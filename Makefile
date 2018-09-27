@@ -64,6 +64,7 @@ csharp: makedir make_c_sdk remove_so swig $(OBJS) make_lib
 	rm -f build/*.cs
 
 clean:
+	cd sdk-cpp && $(MAKE) clean
 	rm -rf build
 
 .PHONY: all clean swig csharp remove_so make_lib make_c_sdk makedir
