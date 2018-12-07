@@ -28,7 +28,13 @@ JAVA_HOME ?= /usr/local
 ROOTOUTDIR = $(ROOT_DIR)/build
 SWIG = swig
 
-CXXFLAGS = -g -fPIC -std=c++11 -I.$(PATHSEP)sdk-cpp$(PATHSEP)include -I.$(PATHSEP)sdk-cpp$(PATHSEP)src -I.$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)include$(PATHSEP) -I.$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)build$(PATHSEP) -L.$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)build
+CXXFLAGS = -g -fPIC -std=c++11 -MMD \
+	-I.$(PATHSEP)include \
+	-I.$(PATHSEP)sdk-cpp$(PATHSEP)include \
+	-I.$(PATHSEP)sdk-cpp$(PATHSEP)src \
+	-I.$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)build$(PATHSEP)kuzzle-c-sdk$(PATHSEP)include \
+	-L.$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)build$(PATHSEP)kuzzle-c-sdk$(PATHSEP)lib
+
 LDFLAGS = -lkuzzlesdk
 
 SRCS = kcore_wrap.cxx
@@ -50,7 +56,7 @@ make_c_sdk:
 	cd sdk-cpp/sdk-c && $(MAKE)
 
 swig:
-	$(SWIG) -Wall -c++ -csharp -namespace Kuzzleio -dllimport kuzzle-wrapper-csharp -outdir $(OUTDIR) -o $(SRCS) -I.$(PATHSEP)sdk-cpp$(PATHSEP)include -I.$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)include$(PATHSEP) -I.$(PATHSEP)sdk-cpp$(PATHSEP)src -I.$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)build$(PATHSEP) swig/core.i
+	$(SWIG) -Wall -c++ -csharp -namespace Kuzzleio -dllimport kuzzle-wrapper-csharp.dll -outdir $(OUTDIR) -o $(SRCS) -I.$(PATHSEP)sdk-cpp$(PATHSEP)include -I.$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)include$(PATHSEP) -I.$(PATHSEP)sdk-cpp$(PATHSEP)src -I.$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)build$(PATHSEP) swig/core.i
 
 make_lib:
 	$(CXX) -shared kcore_wrap.o -o $(OUTDIR)$(SEP)$(LIB_PREFIX)kuzzle-wrapper-csharp.dll $(CXXFLAGS) $(LDFLAGS)
@@ -62,6 +68,11 @@ csharp: OUTDIR=$(ROOTOUTDIR)
 csharp: makedir make_c_sdk remove_so swig $(OBJS) make_lib
 	mcs -target:library -out:$(OUTDIR)$(SEP)kuzzlesdk-$(VERSION).dll build/*.cs
 	rm -f build/*.cs
+
+# Only works on linux
+run_example:
+	cp sdk-cpp/sdk-c/build/kuzzle-c-sdk/lib/libkuzzlesdk.so build/*.dll example
+	cd example && mcs -r:kuzzlesdk-0.0.1.dll example.cs && LD_LIBRARY_PATH=. mono example.exe	
 
 clean:
 	cd sdk-cpp && $(MAKE) clean
