@@ -23,7 +23,7 @@
 %rename(SearchFilters) search_filters;
 %rename(NotificationResult) notification_result;
 %rename(NotificationContent) notification_content;
-// %rename(NotificationListener) NotificationListenerClass;
+%rename(NotificationListener) NotificationListenerClass;
 %rename(SubscribeToSelf) subscribe_to_self;
 %rename(Mapping, match="class") mapping;
 
