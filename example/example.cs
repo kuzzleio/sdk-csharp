@@ -1,7 +1,7 @@
 using Kuzzleio;
 using System;
 
-public class FListener : NotificationListener {
+public class FListener : NotificationListenerClass {
   public override void onMessage(NotificationResult res) {
     Console.WriteLine("OK");
   }

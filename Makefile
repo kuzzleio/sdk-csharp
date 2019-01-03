@@ -67,7 +67,7 @@ remove_so:
 csharp: OUTDIR=$(ROOTOUTDIR)
 csharp: makedir make_c_sdk remove_so swig $(OBJS) make_lib
 	mcs -target:library -out:$(OUTDIR)$(SEP)kuzzlesdk-$(VERSION).dll build/*.cs
-	rm -f build/*.cs
+	# rm -f build/*.cs
 
 # Only works on linux
 run_example:
