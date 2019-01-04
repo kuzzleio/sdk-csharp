@@ -89,8 +89,6 @@
 #define SWIG_FILE_WITH_INIT
 %}
 
-%include "typemap.i"
-
 %include "stl.i"
 %include "kcore.i"
 
