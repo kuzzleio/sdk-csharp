@@ -24,7 +24,6 @@ else
 endif
 
 PATHSEP = $(strip $(SEP))
-JAVA_HOME ?= /usr/local
 ROOTOUTDIR = $(ROOT_DIR)/build
 SWIG = swig
 
@@ -43,7 +42,7 @@ OBJS = $(SRCS:.cxx=.o)
 all: csharp
 
 kcore_wrap.o: kcore_wrap.cxx
-	$(CXX) -c $< -o $@ $(CXXFLAGS) $(LDFLAGS) $(JAVAINCLUDE)
+	$(CXX) -c $< -o $@ $(CXXFLAGS) $(LDFLAGS)
 
 makedir:
 ifeq ($(OS),Windows_NT)
@@ -72,7 +71,7 @@ csharp: makedir make_c_sdk remove_so swig $(OBJS) make_lib
 # Only works on linux
 run_example:
 	cp sdk-cpp/sdk-c/build/kuzzle-c-sdk/lib/libkuzzlesdk.so build/*.dll example
-	cd example && mcs -r:kuzzlesdk-0.0.1.dll example.cs && LD_LIBRARY_PATH=. mono example.exe	
+	cd example && mcs -r:kuzzlesdk-0.0.1.dll example.cs && LD_LIBRARY_PATH=. mono --debug example.exe	
 
 clean:
 	cd sdk-cpp && $(MAKE) clean

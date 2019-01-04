@@ -38,9 +38,9 @@
 %ignore *::status;
 %ignore *::stack;
 
-%feature("director") NotificationListenerClass;
 %feature("director") EventListener;
 %feature("director") SubscribeListener;
+%feature("director") NotificationListenerClass;
 
 %{
 #include "websocket.cpp"
@@ -57,37 +57,37 @@
 %ignore getListener;
 %ignore getListeners;
 
-%{
-#include "kuzzle.cpp"
-#include "realtime.cpp"
-#define SWIG_FILE_WITH_INIT
-%}
-
 %inline {
   namespace kuzzleio {
     class NotificationListenerClass {
       public:
         virtual void onMessage(kuzzleio::notification_result*) = 0;
-        virtual ~NotificationListenerClass() = 0;
+        virtual ~NotificationListenerClass() {};
     };
   }
 }
 
-%extend kuzzleio::Realtime {  
+%extend kuzzleio::Realtime {
   std::string subscribe(const std::string& index, const std::string& collection, const std::string& body, NotificationListenerClass* cb, room_options& options) {
-    NotificationListener* listener = new std::function<void(kuzzleio::notification_result*)>([&](kuzzleio::notification_result* res) {
+    NotificationListener* listener = new std::function<void(kuzzleio::notification_result*)>([cb](kuzzleio::notification_result* res) {
       cb->onMessage(res);
     });
     return $self->subscribe(index, collection, body, listener, options);
   }
 
   std::string subscribe(const std::string& index, const std::string& collection, const std::string& body, NotificationListenerClass* cb) {
-    NotificationListener* listener = new std::function<void(kuzzleio::notification_result*)>([&](kuzzleio::notification_result* res) {
+    NotificationListener* listener = new std::function<void(kuzzleio::notification_result*)>([cb](kuzzleio::notification_result* res) {
       cb->onMessage(res);
     });
     return $self->subscribe(index, collection, body, listener);
   }
 }
+
+%{
+#include "kuzzle.cpp"
+#include "realtime.cpp"
+#define SWIG_FILE_WITH_INIT
+%}
 
 %include "typemap.i"
 
