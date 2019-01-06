@@ -32,6 +32,8 @@
 %rename(_document, match="class") document;
 %rename(_server, match="class") server;
 
+%rename(delete) delete_;
+
 %ignore *::error;
 %ignore *::status;
 %ignore *::stack;
