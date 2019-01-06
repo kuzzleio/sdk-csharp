@@ -40,6 +40,10 @@ LDFLAGS = -lkuzzlesdk
 SRCS = kcore_wrap.cxx
 OBJS = $(SRCS:.cxx=.o)
 
+# Ignore SWIG warning: 451-memory allocation
+# http://www.swig.org/Doc1.3/Warnings.html#Warnings_nn12
+IGNORED_SWIG_WARNING = -w451
+
 all: csharp
 
 kcore_wrap.o: kcore_wrap.cxx
@@ -56,7 +60,7 @@ make_c_sdk:
 	cd sdk-cpp/sdk-c && $(MAKE)
 
 swig:
-	$(SWIG) -Wall -c++ -csharp -namespace Kuzzleio -dllimport kuzzle-wrapper-csharp.dll -outdir $(OUTDIR) -o $(SRCS) -I.$(PATHSEP)sdk-cpp$(PATHSEP)include -I.$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)include$(PATHSEP) -I.$(PATHSEP)sdk-cpp$(PATHSEP)src -I.$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)build$(PATHSEP) swig/core.i
+	$(SWIG) -Wextra $(IGNORED_SWIG_WARNING) -c++ -csharp -namespace Kuzzleio -dllimport kuzzle-wrapper-csharp.dll -outdir $(OUTDIR) -o $(SRCS) -I.$(PATHSEP)sdk-cpp$(PATHSEP)include -I.$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)include$(PATHSEP) -I.$(PATHSEP)sdk-cpp$(PATHSEP)src -I.$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)build$(PATHSEP) swig/core.i
 
 make_lib:
 	$(CXX) -shared kcore_wrap.o -o $(OUTDIR)$(SEP)$(LIB_PREFIX)kuzzle-wrapper-csharp.dll $(CXXFLAGS) $(LDFLAGS)
@@ -67,12 +71,11 @@ remove_so:
 csharp: OUTDIR=$(ROOTOUTDIR)
 csharp: makedir make_c_sdk remove_so swig $(OBJS) make_lib
 	mcs -target:library -out:$(OUTDIR)$(SEP)kuzzlesdk-$(VERSION).dll build/*.cs
-	rm -f build/*.cs
 
 # Only works on linux
 run_example:
 	cp sdk-cpp/sdk-c/build/kuzzle-c-sdk/lib/libkuzzlesdk.so build/*.dll example
-	cd example && mcs -r:kuzzlesdk-0.0.1.dll example.cs && LD_LIBRARY_PATH=. mono example.exe	
+	cd example && mcs -r:kuzzlesdk-0.0.1.dll example.cs && LD_LIBRARY_PATH=. mono example.exe
 
 clean:
 	cd sdk-cpp && $(MAKE) clean
