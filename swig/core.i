@@ -68,7 +68,7 @@
 }
 
 %extend kuzzleio::Realtime {
-  std::string subscribe(const std::string& index, const std::string& collection, const std::string& body, NotificationListenerClass* cb, room_options& options) {
+  std::string subscribe(const std::string& index, const std::string& collection, const std::string& body, NotificationListenerClass* cb, const room_options& options) {
     NotificationListener* listener = new std::function<void(kuzzleio::notification_result*)>([cb](kuzzleio::notification_result* res) {
       cb->onMessage(res);
     });
