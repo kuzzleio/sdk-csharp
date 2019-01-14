@@ -1,1 +1,4 @@
 build/
+example/*.dll
+example/*.so
+example/*.exe
