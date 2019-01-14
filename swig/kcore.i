@@ -4,10 +4,13 @@
 %{
 #include "protocol.hpp"
 #include "websocket.hpp"
+#include "internal/user.hpp"
+#include "internal/user_right.hpp"
+#include "internal/search_result.hpp"
 #include "internal/exceptions.hpp"
 #include "internal/event_emitter.hpp"
 #include "kuzzle.hpp"
-#include "internal/search_result.hpp"
+
 #include "internal/collection.hpp"
 #include "internal/index.hpp"
 #include "internal/server.hpp"
@@ -22,12 +25,15 @@
 
 %include "protocol.hpp"
 %include "websocket.hpp"
+%include "internal/user.hpp"
+%include "internal/user_right.hpp"
+%include "internal/search_result.hpp"
 %include "internal/kuzzle_structs.h"
 %include "kuzzle.h"
 %include "internal/exceptions.hpp"
 %include "internal/event_emitter.hpp"
 %include "kuzzle.hpp"
-%include "internal/search_result.hpp"
+
 %include "internal/collection.hpp"
 %include "internal/index.hpp"
 %include "internal/server.hpp"
