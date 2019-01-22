@@ -2,7 +2,7 @@
 %rename(AckResponse) ack_response;
 %rename(queueTTL) queue_ttl;
 %rename(Options, match="class") options;
-%rename(QueryOptions) query_options;
+%rename(QueryOptions) s_query_options;
 %rename(JsonObject) json_object;
 %rename(JsonResult) json_result;
 %rename(LoginResult) login_result;
@@ -22,6 +22,7 @@
 %rename(SearchFilters) search_filters;
 %rename(NotificationResult) notification_result;
 %rename(NotificationContent) notification_content;
+%rename(NotificationListener) NotificationListenerClass;
 %rename(SubscribeToSelf) subscribe_to_self;
 %rename(Mapping, match="class") mapping;
 
@@ -38,16 +39,15 @@
 %ignore *::status;
 %ignore *::stack;
 
-%feature("director") NotificationListener;
 %feature("director") EventListener;
 %feature("director") SubscribeListener;
+%feature("director") NotificationListenerClass;
 
 %{
 #include "websocket.cpp"
 #include "search_result.cpp"
 #include "user.cpp"
 #include "user_right.cpp"
-#include "kuzzle.cpp"
 
 #include "collection.cpp"
 #include "auth.cpp"
@@ -55,8 +55,41 @@
 #include "server.cpp"
 #include "document.cpp"
 #include "default_constructors.cpp"
-#include "realtime.cpp"
+#include <functional>
+%}
 
+%ignore getListener;
+%ignore getListeners;
+
+%inline {
+  namespace kuzzleio {
+    class NotificationListenerClass {
+      public:
+        virtual void onMessage(kuzzleio::notification_result*) = 0;
+        virtual ~NotificationListenerClass() {};
+    };
+  }
+}
+
+%extend kuzzleio::Realtime {
+  std::string subscribe(const std::string& index, const std::string& collection, const std::string& body, NotificationListenerClass* cb, const room_options& options) {
+    NotificationListener* listener = new std::function<void(kuzzleio::notification_result*)>([cb](kuzzleio::notification_result* res) {
+      cb->onMessage(res);
+    });
+    return $self->subscribe(index, collection, body, listener, options);
+  }
+
+  std::string subscribe(const std::string& index, const std::string& collection, const std::string& body, NotificationListenerClass* cb) {
+    NotificationListener* listener = new std::function<void(kuzzleio::notification_result*)>([cb](kuzzleio::notification_result* res) {
+      cb->onMessage(res);
+    });
+    return $self->subscribe(index, collection, body, listener);
+  }
+}
+
+%{
+#include "kuzzle.cpp"
+#include "realtime.cpp"
 #define SWIG_FILE_WITH_INIT
 %}
 
@@ -93,6 +126,7 @@
 %include "user_right.cpp"
 
 %include "collection.cpp"
+%include "search_result.cpp"
 %include "document.cpp"
 %include "realtime.cpp"
 %include "auth.cpp"

@@ -4,6 +4,7 @@
 %{
 #include "protocol.hpp"
 #include "websocket.hpp"
+#include "internal/kuzzle_structs.h"
 #include "internal/user.hpp"
 #include "internal/user_right.hpp"
 #include "internal/search_result.hpp"

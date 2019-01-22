@@ -24,7 +24,6 @@ else
 endif
 
 PATHSEP = $(strip $(SEP))
-JAVA_HOME ?= /usr/local
 ROOTOUTDIR = $(ROOT_DIR)/build
 SWIG = swig
 
@@ -47,7 +46,7 @@ IGNORED_SWIG_WARNING = -w451
 all: csharp
 
 kcore_wrap.o: kcore_wrap.cxx
-	$(CXX) -c $< -o $@ $(CXXFLAGS) $(LDFLAGS) $(JAVAINCLUDE)
+	$(CXX) -c $< -o $@ $(CXXFLAGS) $(LDFLAGS)
 
 makedir:
 ifeq ($(OS),Windows_NT)
