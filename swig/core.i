@@ -58,32 +58,51 @@
 #include <functional>
 %}
 
-%ignore getListener;
-%ignore getListeners;
-
 %inline {
   namespace kuzzleio {
     class NotificationListenerClass {
+      protected:
+        NotificationListener * _listener;
+
       public:
-        virtual void onMessage(kuzzleio::notification_result*) = 0;
-        virtual ~NotificationListenerClass() {};
+        NotificationListener* listener() const noexcept {
+         return _listener;
+        }
+
+        virtual void onMessage(
+            std::shared_ptr<kuzzleio::notification_result>) = 0;
+
+        NotificationListenerClass() :
+          _listener(
+            new std::function<void(std::shared_ptr<notification_result>)>(
+              [this](std::shared_ptr<kuzzleio::notification_result> res) {
+                this->onMessage(res);
+            }))
+          {}
+
+        virtual ~NotificationListenerClass() {
+          delete _listener;
+        };
     };
   }
 }
 
 %extend kuzzleio::Realtime {
-  std::string subscribe(const std::string& index, const std::string& collection, const std::string& body, NotificationListenerClass* cb, const room_options& options) {
-    NotificationListener* listener = new std::function<void(kuzzleio::notification_result*)>([cb](kuzzleio::notification_result* res) {
-      cb->onMessage(res);
-    });
-    return $self->subscribe(index, collection, body, listener, options);
+  std::string subscribe(
+      const std::string& index,
+      const std::string& collection,
+      const std::string& body,
+      NotificationListenerClass & cb,
+      const room_options& options) {
+    return $self->subscribe(index, collection, body, cb.listener(), options);
   }
 
-  std::string subscribe(const std::string& index, const std::string& collection, const std::string& body, NotificationListenerClass* cb) {
-    NotificationListener* listener = new std::function<void(kuzzleio::notification_result*)>([cb](kuzzleio::notification_result* res) {
-      cb->onMessage(res);
-    });
-    return $self->subscribe(index, collection, body, listener);
+  std::string subscribe(
+      const std::string& index,
+      const std::string& collection,
+      const std::string& body,
+      NotificationListenerClass & cb) {
+    return $self->subscribe(index, collection, body, cb.listener());
   }
 }
 
@@ -100,24 +119,14 @@
 %include "std_vector.i"
 %include "typemaps.i"
 
-%extend options {
-    options() {
-        options *o = kuzzle_new_options();
-        return o;
-    }
-
-    ~options() {
-        free($self);
-    }
-}
-
 %extend kuzzleio::kuzzle_response {
     ~kuzzle_response() {
         kuzzle_free_kuzzle_response($self);
     }
 }
 
-
+%include "options.cpp"
+%include "event_emitter.cpp"
 %include "websocket.cpp"
 %include "kuzzle.cpp"
 %include "search_result.cpp"
