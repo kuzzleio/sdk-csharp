@@ -28,13 +28,12 @@ ROOTOUTDIR = $(ROOT_DIR)/build
 SWIG = swig
 
 CXXFLAGS = -g -fPIC -std=c++11 -MMD \
-	-I.$(PATHSEP)include \
 	-I.$(PATHSEP)sdk-cpp$(PATHSEP)include \
 	-I.$(PATHSEP)sdk-cpp$(PATHSEP)src \
-	-I.$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)build$(PATHSEP)kuzzle-c-sdk$(PATHSEP)include \
-	-L.$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)build$(PATHSEP)kuzzle-c-sdk$(PATHSEP)lib
+	-I.$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)build$(PATHSEP)kuzzle-c-sdk$(PATHSEP)include
 
-LDFLAGS = -lkuzzlesdk
+LDFLAGS = -L.$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)build$(PATHSEP)kuzzle-c-sdk$(PATHSEP)lib \
+	-lkuzzlesdk
 
 SRCS = kcore_wrap.cxx
 OBJS = $(SRCS:.cxx=.o)
@@ -46,7 +45,7 @@ IGNORED_SWIG_WARNING = -w451
 all: csharp
 
 kcore_wrap.o: kcore_wrap.cxx
-	$(CXX) -c $< -o $@ $(CXXFLAGS) $(LDFLAGS)
+	$(CXX) -c $< -o $@ $(CXXFLAGS)
 
 makedir:
 ifeq ($(OS),Windows_NT)
