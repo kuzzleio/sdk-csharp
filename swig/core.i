@@ -35,6 +35,7 @@
 
 %rename(delete) delete_;
 
+%ignore s_options;
 %ignore *::error;
 %ignore *::status;
 %ignore *::stack;
