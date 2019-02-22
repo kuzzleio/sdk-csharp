@@ -24,8 +24,8 @@
 %rename(NotificationContent) notification_content;
 %rename(NotificationListener) NotificationListenerClass;
 %rename(SubscribeToSelf) subscribe_to_self;
-%rename(Mapping, match="class") mapping;
 
+%rename(Mapping, match="class") mapping;
 %rename(_auth, match="class") auth;
 %rename(_kuzzle, match="class") kuzzle;
 %rename(_realtime, match="class") realtime;
@@ -35,6 +35,7 @@
 
 %rename(delete) delete_;
 
+%ignore kuzzleio::User::operator=;
 %ignore s_options;
 %ignore *::error;
 %ignore *::status;
