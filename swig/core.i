@@ -35,11 +35,15 @@
 
 %rename(delete) delete_;
 
-%ignore kuzzleio::User::operator=;
 %ignore s_options;
 %ignore *::error;
 %ignore *::status;
 %ignore *::stack;
+
+// Internal use: ignore it to prevent a warning
+%ignore kuzzleio::User::operator=;
+
+// Proper C# Exception overloads are located in exceptions.i
 %ignore KuzzleException;
 %ignore BadRequestException;
 %ignore ForbiddenException;
@@ -51,6 +55,9 @@
 %ignore ServiceUnavailableException;
 %ignore SizeLimitException;
 %ignore UnauthorizedException;
+
+// do not wrap: used to communicate between the go, cgo and c++ layers
+%ignore _c_emit_event;
 
 %feature("director") EventListener;
 %feature("director") SubscribeListener;
