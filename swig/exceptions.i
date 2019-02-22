@@ -193,7 +193,6 @@
         NotFoundExceptionDelegate notFoundCallback);
 
     static void SetPendingNotFoundException(string message) {
-    NotFoundException foo = new NotFoundException(message);
       SWIGPendingException.Set(new NotFoundException(message));
     }
 
