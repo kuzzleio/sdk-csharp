@@ -4,7 +4,8 @@
   CSharpExceptionCallback_t badRequestExceptionCallback = NULL;
 
   extern "C" SWIGEXPORT
-  void SWIGSTDCALL BadRequestExceptionRegisterCallback(CSharpExceptionCallback_t badRequestCallback) {
+  void SWIGSTDCALL BadRequestExceptionRegisterCallback(
+      CSharpExceptionCallback_t badRequestCallback) {
     badRequestExceptionCallback = badRequestCallback;
   }
 
@@ -14,15 +15,17 @@
 %}
 
 %pragma(csharp) imclasscode=%{
-  class BadRequestExceptionHelper {
+  protected class BadRequestExceptionHelper {
     public delegate void BadRequestExceptionDelegate(string message);
 
     static BadRequestExceptionDelegate badRequestDelegate =
-                                   new BadRequestExceptionDelegate(SetPendingBadRequestException);
+      new BadRequestExceptionDelegate(SetPendingBadRequestException);
 
-    [global::System.Runtime.InteropServices.DllImport("$dllimport", EntryPoint="BadRequestExceptionRegisterCallback")]
-    public static extern
-           void BadRequestExceptionRegisterCallback(BadRequestExceptionDelegate badRequestCallback);
+    [global::System.Runtime.InteropServices.DllImport(
+        "$dllimport",
+        EntryPoint="BadRequestExceptionRegisterCallback")]
+    public static extern void BadRequestExceptionRegisterCallback(
+        BadRequestExceptionDelegate badRequestCallback);
 
     static void SetPendingBadRequestException(string message) {
       SWIGPendingException.Set(new BadRequestException(message));
@@ -32,7 +35,9 @@
       BadRequestExceptionRegisterCallback(badRequestDelegate);
     }
   }
-  static BadRequestExceptionHelper badRequestExceptionHelper = new BadRequestExceptionHelper();
+
+  static protected BadRequestExceptionHelper badRequestExceptionHelper =
+    new BadRequestExceptionHelper();
 %}
 
 %insert(runtime) %{
@@ -41,7 +46,8 @@
   CSharpExceptionCallback_t forbiddenExceptionCallback = NULL;
 
   extern "C" SWIGEXPORT
-  void SWIGSTDCALL ForbiddenExceptionRegisterCallback(CSharpExceptionCallback_t forbiddenCallback) {
+  void SWIGSTDCALL ForbiddenExceptionRegisterCallback(
+      CSharpExceptionCallback_t forbiddenCallback) {
     forbiddenExceptionCallback = forbiddenCallback;
   }
 
@@ -51,15 +57,17 @@
 %}
 
 %pragma(csharp) imclasscode=%{
-  class ForbiddenExceptionHelper {
+  protected class ForbiddenExceptionHelper {
     public delegate void ForbiddenExceptionDelegate(string message);
 
     static ForbiddenExceptionDelegate forbiddenDelegate =
-                                   new ForbiddenExceptionDelegate(SetPendingForbiddenException);
+        new ForbiddenExceptionDelegate(SetPendingForbiddenException);
 
-    [global::System.Runtime.InteropServices.DllImport("$dllimport", EntryPoint="ForbiddenExceptionRegisterCallback")]
-    public static extern
-           void ForbiddenExceptionRegisterCallback(ForbiddenExceptionDelegate forbiddenCallback);
+    [global::System.Runtime.InteropServices.DllImport(
+        "$dllimport",
+        EntryPoint="ForbiddenExceptionRegisterCallback")]
+    public static extern void ForbiddenExceptionRegisterCallback(
+        ForbiddenExceptionDelegate forbiddenCallback);
 
     static void SetPendingForbiddenException(string message) {
       SWIGPendingException.Set(new ForbiddenException(message));
@@ -69,7 +77,8 @@
       ForbiddenExceptionRegisterCallback(forbiddenDelegate);
     }
   }
-  static ForbiddenExceptionHelper forbiddenExceptionHelper = new ForbiddenExceptionHelper();
+  static protected ForbiddenExceptionHelper forbiddenExceptionHelper =
+      new ForbiddenExceptionHelper();
 %}
 
 %insert(runtime) %{
@@ -78,7 +87,8 @@
   CSharpExceptionCallback_t gatewayTimeoutExceptionCallback = NULL;
 
   extern "C" SWIGEXPORT
-  void SWIGSTDCALL GatewayTimeoutExceptionRegisterCallback(CSharpExceptionCallback_t gatewayTimeoutCallback) {
+  void SWIGSTDCALL GatewayTimeoutExceptionRegisterCallback(
+      CSharpExceptionCallback_t gatewayTimeoutCallback) {
     gatewayTimeoutExceptionCallback = gatewayTimeoutCallback;
   }
 
@@ -88,15 +98,17 @@
 %}
 
 %pragma(csharp) imclasscode=%{
-  class GatewayTimeoutExceptionHelper {
+  protected class GatewayTimeoutExceptionHelper {
     public delegate void GatewayTimeoutExceptionDelegate(string message);
 
     static GatewayTimeoutExceptionDelegate gatewayTimeoutDelegate =
-                                   new GatewayTimeoutExceptionDelegate(SetPendingGatewayTimeoutException);
+        new GatewayTimeoutExceptionDelegate(SetPendingGatewayTimeoutException);
 
-    [global::System.Runtime.InteropServices.DllImport("$dllimport", EntryPoint="GatewayTimeoutExceptionRegisterCallback")]
-    public static extern
-           void GatewayTimeoutExceptionRegisterCallback(GatewayTimeoutExceptionDelegate gatewayTimeoutCallback);
+    [global::System.Runtime.InteropServices.DllImport(
+        "$dllimport",
+        EntryPoint="GatewayTimeoutExceptionRegisterCallback")]
+    public static extern void GatewayTimeoutExceptionRegisterCallback(
+        GatewayTimeoutExceptionDelegate gatewayTimeoutCallback);
 
     static void SetPendingGatewayTimeoutException(string message) {
       SWIGPendingException.Set(new GatewayTimeoutException(message));
@@ -106,7 +118,8 @@
       GatewayTimeoutExceptionRegisterCallback(gatewayTimeoutDelegate);
     }
   }
-  static GatewayTimeoutExceptionHelper gatewayTimeoutExceptionHelper = new GatewayTimeoutExceptionHelper();
+  static protected GatewayTimeoutExceptionHelper gatewayTimeoutExceptionHelper =
+      new GatewayTimeoutExceptionHelper();
 %}
 
 %insert(runtime) %{
@@ -115,7 +128,8 @@
   CSharpExceptionCallback_t internalExceptionCallback = NULL;
 
   extern "C" SWIGEXPORT
-  void SWIGSTDCALL InternalExceptionRegisterCallback(CSharpExceptionCallback_t internalCallback) {
+  void SWIGSTDCALL InternalExceptionRegisterCallback(
+      CSharpExceptionCallback_t internalCallback) {
     internalExceptionCallback = internalCallback;
   }
 
@@ -125,15 +139,17 @@
 %}
 
 %pragma(csharp) imclasscode=%{
-  class InternalExceptionHelper {
+  protected class InternalExceptionHelper {
     public delegate void InternalExceptionDelegate(string message);
 
     static InternalExceptionDelegate internalDelegate =
-                                   new InternalExceptionDelegate(SetPendingInternalException);
+        new InternalExceptionDelegate(SetPendingInternalException);
 
-    [global::System.Runtime.InteropServices.DllImport("$dllimport", EntryPoint="InternalExceptionRegisterCallback")]
-    public static extern
-           void InternalExceptionRegisterCallback(InternalExceptionDelegate internalCallback);
+    [global::System.Runtime.InteropServices.DllImport(
+        "$dllimport",
+        EntryPoint="InternalExceptionRegisterCallback")]
+    public static extern void InternalExceptionRegisterCallback(
+        InternalExceptionDelegate internalCallback);
 
     static void SetPendingInternalException(string message) {
       SWIGPendingException.Set(new InternalException(message));
@@ -143,7 +159,8 @@
       InternalExceptionRegisterCallback(internalDelegate);
     }
   }
-  static InternalExceptionHelper internalExceptionHelper = new InternalExceptionHelper();
+  static protected InternalExceptionHelper internalExceptionHelper =
+      new InternalExceptionHelper();
 %}
 
 %insert(runtime) %{
@@ -152,7 +169,8 @@
   CSharpExceptionCallback_t notFoundExceptionCallback = NULL;
 
   extern "C" SWIGEXPORT
-  void SWIGSTDCALL NotFoundExceptionRegisterCallback(CSharpExceptionCallback_t notFoundCallback) {
+  void SWIGSTDCALL NotFoundExceptionRegisterCallback(
+      CSharpExceptionCallback_t notFoundCallback) {
     notFoundExceptionCallback = notFoundCallback;
   }
 
@@ -162,17 +180,20 @@
 %}
 
 %pragma(csharp) imclasscode=%{
-  class NotFoundExceptionHelper {
+  protected class NotFoundExceptionHelper {
     public delegate void NotFoundExceptionDelegate(string message);
 
     static NotFoundExceptionDelegate notFoundDelegate =
-                                   new NotFoundExceptionDelegate(SetPendingNotFoundException);
+        new NotFoundExceptionDelegate(SetPendingNotFoundException);
 
-    [global::System.Runtime.InteropServices.DllImport("$dllimport", EntryPoint="NotFoundExceptionRegisterCallback")]
-    public static extern
-           void NotFoundExceptionRegisterCallback(NotFoundExceptionDelegate notFoundCallback);
+    [global::System.Runtime.InteropServices.DllImport(
+        "$dllimport",
+        EntryPoint="NotFoundExceptionRegisterCallback")]
+    public static extern void NotFoundExceptionRegisterCallback(
+        NotFoundExceptionDelegate notFoundCallback);
 
     static void SetPendingNotFoundException(string message) {
+    NotFoundException foo = new NotFoundException(message);
       SWIGPendingException.Set(new NotFoundException(message));
     }
 
@@ -180,7 +201,8 @@
       NotFoundExceptionRegisterCallback(notFoundDelegate);
     }
   }
-  static NotFoundExceptionHelper notFoundExceptionHelper = new NotFoundExceptionHelper();
+  static protected NotFoundExceptionHelper notFoundExceptionHelper =
+      new NotFoundExceptionHelper();
 %}
 
 %insert(runtime) %{
@@ -189,7 +211,8 @@
   CSharpExceptionCallback_t partialExceptionCallback = NULL;
 
   extern "C" SWIGEXPORT
-  void SWIGSTDCALL PartialExceptionRegisterCallback(CSharpExceptionCallback_t partialCallback) {
+  void SWIGSTDCALL PartialExceptionRegisterCallback(
+      CSharpExceptionCallback_t partialCallback) {
     partialExceptionCallback = partialCallback;
   }
 
@@ -199,15 +222,17 @@
 %}
 
 %pragma(csharp) imclasscode=%{
-  class PartialExceptionHelper {
+  protected class PartialExceptionHelper {
     public delegate void PartialExceptionDelegate(string message);
 
     static PartialExceptionDelegate partialDelegate =
-                                   new PartialExceptionDelegate(SetPendingPartialException);
+        new PartialExceptionDelegate(SetPendingPartialException);
 
-    [global::System.Runtime.InteropServices.DllImport("$dllimport", EntryPoint="PartialExceptionRegisterCallback")]
-    public static extern
-           void PartialExceptionRegisterCallback(PartialExceptionDelegate partialCallback);
+    [global::System.Runtime.InteropServices.DllImport(
+        "$dllimport",
+        EntryPoint="PartialExceptionRegisterCallback")]
+    public static extern void PartialExceptionRegisterCallback(
+        PartialExceptionDelegate partialCallback);
 
     static void SetPendingPartialException(string message) {
       SWIGPendingException.Set(new PartialException(message));
@@ -217,7 +242,8 @@
       PartialExceptionRegisterCallback(partialDelegate);
     }
   }
-  static PartialExceptionHelper partialExceptionHelper = new PartialExceptionHelper();
+  static protected PartialExceptionHelper partialExceptionHelper =
+      new PartialExceptionHelper();
 %}
 %insert(runtime) %{
   typedef void (SWIGSTDCALL* CSharpExceptionCallback_t)(const char *);
@@ -225,7 +251,8 @@
   CSharpExceptionCallback_t preconditionExceptionCallback = NULL;
 
   extern "C" SWIGEXPORT
-  void SWIGSTDCALL PreconditionExceptionRegisterCallback(CSharpExceptionCallback_t preconditionCallback) {
+  void SWIGSTDCALL PreconditionExceptionRegisterCallback(
+      CSharpExceptionCallback_t preconditionCallback) {
     preconditionExceptionCallback = preconditionCallback;
   }
 
@@ -235,15 +262,17 @@
 %}
 
 %pragma(csharp) imclasscode=%{
-  class PreconditionExceptionHelper {
+  protected class PreconditionExceptionHelper {
     public delegate void PreconditionExceptionDelegate(string message);
 
     static PreconditionExceptionDelegate preconditionDelegate =
-                                   new PreconditionExceptionDelegate(SetPendingPreconditionException);
+        new PreconditionExceptionDelegate(SetPendingPreconditionException);
 
-    [global::System.Runtime.InteropServices.DllImport("$dllimport", EntryPoint="PreconditionExceptionRegisterCallback")]
-    public static extern
-           void PreconditionExceptionRegisterCallback(PreconditionExceptionDelegate preconditionCallback);
+    [global::System.Runtime.InteropServices.DllImport(
+        "$dllimport",
+        EntryPoint="PreconditionExceptionRegisterCallback")]
+    public static extern void PreconditionExceptionRegisterCallback(
+        PreconditionExceptionDelegate preconditionCallback);
 
     static void SetPendingPreconditionException(string message) {
       SWIGPendingException.Set(new PreconditionException(message));
@@ -253,7 +282,8 @@
       PreconditionExceptionRegisterCallback(preconditionDelegate);
     }
   }
-  static PreconditionExceptionHelper preconditionExceptionHelper = new PreconditionExceptionHelper();
+  static protected PreconditionExceptionHelper preconditionExceptionHelper =
+      new PreconditionExceptionHelper();
 %}
 
 %insert(runtime) %{
@@ -262,25 +292,30 @@
   CSharpExceptionCallback_t serviceUnavailableExceptionCallback = NULL;
 
   extern "C" SWIGEXPORT
-  void SWIGSTDCALL ServiceUnavailableExceptionRegisterCallback(CSharpExceptionCallback_t serviceUnavailableCallback) {
+  void SWIGSTDCALL ServiceUnavailableExceptionRegisterCallback(
+      CSharpExceptionCallback_t serviceUnavailableCallback) {
     serviceUnavailableExceptionCallback = serviceUnavailableCallback;
   }
 
-  static void SWIG_CSharpSetPendingExceptionServiceUnavailable(const char *msg) {
+  static void SWIG_CSharpSetPendingExceptionServiceUnavailable(
+      const char *msg) {
     serviceUnavailableExceptionCallback(msg);
   }
 %}
 
 %pragma(csharp) imclasscode=%{
-  class ServiceUnavailableExceptionHelper {
+  protected class ServiceUnavailableExceptionHelper {
     public delegate void ServiceUnavailableExceptionDelegate(string message);
 
     static ServiceUnavailableExceptionDelegate serviceUnavailableDelegate =
-                                   new ServiceUnavailableExceptionDelegate(SetPendingServiceUnavailableException);
+        new ServiceUnavailableExceptionDelegate(
+            SetPendingServiceUnavailableException);
 
-    [global::System.Runtime.InteropServices.DllImport("$dllimport", EntryPoint="ServiceUnavailableExceptionRegisterCallback")]
-    public static extern
-           void ServiceUnavailableExceptionRegisterCallback(ServiceUnavailableExceptionDelegate serviceUnavailableCallback);
+    [global::System.Runtime.InteropServices.DllImport(
+        "$dllimport",
+        EntryPoint="ServiceUnavailableExceptionRegisterCallback")]
+    public static extern void ServiceUnavailableExceptionRegisterCallback(
+        ServiceUnavailableExceptionDelegate serviceUnavailableCallback);
 
     static void SetPendingServiceUnavailableException(string message) {
       SWIGPendingException.Set(new ServiceUnavailableException(message));
@@ -290,7 +325,9 @@
       ServiceUnavailableExceptionRegisterCallback(serviceUnavailableDelegate);
     }
   }
-  static ServiceUnavailableExceptionHelper serviceUnavailableExceptionHelper = new ServiceUnavailableExceptionHelper();
+  protected static ServiceUnavailableExceptionHelper
+      serviceUnavailableExceptionHelper =
+          new ServiceUnavailableExceptionHelper();
 %}
 
 %insert(runtime) %{
@@ -299,7 +336,8 @@
   CSharpExceptionCallback_t sizeLimitExceptionCallback = NULL;
 
   extern "C" SWIGEXPORT
-  void SWIGSTDCALL SizeLimitExceptionRegisterCallback(CSharpExceptionCallback_t sizeLimitCallback) {
+  void SWIGSTDCALL SizeLimitExceptionRegisterCallback(
+      CSharpExceptionCallback_t sizeLimitCallback) {
     sizeLimitExceptionCallback = sizeLimitCallback;
   }
 
@@ -309,15 +347,17 @@
 %}
 
 %pragma(csharp) imclasscode=%{
-  class SizeLimitExceptionHelper {
+  protected class SizeLimitExceptionHelper {
     public delegate void SizeLimitExceptionDelegate(string message);
 
     static SizeLimitExceptionDelegate sizeLimitDelegate =
-                                   new SizeLimitExceptionDelegate(SetPendingSizeLimitException);
+        new SizeLimitExceptionDelegate(SetPendingSizeLimitException);
 
-    [global::System.Runtime.InteropServices.DllImport("$dllimport", EntryPoint="SizeLimitExceptionRegisterCallback")]
-    public static extern
-           void SizeLimitExceptionRegisterCallback(SizeLimitExceptionDelegate sizeLimitCallback);
+    [global::System.Runtime.InteropServices.DllImport(
+        "$dllimport",
+        EntryPoint="SizeLimitExceptionRegisterCallback")]
+    public static extern void SizeLimitExceptionRegisterCallback(
+        SizeLimitExceptionDelegate sizeLimitCallback);
 
     static void SetPendingSizeLimitException(string message) {
       SWIGPendingException.Set(new SizeLimitException(message));
@@ -327,7 +367,8 @@
       SizeLimitExceptionRegisterCallback(sizeLimitDelegate);
     }
   }
-  static SizeLimitExceptionHelper sizeLimitExceptionHelper = new SizeLimitExceptionHelper();
+  static protected SizeLimitExceptionHelper sizeLimitExceptionHelper =
+      new SizeLimitExceptionHelper();
 %}
 
 %insert(runtime) %{
@@ -336,7 +377,8 @@
   CSharpExceptionCallback_t unauthorizedExceptionCallback = NULL;
 
   extern "C" SWIGEXPORT
-  void SWIGSTDCALL UnauthorizedExceptionRegisterCallback(CSharpExceptionCallback_t unauthorizedCallback) {
+  void SWIGSTDCALL UnauthorizedExceptionRegisterCallback(
+      CSharpExceptionCallback_t unauthorizedCallback) {
     unauthorizedExceptionCallback = unauthorizedCallback;
   }
 
@@ -346,15 +388,17 @@
 %}
 
 %pragma(csharp) imclasscode=%{
-  class UnauthorizedExceptionHelper {
+  protected class UnauthorizedExceptionHelper {
     public delegate void UnauthorizedExceptionDelegate(string message);
 
     static UnauthorizedExceptionDelegate unauthorizedDelegate =
-                                   new UnauthorizedExceptionDelegate(SetPendingUnauthorizedException);
+        new UnauthorizedExceptionDelegate(SetPendingUnauthorizedException);
 
-    [global::System.Runtime.InteropServices.DllImport("$dllimport", EntryPoint="UnauthorizedExceptionRegisterCallback")]
-    public static extern
-           void UnauthorizedExceptionRegisterCallback(UnauthorizedExceptionDelegate unauthorizedCallback);
+    [global::System.Runtime.InteropServices.DllImport(
+        "$dllimport",
+        EntryPoint="UnauthorizedExceptionRegisterCallback")]
+    public static extern void UnauthorizedExceptionRegisterCallback(
+        UnauthorizedExceptionDelegate unauthorizedCallback);
 
     static void SetPendingUnauthorizedException(string message) {
       SWIGPendingException.Set(new UnauthorizedException(message));
@@ -364,7 +408,8 @@
       UnauthorizedExceptionRegisterCallback(unauthorizedDelegate);
     }
   }
-  static UnauthorizedExceptionHelper unauthorizedExceptionHelper = new UnauthorizedExceptionHelper();
+  static protected UnauthorizedExceptionHelper unauthorizedExceptionHelper =
+      new UnauthorizedExceptionHelper();
 %}
 
 %insert(runtime) %{
@@ -373,7 +418,8 @@
   CSharpExceptionCallback_t kuzzleExceptionCallback = NULL;
 
   extern "C" SWIGEXPORT
-  void SWIGSTDCALL KuzzleExceptionRegisterCallback(CSharpExceptionCallback_t kuzzleCallback) {
+  void SWIGSTDCALL KuzzleExceptionRegisterCallback(
+      CSharpExceptionCallback_t kuzzleCallback) {
     kuzzleExceptionCallback = kuzzleCallback;
   }
 
@@ -383,15 +429,17 @@
 %}
 
 %pragma(csharp) imclasscode=%{
-  class KuzzleExceptionHelper {
+  protected class KuzzleExceptionHelper {
     public delegate void KuzzleExceptionDelegate(string message);
 
     static KuzzleExceptionDelegate kuzzleDelegate =
-                                   new KuzzleExceptionDelegate(SetPendingKuzzleException);
+        new KuzzleExceptionDelegate(SetPendingKuzzleException);
 
-    [global::System.Runtime.InteropServices.DllImport("$dllimport", EntryPoint="KuzzleExceptionRegisterCallback")]
-    public static extern
-           void KuzzleExceptionRegisterCallback(KuzzleExceptionDelegate kuzzleCallback);
+    [global::System.Runtime.InteropServices.DllImport(
+        "$dllimport",
+        EntryPoint="KuzzleExceptionRegisterCallback")]
+    public static extern void KuzzleExceptionRegisterCallback(
+        KuzzleExceptionDelegate kuzzleCallback);
 
     static void SetPendingKuzzleException(string message) {
       SWIGPendingException.Set(new KuzzleException(message));
@@ -401,7 +449,8 @@
       KuzzleExceptionRegisterCallback(kuzzleDelegate);
     }
   }
-  static KuzzleExceptionHelper kuzzleExceptionHelper = new KuzzleExceptionHelper();
+  static protected KuzzleExceptionHelper kuzzleExceptionHelper =
+      new KuzzleExceptionHelper();
 %}
 
 %exception {
@@ -430,4 +479,70 @@
   }
 }
 
-%typemap(csbase) kuzzleio::KuzzleException "System.ApplicationException";
+%pragma(csharp) moduleimports=%{
+  public class KuzzleException : global::System.ApplicationException {
+    public KuzzleException(string message)
+      : base(message) {
+    }
+  }
+
+  public class BadRequestException : KuzzleException {
+    public BadRequestException(string message)
+      : base(message) {
+    }
+  }
+
+  public class ForbiddenException : KuzzleException {
+    public ForbiddenException(string message)
+      : base(message) {
+    }
+  }
+
+  public class GatewayTimeoutException : KuzzleException {
+    public GatewayTimeoutException(string message)
+      : base(message) {
+    }
+  }
+
+  public class InternalException : KuzzleException {
+    public InternalException(string message)
+      : base(message) {
+    }
+  }
+
+  public class NotFoundException : KuzzleException {
+    public NotFoundException(string message)
+      : base(message) {
+    }
+  }
+
+  public class PartialException : KuzzleException {
+    public PartialException(string message)
+      : base(message) {
+    }
+  }
+
+  public class PreconditionException : global::System.ApplicationException {
+    public PreconditionException(string message)
+      : base(message) {
+    }
+  }
+
+  public class ServiceUnavailableException : global::System.ApplicationException {
+    public ServiceUnavailableException(string message)
+      : base(message) {
+    }
+  }
+
+  public class SizeLimitException : global::System.ApplicationException {
+    public SizeLimitException(string message)
+      : base(message) {
+    }
+  }
+
+  public class UnauthorizedException : global::System.ApplicationException {
+    public UnauthorizedException(string message)
+      : base(message) {
+    }
+  }
+%}

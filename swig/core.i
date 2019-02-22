@@ -39,6 +39,17 @@
 %ignore *::error;
 %ignore *::status;
 %ignore *::stack;
+%ignore KuzzleException;
+%ignore BadRequestException;
+%ignore ForbiddenException;
+%ignore GatewayTimeoutException;
+%ignore InternalException;
+%ignore NotFoundException;
+%ignore PartialException;
+%ignore PreconditionException;
+%ignore ServiceUnavailableException;
+%ignore SizeLimitException;
+%ignore UnauthorizedException;
 
 %feature("director") EventListener;
 %feature("director") SubscribeListener;
