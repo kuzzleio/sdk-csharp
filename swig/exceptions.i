@@ -480,68 +480,79 @@
 
 %pragma(csharp) moduleimports=%{
   public class KuzzleException : global::System.ApplicationException {
+    protected int status;
+    public int Status {
+      get { return status; }
+    }
+
     public KuzzleException(string message)
       : base(message) {
+      status = 500;
+    }
+
+    protected KuzzleException(string message, int status)
+      : base(message) {
+      this.status = status;
     }
   }
 
   public class BadRequestException : KuzzleException {
     public BadRequestException(string message)
-      : base(message) {
+      : base(message, 400) {
     }
   }
 
   public class ForbiddenException : KuzzleException {
     public ForbiddenException(string message)
-      : base(message) {
+      : base(message, 403) {
     }
   }
 
   public class GatewayTimeoutException : KuzzleException {
     public GatewayTimeoutException(string message)
-      : base(message) {
+      : base(message, 504) {
     }
   }
 
   public class InternalException : KuzzleException {
     public InternalException(string message)
-      : base(message) {
+      : base(message, 500) {
     }
   }
 
   public class NotFoundException : KuzzleException {
     public NotFoundException(string message)
-      : base(message) {
+      : base(message, 404) {
     }
   }
 
   public class PartialException : KuzzleException {
     public PartialException(string message)
-      : base(message) {
+      : base(message, 206) {
     }
   }
 
-  public class PreconditionException : global::System.ApplicationException {
+  public class PreconditionException : KuzzleException {
     public PreconditionException(string message)
-      : base(message) {
+      : base(message, 412) {
     }
   }
 
-  public class ServiceUnavailableException : global::System.ApplicationException {
+  public class ServiceUnavailableException : KuzzleException {
     public ServiceUnavailableException(string message)
-      : base(message) {
+      : base(message, 503) {
     }
   }
 
-  public class SizeLimitException : global::System.ApplicationException {
+  public class SizeLimitException : KuzzleException {
     public SizeLimitException(string message)
-      : base(message) {
+      : base(message, 413) {
     }
   }
 
-  public class UnauthorizedException : global::System.ApplicationException {
+  public class UnauthorizedException : KuzzleException {
     public UnauthorizedException(string message)
-      : base(message) {
+      : base(message, 401) {
     }
   }
 %}
