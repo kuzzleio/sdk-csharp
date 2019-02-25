@@ -2,3 +2,6 @@ build/
 example/*.dll
 example/*.so
 example/*.exe
+
+# ignore SWIG generated files
+kcore_wrap.*

@@ -4,12 +4,12 @@
 %{
 #include "protocol.hpp"
 #include "websocket.hpp"
+#include "internal/options.hpp"
 #include "internal/kuzzle_structs.h"
 #include "internal/user.hpp"
 #include "internal/user_right.hpp"
 #include "internal/search_result.hpp"
 #include "internal/exceptions.hpp"
-#include "internal/event_emitter.hpp"
 #include "kuzzle.hpp"
 
 #include "internal/collection.hpp"
@@ -24,6 +24,8 @@
 %define _Complex
 %enddef
 
+%include "internal/event_emitter.hpp"
+%include "internal/options.hpp"
 %include "protocol.hpp"
 %include "websocket.hpp"
 %include "internal/user.hpp"
@@ -32,7 +34,6 @@
 %include "internal/kuzzle_structs.h"
 %include "kuzzle.h"
 %include "internal/exceptions.hpp"
-%include "internal/event_emitter.hpp"
 %include "kuzzle.hpp"
 
 %include "internal/collection.hpp"
