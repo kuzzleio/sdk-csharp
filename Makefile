@@ -26,6 +26,7 @@ endif
 PATHSEP = $(strip $(SEP))
 ROOTOUTDIR = $(ROOT_DIR)/build
 SWIG = swig
+CSDLLNAME = kuzzlesdk-wrapper
 
 CXXFLAGS = -g -fPIC -std=c++11 -MMD \
 	-I.$(PATHSEP)sdk-cpp$(PATHSEP)include \
@@ -58,10 +59,10 @@ make_c_sdk:
 	cd sdk-cpp/sdk-c && $(MAKE)
 
 swig:
-	$(SWIG) -Wextra $(IGNORED_SWIG_WARNING) -c++ -csharp -namespace Kuzzleio -dllimport kuzzle-wrapper-csharp.dll -outdir $(OUTDIR) -o $(SRCS) -I.$(PATHSEP)sdk-cpp$(PATHSEP)include -I.$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)include$(PATHSEP) -I.$(PATHSEP)sdk-cpp$(PATHSEP)src -I.$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)build$(PATHSEP) swig/core.i
+	$(SWIG) -Wextra $(IGNORED_SWIG_WARNING) -c++ -csharp -namespace Kuzzleio -dllimport $(CSDLLNAME) -outdir $(OUTDIR) -o $(SRCS) -I.$(PATHSEP)sdk-cpp$(PATHSEP)include -I.$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)include$(PATHSEP) -I.$(PATHSEP)sdk-cpp$(PATHSEP)src -I.$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)build$(PATHSEP) swig/core.i
 
 make_lib:
-	$(CXX) -shared kcore_wrap.o -o $(OUTDIR)$(SEP)$(LIB_PREFIX)kuzzle-wrapper-csharp.dll $(CXXFLAGS) $(LDFLAGS)
+	$(CXX) -shared kcore_wrap.o -o $(OUTDIR)$(SEP)$(LIB_PREFIX)$(CSDLLNAME) $(CXXFLAGS) $(LDFLAGS)
 
 remove_so:
 	rm -rf .$(PATHSEP)sdk-cpp$(PATHSEP)sdk-c$(PATHSEP)build$(PATHSEP)*.so*
