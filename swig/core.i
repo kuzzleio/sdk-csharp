@@ -1,3 +1,5 @@
+%include <std_shared_ptr.i>
+
 %rename(TokenValidity) token_validity;
 %rename(AckResponse) ack_response;
 %rename(queueTTL) queue_ttl;
@@ -77,6 +79,9 @@
 #include "default_constructors.cpp"
 #include <functional>
 %}
+
+%shared_ptr(kuzzleio::notification_result);
+%shared_ptr(kuzzleio::SearchResult);
 
 %inline {
   namespace kuzzleio {
