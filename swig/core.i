@@ -112,8 +112,6 @@
   }
 }
 
-
-
 %extend kuzzleio::Realtime {
   std::string subscribe(
       const std::string& index,
