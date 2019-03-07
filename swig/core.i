@@ -83,6 +83,8 @@
 %shared_ptr(kuzzleio::notification_result);
 %shared_ptr(kuzzleio::SearchResult);
 
+%typemap(csdirectorin) std::shared_ptr<kuzzleio::notification_result> "new NotificationResult($iminput, true)"
+
 %inline {
   namespace kuzzleio {
     class NotificationListenerClass {
