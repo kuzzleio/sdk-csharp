@@ -136,16 +136,13 @@
 // Add a C# reference to prevent premature garbage collection and resulting use
 // of dangling C++ pointer.
 %typemap(cscode) kuzzleio::Kuzzle %{
-  // Ensure that the GC doesn't collect any Protocol instance set from C#
-  private Protocol _protocol;
-  internal void addReference(Protocol protocol) {
-    _protocol = protocol;
-  }
+  protected Protocol _protocol;
 %}
 
 %typemap(csconstruct, excode=SWIGEXCODE) Kuzzle %{: this($imcall, true)
   {$excode$directorconnect
-    this.addReference(protocol);
+    // Ensure that the GC doesn't collect any Protocol instance set from C#
+    _protocol = protocol;
   }
 %}
 
