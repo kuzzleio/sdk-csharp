@@ -83,7 +83,8 @@
 %shared_ptr(kuzzleio::notification_result);
 %shared_ptr(kuzzleio::SearchResult);
 
-%typemap(csdirectorin) std::shared_ptr<kuzzleio::notification_result> "new NotificationResult($iminput, true)"
+%typemap(csdirectorin) std::shared_ptr<kuzzleio::notification_result>
+  "new NotificationResult($iminput, true)"
 
 %inline {
   namespace kuzzleio {
@@ -114,6 +115,12 @@
   }
 }
 
+// Realtime controller extension
+%csmethodmodifiers kuzzleio::Realtime::subscribe "private";
+%csmethodmodifiers kuzzleio::Realtime::unsubscribe "private";
+%rename("_subscribe", fullname=1) kuzzleio::Realtime::subscribe;
+%rename("_unsubscribe", fullname=1) kuzzleio::Realtime::unsubscribe;
+
 %extend kuzzleio::Realtime {
   std::string subscribe(
       const std::string& index,
@@ -133,12 +140,132 @@
   }
 }
 
-// Add a C# reference to prevent premature garbage collection and resulting use
-// of dangling C++ pointer.
-%typemap(cscode) kuzzleio::Kuzzle %{
-  protected Protocol _protocol;
+%typemap(cscode) kuzzleio::Realtime %{
+  protected System.Collections.Concurrent.ConcurrentDictionary<
+      string,
+      System.Collections.Concurrent.ConcurrentBag<NotificationListener>
+      > _listeners = new System.Collections.Concurrent.ConcurrentDictionary<
+          string,
+          System.Collections.Concurrent.ConcurrentBag<NotificationListener>
+          >();
+
+  internal void addListener(string roomId, NotificationListener listener) {
+    _listeners.TryAdd(
+      roomId,
+      new System.Collections.Concurrent.ConcurrentBag<NotificationListener>());
+
+    _listeners[roomId].Add(listener);
+  }
+
+  public string subscribe(string index, string collection, string body,
+                           NotificationListener cb, room_options options) {
+    string roomId = this._subscribe(index, collection, body, cb, options);
+
+    this.addListener(roomId, cb);
+
+    return roomId;
+  }
+
+  public string subscribe(string index, string collection, string body,
+                           NotificationListener cb) {
+    string roomId = this._subscribe(index, collection, body, cb);
+
+    this.addListener(roomId, cb);
+
+    return roomId;
+  }
+
+  public void unsubscribe(string roomId, QueryOptions options) {
+    this._listeners.TryRemove(roomId, out _);
+    this._unsubscribe(roomId, options);
+  }
+
+  public void unsubscribe(string roomId) {
+    this._listeners.TryRemove(roomId, out _);
+    this._unsubscribe(roomId);
+  }
 %}
 
+// Make Kuzzle controllers permanent, allowing them to store data as they
+// see fit
+%immutable kuzzleio::Kuzzle::auth;
+%immutable kuzzleio::Kuzzle::collection;
+%immutable kuzzleio::Kuzzle::document;
+%immutable kuzzleio::Kuzzle::index;
+%immutable kuzzleio::Kuzzle::realtime;
+%immutable kuzzleio::Kuzzle::server;
+
+%rename(_native_auth) kuzzleio::Kuzzle::auth;
+%rename(_native_collection) kuzzleio::Kuzzle::collection;
+%rename(_native_document) kuzzleio::Kuzzle::document;
+%rename(_native_index) kuzzleio::Kuzzle::index;
+%rename(_native_realtime) kuzzleio::Kuzzle::realtime;
+%rename(_native_server) kuzzleio::Kuzzle::server;
+
+%csmethodmodifiers kuzzleio::Kuzzle::auth "protected";
+%csmethodmodifiers kuzzleio::Kuzzle::collection "protected";
+%csmethodmodifiers kuzzleio::Kuzzle::document "protected";
+%csmethodmodifiers kuzzleio::Kuzzle::index "protected";
+%csmethodmodifiers kuzzleio::Kuzzle::realtime "protected";
+%csmethodmodifiers kuzzleio::Kuzzle::server "protected";
+
+%typemap(cscode) kuzzleio::Kuzzle %{
+  // prevent premature GC collection
+  protected Protocol _protocol;
+
+  // singletons
+  protected Auth _auth = null;
+  protected Collection _collection = null;
+  protected Document _document = null;
+  protected Index _index = null;
+  protected Realtime _realtime = null;
+  protected Server _server = null;
+
+  public Auth auth {
+    get {
+      if (_auth == null) _auth = _native_auth;
+      return _auth;
+    }
+  }
+
+  public Collection collection {
+    get {
+      if (_collection == null) _collection = _native_collection;
+      return _collection;
+    }
+  }
+
+  public Document document {
+    get {
+      if (_document == null) _document = _native_document;
+      return _document;
+    }
+  }
+
+  public Index index {
+    get {
+      if (_index == null) _index = _native_index;
+      return _index;
+    }
+  }
+
+  public Realtime realtime {
+    get {
+      if (_realtime == null) _realtime = _native_realtime;
+      return _realtime;
+    }
+  }
+
+  public Server server {
+    get {
+      if (_server == null) _server = _native_server;
+      return _server;
+    }
+  }
+%}
+
+// Add a C# reference to prevent premature garbage collection and resulting use
+// of dangling C++ pointer.
 %typemap(csconstruct, excode=SWIGEXCODE) Kuzzle %{: this($imcall, true)
   {$excode$directorconnect
     // Ensure that the GC doesn't collect any Protocol instance set from C#
