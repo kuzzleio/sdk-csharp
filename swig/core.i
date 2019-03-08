@@ -150,9 +150,11 @@
           >();
 
   internal void addListener(string roomId, NotificationListener listener) {
-    _listeners.TryAdd(
-      roomId,
-      new System.Collections.Concurrent.ConcurrentBag<NotificationListener>());
+    if (!_listeners.ContainsKey(roomId)) {
+      _listeners.TryAdd(
+        roomId,
+        new System.Collections.Concurrent.ConcurrentBag<NotificationListener>());
+    }
 
     _listeners[roomId].Add(listener);
   }
