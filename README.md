@@ -1,11 +1,15 @@
 Official Kuzzle C# SDK - ALPHA VERSION
+
 ======
 
 ## About Kuzzle
 
-A backend software, self-hostable and ready to use to power modern apps.
+Kuzzle is a ready-to-use, **on-premises backend** that enables you to manage your persistent data and be notified in real-time on whatever happens to it. It also provides you with a flexible and powerful user-management system.
 
-You can access the Kuzzle repository on [Github](https://github.com/kuzzleio/kuzzle)
+Kuzzle enables you to build modern web applications and complex IoT networks in no time.
+
+Official website: https://kuzzle.io
+Documentation: https://docs.kuzzle.io
 
 ## SDK Documentation
 
@@ -20,9 +24,5 @@ The C# SDK implements the websocket protocol.
 Execute the following snippet to clone the GIT repository, and build the SDK. It will then be available in the "build/" directory
 
 ```sh
-git clone --recursive git@github.com:kuzzleio/sdk-csharp.git
-git submodule update --init --recursive
-cd sdk-csharp
 make
 ```
-
