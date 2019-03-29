@@ -1,7 +1,7 @@
 build/
-example/*.dll
-example/*.so
-example/*.exe
+packages/
+.vs/
 
-# ignore SWIG generated files
-kcore_wrap.*
+Kuzzle/bin/
+Kuzzle/obj/
+
