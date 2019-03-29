@@ -1,39 +1,22 @@
-using System.Runtime.Serialization;
-using System.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Kuzzle {
-  [DataContract]
+  /// <summary>
+  /// Represents a Kuzzle API response
+  /// </summary>
   public struct Response {
-    [DataContract]
     public struct ErrorResponse {
-      [DataMember]
       public int status;
-
-      [DataMember]
       public string message;
     }
 
-    public JsonObject result;
-
-    [DataMember]
+    public JObject result;
     public ErrorResponse error;
-
-    [DataMember]
     public string requestId;
-
-    [DataMember]
     public int status;
-
-    [DataMember]
     public string controller;
-
-    [DataMember]
     public string action;
-
-    [DataMember]
     public string index;
-
-    [DataMember]
     public string collection;
   }
 }

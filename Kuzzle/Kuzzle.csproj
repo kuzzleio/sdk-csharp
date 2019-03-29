@@ -32,17 +32,18 @@
     <Compile Include="Response.cs" />
     <Compile Include="Notification.cs" />
     <Compile Include="Protocol\AbstractProtocol.cs" />
+    <Compile Include="Protocol\WebSocket.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System.Json">
-      <HintPath>..\packages\System.Json.4.5.0\lib\netstandard1.0\System.Json.dll</HintPath>
+    <Folder Include="Protocol\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\portable-net45+win8+wp8+wpa81\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Protocol\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
 </Project>
