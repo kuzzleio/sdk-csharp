@@ -2,6 +2,6 @@ build/
 packages/
 .vs/
 
-Kuzzle/bin/
-Kuzzle/obj/
-
+*/bin/
+*/obj/
+*.csproj.nuget.cache

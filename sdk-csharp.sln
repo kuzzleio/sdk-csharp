@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kuzzle", "Kuzzle\Kuzzle.csproj", "{5F0C9EDA-E70D-448B-903D-657EC1E79304}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManualTester", "ManualTester\ManualTester.csproj", "{257AC775-5B78-4A53-BDBE-6F5BD3816172}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{5F0C9EDA-E70D-448B-903D-657EC1E79304}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F0C9EDA-E70D-448B-903D-657EC1E79304}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F0C9EDA-E70D-448B-903D-657EC1E79304}.Release|Any CPU.Build.0 = Release|Any CPU
+		{257AC775-5B78-4A53-BDBE-6F5BD3816172}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{257AC775-5B78-4A53-BDBE-6F5BD3816172}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{257AC775-5B78-4A53-BDBE-6F5BD3816172}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{257AC775-5B78-4A53-BDBE-6F5BD3816172}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0

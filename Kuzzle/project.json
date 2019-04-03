@@ -1,0 +1,11 @@
+﻿{
+  "dependencies": {
+    "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
+    "NETStandard.Library": "2.0.3",
+    "Newtonsoft.Json": "12.0.1",
+    "System.Net.WebSockets.Client": "4.3.2"
+  },
+  "frameworks": {
+    "netstandard1.3": {}
+  }
+}

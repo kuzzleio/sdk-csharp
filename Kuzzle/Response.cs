@@ -1,22 +1,23 @@
+using System;
 using Newtonsoft.Json.Linq;
 
 namespace Kuzzle {
   /// <summary>
   /// Represents a Kuzzle API response
   /// </summary>
-  public struct Response {
+  public sealed class ApiResponse : EventArgs {
     public struct ErrorResponse {
-      public int status;
-      public string message;
+      public readonly int status;
+      public readonly string message;
     }
 
-    public JObject result;
-    public ErrorResponse error;
-    public string requestId;
-    public int status;
-    public string controller;
-    public string action;
-    public string index;
-    public string collection;
+    public readonly JObject Result;
+    public readonly ErrorResponse Error;
+    public readonly string RequestId;
+    public readonly int Status;
+    public readonly string Controller;
+    public readonly string Action;
+    public readonly string Index;
+    public readonly string Collection;
   }
 }
