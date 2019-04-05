@@ -1,17 +1,9 @@
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace Kuzzle.Protocol {
-  public class MessageEventArgs : EventArgs {
-    public JObject Message { get; set; }
-
-    public MessageEventArgs(string msg) {
-      Message = JObject.Parse(msg);
-    }
-  }
+  public delegate void ResponseReceiver(object sender, ApiResponse response);
 
   /// <summary>
   /// Abstract class laying the groundwork of network protocol communication
@@ -38,13 +30,13 @@ namespace Kuzzle.Protocol {
     public abstract Task SendAsync(JObject payload);
 
     /// <summary>
-    /// Dispatch the specified Kuzzle API response event
+    /// Dispatch a message received from a Kuzzle server
     /// </summary>
-    /// <param name="message">Kuzzle API response.</param>
-    protected void OnMessage(MessageEventArgs message) {
-      MessageEvent?.Invoke(this, message);
+    /// <param name="payload">Kuzzle API response.</param>
+    protected void DispatchResponse(string payload) {
+      ResponseEvent?.Invoke(this, ApiResponse.FromString(payload));
     }
 
-    public event EventHandler<MessageEventArgs> MessageEvent;
+    public event EventHandler<ApiResponse> ResponseEvent;
   }
 }

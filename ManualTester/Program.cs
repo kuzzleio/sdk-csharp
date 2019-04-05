@@ -1,27 +1,32 @@
 ﻿using System;
-using Kuzzle.Protocol;
+using Kuzzle;
 using Newtonsoft.Json.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ManualTester {
   class MainClass {
-    static public void MessageReceiver(object sender, MessageEventArgs m) {
-      Console.WriteLine(m.Message);
+    static public void MessageReceiver(object sender, ApiResponse m) {
+      Console.WriteLine(JObject.FromObject(m));
     }
 
     static public async Task Run() {
-      var ws = new WebSocket("localhost");
+      var ws = new Kuzzle.Protocol.WebSocket("localhost");
+      var kuzzle = new Kuzzle.Kuzzle(ws);
 
-      await ws.ConnectAsync();
-      ws.MessageEvent += MessageReceiver;
+      await kuzzle.ConnectAsync();
 
-      await ws.SendAsync(JObject.Parse(@"{controller: 'server', action: 'now'}"));
+      try {
+        Console.WriteLine("Timestamp = " + await kuzzle.Server.NowAsync());
+        Console.WriteLine("Info = " + await kuzzle.Server.InfoAsync());
+      } catch (Kuzzle.Exceptions.ApiErrorException e) {
+        Console.WriteLine("API Error code " + e.Status);
+        Console.WriteLine("Message: " + e.Message);
+      }
     }
 
     public static void Main(string[] args) {
-      Run();
-      Thread.Sleep(2000);
+      Run().Wait();
     }
   }
 }

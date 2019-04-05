@@ -90,7 +90,7 @@ namespace Kuzzle.Protocol {
           } while (!data.EndOfMessage);
 
           if (message.Length > 0) {
-            OnMessage(new MessageEventArgs(message));
+            DispatchResponse(message);
           }
 
           await Task.Delay(200);
