@@ -38,6 +38,7 @@
     <Compile Include="Controllers\ServerController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Exceptions\ApiErrorException.cs" />
+    <Compile Include="Controllers\AuthController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Protocol\" />

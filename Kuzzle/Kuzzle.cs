@@ -12,6 +12,7 @@ namespace Kuzzle {
     private readonly Dictionary<string, TaskCompletionSource<ApiResponse>>
         requests = new Dictionary<string, TaskCompletionSource<ApiResponse>>();
 
+    public AuthController Auth { get; private set; }
     public DocumentController Document { get; private set; }
     public ServerController Server { get; private set; }
 
@@ -66,6 +67,7 @@ namespace Kuzzle {
       NetworkProtocol.ResponseEvent += ResponseHandler;
 
       // Initializes the controllers
+      Auth = new AuthController(this);
       Document = new DocumentController(this);
       Server = new ServerController(this);
     }

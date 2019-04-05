@@ -15,10 +15,9 @@ namespace ManualTester {
       var kuzzle = new Kuzzle.Kuzzle(ws);
 
       await kuzzle.ConnectAsync();
-
       try {
-        Console.WriteLine("Timestamp = " + await kuzzle.Server.NowAsync());
-        Console.WriteLine("Info = " + await kuzzle.Server.InfoAsync());
+        Console.WriteLine("rights = " + await kuzzle.Auth.GetStrategiesAsync());
+        //Console.WriteLine("current user = " + await kuzzle.Auth.GetCurrentUserAsync());
       } catch (Kuzzle.Exceptions.ApiErrorException e) {
         Console.WriteLine("API Error code " + e.Status);
         Console.WriteLine("Message: " + e.Message);

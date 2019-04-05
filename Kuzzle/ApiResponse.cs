@@ -23,7 +23,7 @@ namespace Kuzzle {
     }
 
     [JsonProperty(PropertyName = "result")]
-    public readonly JObject Result;
+    public readonly JToken Result;
 
     [JsonProperty(PropertyName = "error")]
     public readonly ErrorResponse? Error;

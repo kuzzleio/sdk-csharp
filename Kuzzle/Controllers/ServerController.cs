@@ -11,8 +11,8 @@ namespace Kuzzle.Controllers {
     /// </summary>
     public async Task<Int64> NowAsync() {
       ApiResponse response = await kuzzle.Query(new JObject {
-        {"controller", "server"},
-        {"action", "now"}
+        { "controller", "server" },
+        { "action", "now" }
       });
 
       return (Int64)response.Result["now"];
@@ -25,8 +25,8 @@ namespace Kuzzle.Controllers {
     /// <returns>Server information.</returns>
     public async Task<JObject> InfoAsync() {
       ApiResponse response = await kuzzle.Query(new JObject{
-        {"controller", "server"},
-        {"action", "info"}
+        { "controller", "server" },
+        { "action", "info" }
       });
 
       return (JObject)response.Result["serverInfo"];
@@ -37,8 +37,8 @@ namespace Kuzzle.Controllers {
     /// </summary>
     public async Task<bool> AdminExistsAsync() {
       ApiResponse response = await kuzzle.Query(new JObject {
-        {"controller", "server"},
-        {"action", "adminExists"}
+        { "controller", "server" },
+        { "action", "adminExists" }
       });
 
       return (bool)response.Result["exists"];
@@ -49,11 +49,11 @@ namespace Kuzzle.Controllers {
     /// </summary>
     public async Task<JObject> GetAllStatsAsync() {
       ApiResponse response = await kuzzle.Query(new JObject {
-        {"controller", "server"},
-        {"action", "getAllStats"}
+        { "controller", "server" },
+        { "action", "getAllStats" }
       });
 
-      return response.Result;
+      return (JObject)response.Result;
     }
 
     /// <summary>
@@ -61,11 +61,11 @@ namespace Kuzzle.Controllers {
     /// </summary>
     public async Task<JObject> GetConfigAsync() {
       ApiResponse response = await kuzzle.Query(new JObject {
-        {"controller", "server"},
-        {"action", "getConfig"}
+        { "controller", "server" },
+        { "action", "getConfig" }
       });
 
-      return response.Result;
+      return (JObject)response.Result;
     }
 
     /// <summary>
@@ -73,11 +73,11 @@ namespace Kuzzle.Controllers {
     /// </summary>
     public async Task<JObject> GetLastStatsAsync() {
       ApiResponse response = await kuzzle.Query(new JObject {
-        {"controller", "server"},
-        {"action", "getLastStats"}
+        { "controller", "server" },
+        { "action", "getLastStats" }
       });
 
-      return response.Result;
+      return (JObject)response.Result;
     }
 
     /// <summary>
@@ -85,13 +85,13 @@ namespace Kuzzle.Controllers {
     /// </summary>
     public async Task<JObject> GetStatsAsync(Int64 start, Int64 end) {
       ApiResponse response = await kuzzle.Query(new JObject {
-        {"controller", "server"},
-        {"action", "getLastStats"},
-        {"startTime", start},
-        {"stopTime", end}
+        { "controller", "server" },
+        { "action", "getLastStats" },
+        { "startTime", start},
+        { "stopTime", end}
       });
 
-      return response.Result;
+      return (JObject)response.Result;
     }
   }
 }
