@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Kuzzle.Controllers {
+namespace Kuzzle.API {
   public class BaseController {
     protected readonly Kuzzle kuzzle;
 

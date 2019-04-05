@@ -15,9 +15,21 @@ namespace ManualTester {
       var kuzzle = new Kuzzle.Kuzzle(ws);
 
       await kuzzle.ConnectAsync();
+
+      JObject foo = new JObject { { "foo", "bar" } };
+
+      Console.WriteLine(foo["baz"]?["qux"]);
+
       try {
-        Console.WriteLine("rights = " + await kuzzle.Auth.GetStrategiesAsync());
+        //Console.WriteLine("login = " + await kuzzle.Auth.LoginAsync("local",
+        //  new JObject { { "username", "foobar" }, { "password", "foobar" } }));
         //Console.WriteLine("current user = " + await kuzzle.Auth.GetCurrentUserAsync());
+        Console.WriteLine("documents: " +
+          await kuzzle.Document.CreateAsync("foo", "bar",
+            new JObject { { "foo", "bar" } }, null));
+        ///new Kuzzle.API.DocumentOptions { WaitForRefresh = true }));
+
+        Console.WriteLine("timestamp: " + await kuzzle.Server.NowAsync());
       } catch (Kuzzle.Exceptions.ApiErrorException e) {
         Console.WriteLine("API Error code " + e.Status);
         Console.WriteLine("Message: " + e.Message);

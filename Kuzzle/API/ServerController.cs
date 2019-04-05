@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace Kuzzle.Controllers {
+namespace Kuzzle.API {
   public class ServerController : BaseController {
     public ServerController(Kuzzle k) : base(k) { }
 

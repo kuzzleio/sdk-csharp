@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace Kuzzle.Controllers {
+namespace Kuzzle.API {
   public class AuthController : BaseController {
     public AuthController(Kuzzle k) : base(k) { }
 

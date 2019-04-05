@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Kuzzle.Protocol;
-using Kuzzle.Controllers;
+using Kuzzle.API;
 using Newtonsoft.Json.Linq;
 
 

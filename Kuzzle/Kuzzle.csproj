@@ -34,16 +34,19 @@
     <Compile Include="Protocol\AbstractProtocol.cs" />
     <Compile Include="Protocol\WebSocket.cs" />
     <Compile Include="Kuzzle.cs" />
-    <Compile Include="Controllers\DocumentController.cs" />
-    <Compile Include="Controllers\ServerController.cs" />
-    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="API\DocumentController.cs" />
+    <Compile Include="API\ServerController.cs" />
+    <Compile Include="API\BaseController.cs" />
     <Compile Include="Exceptions\ApiErrorException.cs" />
-    <Compile Include="Controllers\AuthController.cs" />
+    <Compile Include="API\AuthController.cs" />
+    <Compile Include="API\ScrollableResults\SearchResult.cs" />
+    <Compile Include="API\ScrollableResults\SearchOptions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Protocol\" />
-    <Folder Include="Controllers\" />
+    <Folder Include="API\" />
     <Folder Include="Exceptions\" />
+    <Folder Include="API\ScrollableResults\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />
