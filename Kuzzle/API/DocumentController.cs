@@ -1,5 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Kuzzle.API.ScrollableResults;
 using Newtonsoft.Json.Linq;
 
 namespace Kuzzle.API {
@@ -125,7 +125,7 @@ namespace Kuzzle.API {
         string collection,
         JObject query,
         DocumentOptions options = null) {
-      var apiQuery = new JObject {
+      var request = new JObject {
         { "controller", "document" },
         { "action", "deleteByQuery" },
         { "body", query },
@@ -135,7 +135,7 @@ namespace Kuzzle.API {
 
       ApplyOptions(query, options);
 
-      ApiResponse response = await kuzzle.Query(apiQuery);
+      ApiResponse response = await kuzzle.Query(request);
 
       return (JArray)response.Result["hits"];
     }
@@ -170,7 +170,7 @@ namespace Kuzzle.API {
         string collection,
         JArray documents,
         DocumentOptions options = null) {
-      var apiQuery = new JObject {
+      var request = new JObject {
         { "controller", "document" },
         { "action", "mCreate" },
         { "body", new JObject{ { "documents", documents } } },
@@ -178,9 +178,9 @@ namespace Kuzzle.API {
         { "collection", collection }
       };
 
-      ApplyOptions(apiQuery, options);
+      ApplyOptions(request, options);
 
-      ApiResponse response = await kuzzle.Query(apiQuery);
+      ApiResponse response = await kuzzle.Query(request);
 
       return (JArray)response.Result["hits"];
     }
@@ -195,7 +195,7 @@ namespace Kuzzle.API {
         string collection,
         JArray documents,
         DocumentOptions options = null) {
-      var apiQuery = new JObject {
+      var request = new JObject {
         { "controller", "document" },
         { "action", "mCreateOrReplace" },
         { "body", new JObject{ { "documents", documents } } },
@@ -203,9 +203,9 @@ namespace Kuzzle.API {
         { "collection", collection }
       };
 
-      ApplyOptions(apiQuery, options);
+      ApplyOptions(request, options);
 
-      ApiResponse response = await kuzzle.Query(apiQuery);
+      ApiResponse response = await kuzzle.Query(request);
 
       return (JArray)response.Result["hits"];
     }
@@ -220,7 +220,7 @@ namespace Kuzzle.API {
         string collection,
         JArray ids,
         DocumentOptions options = null) {
-      var apiQuery = new JObject {
+      var request = new JObject {
         { "controller", "document" },
         { "action", "mDelete" },
         { "body", new JObject{ { "ids", ids } } },
@@ -228,9 +228,9 @@ namespace Kuzzle.API {
         { "collection", collection }
       };
 
-      ApplyOptions(apiQuery, options);
+      ApplyOptions(request, options);
 
-      ApiResponse response = await kuzzle.Query(apiQuery);
+      ApiResponse response = await kuzzle.Query(request);
 
       return (JArray)response.Result["hits"];
     }
@@ -244,7 +244,7 @@ namespace Kuzzle.API {
         string index,
         string collection,
         JArray ids) {
-      var apiQuery = new JObject {
+      var request = new JObject {
         { "controller", "document" },
         { "action", "mGet" },
         { "body", new JObject{ { "ids", ids } } },
@@ -252,7 +252,7 @@ namespace Kuzzle.API {
         { "collection", collection }
       };
 
-      ApiResponse response = await kuzzle.Query(apiQuery);
+      ApiResponse response = await kuzzle.Query(request);
 
       return (JArray)response.Result["hits"];
     }
@@ -267,7 +267,7 @@ namespace Kuzzle.API {
         string collection,
         JArray documents,
         DocumentOptions options = null) {
-      var apiQuery = new JObject {
+      var request = new JObject {
         { "controller", "document" },
         { "action", "mReplace" },
         { "body", new JObject{ { "documents", documents } } },
@@ -275,9 +275,9 @@ namespace Kuzzle.API {
         { "collection", collection }
       };
 
-      ApplyOptions(apiQuery, options);
+      ApplyOptions(request, options);
 
-      ApiResponse response = await kuzzle.Query(apiQuery);
+      ApiResponse response = await kuzzle.Query(request);
 
       return (JArray)response.Result["hits"];
     }
@@ -292,7 +292,7 @@ namespace Kuzzle.API {
         string collection,
         JArray documents,
         DocumentOptions options = null) {
-      var apiQuery = new JObject {
+      var request = new JObject {
         { "controller", "document" },
         { "action", "mUpdate" },
         { "body", new JObject{ { "documents", documents } } },
@@ -300,9 +300,9 @@ namespace Kuzzle.API {
         { "collection", collection }
       };
 
-      ApplyOptions(apiQuery, options);
+      ApplyOptions(request, options);
 
-      ApiResponse response = await kuzzle.Query(apiQuery);
+      ApiResponse response = await kuzzle.Query(request);
 
       return (JArray)response.Result["hits"];
     }
@@ -316,7 +316,7 @@ namespace Kuzzle.API {
         string id,
         JObject content,
         DocumentOptions options = null) {
-      var apiQuery = new JObject {
+      var request = new JObject {
         { "controller", "document" },
         { "action", "replace" },
         { "body", content },
@@ -325,9 +325,81 @@ namespace Kuzzle.API {
         { "_id", id }
       };
 
-      ApplyOptions(apiQuery, options);
+      ApplyOptions(request, options);
 
-      ApiResponse response = await kuzzle.Query(apiQuery);
+      ApiResponse response = await kuzzle.Query(request);
+
+      return (JObject)response.Result;
+    }
+
+    /// <summary>
+    /// Searches documents.
+    /// </summary>
+    public async Task<SearchResult> SeachAsync(
+        string index,
+        string collection,
+        JObject query,
+        SearchOptions options = null) {
+      var request = new JObject {
+        { "controller", "document" },
+        { "action", "search" },
+        { "body", query },
+        { "index", index },
+        { "collection", collection }
+      };
+
+      if (options != null) {
+        request.Merge(options);
+      }
+
+      ApiResponse response = await kuzzle.Query(request);
+      return new SearchResult(kuzzle, request, options, response);
+    }
+
+    /// <summary>
+    /// Updates a document content.
+    /// </summary>
+    public async Task<JObject> UpdateAsync(
+        string index,
+        string collection,
+        string id,
+        JObject changes,
+        DocumentOptions options = null) {
+      var request = new JObject {
+        { "controller", "document" },
+        { "action", "update" },
+        { "body", changes },
+        { "index", index },
+        { "collection", collection },
+        { "_id", id }
+      };
+
+      ApplyOptions(request, options);
+
+      ApiResponse response = await kuzzle.Query(request);
+
+      return (JObject)response.Result;
+    }
+
+    /// <summary>
+    /// Validates data against existing validation rules.
+    /// Documents are always valid if no validation rules are defined on 
+    /// the provided index and collection.
+    /// This request does not store the document.
+    /// </summary>
+    public async Task<JObject> ValidateAsync(
+        string index,
+        string collection,
+        JObject content) {
+      var request = new JObject {
+        { "controller", "document" },
+        { "action", "validate" },
+        { "body", content },
+        { "index", index },
+        { "collection", collection }
+      };
+
+      ApiResponse response = await kuzzle.Query(request);
 
       return (JObject)response.Result;
     }

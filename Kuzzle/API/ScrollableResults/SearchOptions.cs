@@ -1,8 +1,14 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+
 namespace Kuzzle.API.ScrollableResults {
   public class SearchOptions {
-    public uint? From { get; set; }
-    public uint? Size { get; set; }
+    [JsonProperty(PropertyName = "from")]
+    public int? From { get; set; }
+
+    [JsonProperty(PropertyName = "size")]
+    public int? Size { get; set; }
+
+    [JsonProperty(PropertyName = "scroll")]
     public string Scroll { get; set; }
 
     /// <summary>

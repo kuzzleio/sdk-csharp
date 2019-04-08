@@ -1,12 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace Kuzzle.API.ScrollableResults {
   public class SearchResult {
     protected readonly Kuzzle kuzzle;
     protected readonly SearchOptions options;
-    protected readonly JObject sourceApiQuery;
+    protected readonly JObject request;
 
     // To be overloaded by specialized SearchResult children
     protected readonly string scrollAction = "scroll";
@@ -18,11 +17,11 @@ namespace Kuzzle.API.ScrollableResults {
     public string ScrollId { get; private set; }
 
     internal SearchResult(
-        Kuzzle kuzzle, JObject apiQuery, SearchOptions options,
+        Kuzzle kuzzle, JObject request, SearchOptions options,
         ApiResponse response, int previouslyFetched = 0) {
       this.kuzzle = kuzzle;
       this.options = new SearchOptions(options);
-      sourceApiQuery = (JObject)apiQuery.DeepClone();
+      this.request = (JObject)request.DeepClone();
 
       Aggregations = (JObject)response.Result["aggregations"];
       Hits = (JArray)response.Result["hits"];
@@ -31,17 +30,38 @@ namespace Kuzzle.API.ScrollableResults {
       ScrollId = (string)response.Result["scrollId"];
     }
 
-    private async Task<SearchResult> NextWithScroll() {
-      var query = new JObject {
-        { "controller", (string)sourceApiQuery["controller"] },
+    private JObject GetScrollRequest() {
+      return new JObject {
+        { "controller", (string)request["controller"] },
         { "action", scrollAction }
       };
+    }
 
-      query.Merge(options);
+    private JObject GetSearchAfterRequest() {
+      var nextRequest = request; // "request" is already a deep copy
+      JObject lastItem = (JObject)Hits.Last;
+      JArray searchAfter = new JArray();
 
-      ApiResponse response = await kuzzle.Query(query);
+      request["body"]["search_after"] = searchAfter;
 
-      return new SearchResult(kuzzle, query, options, response, Fetched);
+      foreach (JToken value in (JArray)request["body"]["sort"]) {
+        string key;
+
+        if (value.Type == JTokenType.String) {
+          key = (string)value;
+        } else {
+          key = (string)((JObject)value).First;
+        }
+
+        if (key == "_uid") {
+          searchAfter.Add((string)request["collection"] + "#"
+            + (string)lastItem["_id"]);
+        } else {
+          searchAfter.Add(lastItem["_source"].SelectToken(key));
+        }
+      }
+
+      return nextRequest;
     }
 
     /// <summary>
@@ -51,11 +71,30 @@ namespace Kuzzle.API.ScrollableResults {
     public async Task<SearchResult> NextAsync() {
       if (Fetched >= Total) return null;
 
+      JObject nextRequest = null;
+
       if (ScrollId != null) {
-        return await NextWithScroll();
+        nextRequest = GetScrollRequest();
+      } else if (options.Size != null && request["body"]["sort"] != null) {
+        nextRequest = GetSearchAfterRequest();
+      } else if (options.Size != null) {
+        if (options.From != null && options.From > Total) {
+          return null;
+        }
+
+        options.From = Fetched;
+        nextRequest = request;
       }
-      return null;
-      //if (options.Size != null && sourceApiQuery["sort"])
+
+      if (nextRequest == null) {
+        return null;
+      }
+
+      nextRequest.Merge(options);
+
+      ApiResponse response = await kuzzle.Query(nextRequest);
+
+      return new SearchResult(kuzzle, nextRequest, options, response, Fetched);
     }
   }
 }
