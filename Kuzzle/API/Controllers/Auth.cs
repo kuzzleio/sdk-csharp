@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace Kuzzle.API.Controllers {
-  public class Auth : Base {
-    public Auth(Kuzzle k) : base(k) { }
+  public sealed class Auth : Base {
+    internal Auth(Kuzzle k) : base(k) { }
 
     /// <summary>
     /// Checks the validity of an authentication token.

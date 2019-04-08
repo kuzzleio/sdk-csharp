@@ -21,7 +21,7 @@ namespace Kuzzle.API.Controllers {
       }
     }
 
-    public Document(Kuzzle k) : base(k) { }
+    internal Document(Kuzzle k) : base(k) { }
 
     /// <summary>
     /// Counts documents in a collection.

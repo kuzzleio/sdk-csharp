@@ -36,11 +36,11 @@
     <Compile Include="API\ScrollableResults\SearchResult.cs" />
     <Compile Include="API\ScrollableResults\SearchOptions.cs" />
     <Compile Include="API\Response.cs" />
-    <Compile Include="API\Notification.cs" />
     <Compile Include="API\Controllers\Auth.cs" />
     <Compile Include="API\Controllers\Base.cs" />
     <Compile Include="API\Controllers\Document.cs" />
     <Compile Include="API\Controllers\Server.cs" />
+    <Compile Include="API\Controllers\Realtime.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Protocol\" />

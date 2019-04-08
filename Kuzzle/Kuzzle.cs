@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System.Reflection;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Kuzzle.Protocol;
 using Kuzzle.API;
 using Kuzzle.API.Controllers;
 using Newtonsoft.Json.Linq;
+using System;
 
 namespace Kuzzle {
   public sealed class Kuzzle {
@@ -12,8 +14,17 @@ namespace Kuzzle {
     private readonly Dictionary<string, TaskCompletionSource<Response>>
         requests = new Dictionary<string, TaskCompletionSource<Response>>();
 
+    // General informations
+    public readonly string Version;
+    public readonly string InstanceId;
+
+    // Emitter for all responses not directly linked to a user request
+    // (i.e. all real-time notifications)
+    internal event EventHandler<Response> UnhandledResponse;
+
     public Auth Auth { get; private set; }
     public Document Document { get; private set; }
+    public Realtime Realtime { get; private set; }
     public Server Server { get; private set; }
 
     /// <summary>
@@ -30,7 +41,7 @@ namespace Kuzzle {
       }
       set {
         if (networkProtocol != null) {
-          networkProtocol.ResponseEvent -= ResponseHandler;
+          networkProtocol.ResponseEvent -= ResponsesListener;
         }
 
         Jwt = null;
@@ -43,10 +54,10 @@ namespace Kuzzle {
     /// </summary>
     /// <param name="sender">Network Protocol instance</param>
     /// <param name="payload">raw API Response</param>
-    private void ResponseHandler(object sender, string payload) {
+    private void ResponsesListener(object sender, string payload) {
       Response response = Response.FromString(payload);
 
-      if (requests.ContainsKey(response.RequestId)) {
+      if (requests.ContainsKey(response.Room)) {
         if (response.Error != null) {
           requests[response.RequestId].SetException(
             new Exceptions.ApiErrorException(response));
@@ -58,7 +69,7 @@ namespace Kuzzle {
           requests.Remove(response.RequestId);
         }
       } else {
-        // if a response is unknown, then it's probably a real-time notification
+        UnhandledResponse?.Invoke(this, response);
       }
     }
 
@@ -68,16 +79,21 @@ namespace Kuzzle {
     /// <param name="networkProtocol">Network protocol.</param>
     public Kuzzle(AbstractProtocol networkProtocol) {
       NetworkProtocol = networkProtocol;
-      NetworkProtocol.ResponseEvent += ResponseHandler;
+      NetworkProtocol.ResponseEvent += ResponsesListener;
 
       // Initializes the controllers
       Auth = new Auth(this);
       Document = new Document(this);
+      Realtime = new Realtime(this);
       Server = new Server(this);
+
+      // Initializes instance unique properties
+      Version = typeof(Kuzzle).GetTypeInfo().Assembly.GetName().Version.ToString();
+      InstanceId = Guid.NewGuid().ToString();
     }
 
     ~Kuzzle() {
-      NetworkProtocol.ResponseEvent -= ResponseHandler;
+      NetworkProtocol.ResponseEvent -= ResponsesListener;
     }
 
     /// <summary>
@@ -105,8 +121,15 @@ namespace Kuzzle {
         query["jwt"] = Jwt;
       }
 
-      string requestId = System.Guid.NewGuid().ToString();
+      string requestId = Guid.NewGuid().ToString();
       query["requestId"] = requestId;
+
+      // Injecting SDK version + instance ID
+      if (query["volatile"] == null) {
+        query["volatile"] = new JObject();
+      }
+      query["volatile"]["sdkVersion"] = Version;
+      query["volatile"]["sdkInstanceId"] = InstanceId;
 
       NetworkProtocol.SendAsync(query).Wait();
 

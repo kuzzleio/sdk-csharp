@@ -32,7 +32,7 @@ namespace Kuzzle.Protocol {
     /// </summary>
     /// <param name="payload">Kuzzle API response.</param>
     protected void DispatchResponse(string payload) {
-      ResponseEvent?.Invoke(this, payload);  //ApiResponse.FromString(payload));
+      ResponseEvent?.Invoke(this, payload);
     }
 
     public event EventHandler<string> ResponseEvent;
