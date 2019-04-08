@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Kuzzle.Protocol;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -9,8 +10,8 @@ namespace Kuzzle.API.Controllers {
     public delegate void NotificationHandler(Response notification);
 
     // rooms => channels
-    private readonly Dictionary<string, List<string>> rooms =
-      new Dictionary<string, List<string>>();
+    private readonly Dictionary<string, HashSet<string>> rooms =
+      new Dictionary<string, HashSet<string>>();
 
     // channels => handlers
     private readonly Dictionary<string, List<Tuple<NotificationHandler, SubscribeOptions>>>
@@ -30,13 +31,20 @@ namespace Kuzzle.API.Controllers {
       }
     }
 
+    private void StateChangeListener(object sender, ProtocolState state) {
+      if (state == ProtocolState.Closed) {
+        rooms.Clear();
+        channels.Clear();
+      }
+    }
+
     private void AddNotificationHandler(
         string room,
         string channel,
         NotificationHandler h,
         SubscribeOptions options) {
       if (!rooms.ContainsKey(room)) {
-        rooms[room] = new List<string>();
+        rooms[room] = new HashSet<string>();
       }
 
       rooms[room].Add(channel);
@@ -60,10 +68,12 @@ namespace Kuzzle.API.Controllers {
 
     internal Realtime(Kuzzle k) : base(k) {
       kuzzle.UnhandledResponse += NotificationsListener;
+      kuzzle.NetworkProtocol.StateChanged += StateChangeListener;
     }
 
     ~Realtime() {
       kuzzle.UnhandledResponse -= NotificationsListener;
+      kuzzle.NetworkProtocol.StateChanged -= StateChangeListener;
     }
 
     /// <summary>

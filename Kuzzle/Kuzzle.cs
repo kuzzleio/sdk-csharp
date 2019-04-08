@@ -73,6 +73,13 @@ namespace Kuzzle {
       }
     }
 
+    private void StateChangeListener(object sender, ProtocolState state) {
+      // If not connected anymore: clean up
+      if (state == ProtocolState.Closed) {
+        requests.Clear();
+      }
+    }
+
     /// <summary>
     /// Initialize a new instance of the <see cref="T:Kuzzle.Kuzzle"/> class.
     /// </summary>
@@ -80,6 +87,7 @@ namespace Kuzzle {
     public Kuzzle(AbstractProtocol networkProtocol) {
       NetworkProtocol = networkProtocol;
       NetworkProtocol.ResponseEvent += ResponsesListener;
+      NetworkProtocol.StateChanged += StateChangeListener;
 
       // Initializes the controllers
       Auth = new Auth(this);
@@ -94,6 +102,7 @@ namespace Kuzzle {
 
     ~Kuzzle() {
       NetworkProtocol.ResponseEvent -= ResponsesListener;
+      NetworkProtocol.StateChanged -= StateChangeListener;
     }
 
     /// <summary>
@@ -117,6 +126,10 @@ namespace Kuzzle {
     /// <returns>API response</returns>
     /// <param name="query">Kuzzle API query</param>
     public Task<Response> Query(JObject query) {
+      if (NetworkProtocol.State != ProtocolState.Open) {
+        throw new Exceptions.NotConnectedException();
+      }
+
       if (Jwt != null) {
         query["jwt"] = Jwt;
       }

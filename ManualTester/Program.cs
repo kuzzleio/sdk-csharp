@@ -33,9 +33,11 @@ namespace ManualTester {
           new JObject { { "foo", "bar" } });
 
         await Task.Delay(1000);
+        ws.Disconnect();
+
         //Console.WriteLine("login = " + await kuzzle.Auth.LoginAsync("local",
         //  new JObject { { "username", "foobar" }, { "password", "foobar" } }));
-        //Console.WriteLine("current user = " + await kuzzle.Auth.GetCurrentUserAsync());
+        Console.WriteLine("current user = " + await kuzzle.Auth.GetCurrentUserAsync());
         //Console.WriteLine("documents: " +
         //await kuzzle.Document.CreateAsync("foo", "bar",
         //new JObject { { "foo", "bar" } }, null));

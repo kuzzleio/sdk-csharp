@@ -34,6 +34,7 @@ namespace Kuzzle.Protocol {
     private CancellationTokenSource receiveCancellationToken;
 
     public WebSocket(string hostname) : this(hostname, new WebSocketOptions()) {
+      State = ProtocolState.Closed;
     }
 
     public WebSocket(string hostname, WebSocketOptions options) {
@@ -55,22 +56,31 @@ namespace Kuzzle.Protocol {
           new CancellationTokenSource(options.ConnectTimeout);
 
       await socket.ConnectAsync(uri, source.Token);
+
+      State = ProtocolState.Open;
+      DispatchStateChange(State);
+
       Listen();
     }
 
     public override void Disconnect() {
       receiveCancellationToken?.Cancel();
       socket?.Abort();
+      CloseState();
     }
 
     public override async Task SendAsync(JObject payload) {
       var buffer = Encoding.UTF8.GetBytes(payload.ToString());
 
-      await socket?.SendAsync(
-        new ArraySegment<byte>(buffer),
-        WebSocketMessageType.Text,
-        true,
-        CancellationToken.None);
+      if (State == ProtocolState.Closed) {
+        CloseState();
+      } else {
+        await socket?.SendAsync(
+          new ArraySegment<byte>(buffer),
+          WebSocketMessageType.Text,
+          true,
+          CancellationToken.None);
+      }
     }
 
     private void Listen() {
@@ -92,10 +102,16 @@ namespace Kuzzle.Protocol {
           if (message.Length > 0) {
             DispatchResponse(message);
           }
-
-          await Task.Delay(200);
         }
+        CloseState();
       }, receiveCancellationToken.Token);
+    }
+
+    private void CloseState() {
+      if (State != ProtocolState.Closed) {
+        State = ProtocolState.Closed;
+        DispatchStateChange(State);
+      }
     }
   }
 }

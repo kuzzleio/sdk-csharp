@@ -41,6 +41,9 @@
     <Compile Include="API\Controllers\Document.cs" />
     <Compile Include="API\Controllers\Server.cs" />
     <Compile Include="API\Controllers\Realtime.cs" />
+    <Compile Include="Protocol\ProtocolState.cs" />
+    <Compile Include="Exceptions\KuzzleException.cs" />
+    <Compile Include="Exceptions\NotConnectedException.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Protocol\" />

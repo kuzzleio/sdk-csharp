@@ -12,6 +12,12 @@ namespace Kuzzle.Protocol {
   /// </summary>
   public abstract class AbstractProtocol {
     /// <summary>
+    /// Current connection state
+    /// </summary>
+    /// <value>The state.</value>
+    public ProtocolState State { get; protected set; }
+
+    /// <summary>
     /// Connect this instance.
     /// </summary>
     public abstract Task ConnectAsync();
@@ -35,6 +41,21 @@ namespace Kuzzle.Protocol {
       ResponseEvent?.Invoke(this, payload);
     }
 
+    /// <summary>
+    /// To be triggered whenever a message is received from Kuzzle
+    /// </summary>
     public event EventHandler<string> ResponseEvent;
+
+    /// <summary>
+    /// Dispatch a state changed event
+    /// </summary>
+    protected void DispatchStateChange(ProtocolState state) {
+      StateChanged?.Invoke(this, state);
+    }
+
+    /// <summary>
+    /// To be triggered whenever a message is received from Kuzzle
+    /// </summary>
+    public event EventHandler<ProtocolState> StateChanged;
   }
 }
