@@ -2,11 +2,11 @@ using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Kuzzle {
+namespace Kuzzle.API {
   /// <summary>
   /// Represents a Kuzzle API response
   /// </summary>
-  public sealed class ApiResponse : EventArgs {
+  public sealed class Response : EventArgs {
     public struct ErrorResponse {
       public int status;
       public string message;
@@ -18,8 +18,8 @@ namespace Kuzzle {
     /// </summary>
     /// <returns>ApiResponse class instance</returns>
     /// <param name="serialized">Serialized JSON string</param>
-    public static ApiResponse FromString(string serialized) {
-      return JsonConvert.DeserializeObject<ApiResponse>(serialized);
+    public static Response FromString(string serialized) {
+      return JsonConvert.DeserializeObject<Response>(serialized);
     }
 
     [JsonProperty(PropertyName = "result")]

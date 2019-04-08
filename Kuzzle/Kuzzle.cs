@@ -2,19 +2,19 @@
 using System.Threading.Tasks;
 using Kuzzle.Protocol;
 using Kuzzle.API;
+using Kuzzle.API.Controllers;
 using Newtonsoft.Json.Linq;
-
 
 namespace Kuzzle {
   public sealed class Kuzzle {
     private AbstractProtocol networkProtocol;
 
-    private readonly Dictionary<string, TaskCompletionSource<ApiResponse>>
-        requests = new Dictionary<string, TaskCompletionSource<ApiResponse>>();
+    private readonly Dictionary<string, TaskCompletionSource<Response>>
+        requests = new Dictionary<string, TaskCompletionSource<Response>>();
 
-    public AuthController Auth { get; private set; }
-    public DocumentController Document { get; private set; }
-    public ServerController Server { get; private set; }
+    public Auth Auth { get; private set; }
+    public Document Document { get; private set; }
+    public Server Server { get; private set; }
 
     /// <summary>
     /// Authentication token
@@ -42,8 +42,10 @@ namespace Kuzzle {
     /// Handles the ResponseEvent event from the network protocol
     /// </summary>
     /// <param name="sender">Network Protocol instance</param>
-    /// <param name="response">API Response</param>
-    private void ResponseHandler(object sender, ApiResponse response) {
+    /// <param name="payload">raw API Response</param>
+    private void ResponseHandler(object sender, string payload) {
+      Response response = Response.FromString(payload);
+
       if (requests.ContainsKey(response.RequestId)) {
         if (response.Error != null) {
           requests[response.RequestId].SetException(
@@ -55,6 +57,8 @@ namespace Kuzzle {
         lock (requests) {
           requests.Remove(response.RequestId);
         }
+      } else {
+        // if a response is unknown, then it's probably a real-time notification
       }
     }
 
@@ -67,9 +71,9 @@ namespace Kuzzle {
       NetworkProtocol.ResponseEvent += ResponseHandler;
 
       // Initializes the controllers
-      Auth = new AuthController(this);
-      Document = new DocumentController(this);
-      Server = new ServerController(this);
+      Auth = new Auth(this);
+      Document = new Document(this);
+      Server = new Server(this);
     }
 
     ~Kuzzle() {
@@ -96,7 +100,7 @@ namespace Kuzzle {
     /// </summary>
     /// <returns>API response</returns>
     /// <param name="query">Kuzzle API query</param>
-    public Task<ApiResponse> Query(JObject query) {
+    public Task<Response> Query(JObject query) {
       if (Jwt != null) {
         query["jwt"] = Jwt;
       }
@@ -106,8 +110,8 @@ namespace Kuzzle {
 
       NetworkProtocol.SendAsync(query).Wait();
 
-      TaskCompletionSource<ApiResponse> response =
-          new TaskCompletionSource<ApiResponse>();
+      TaskCompletionSource<Response> response =
+          new TaskCompletionSource<Response>();
 
       lock (requests) {
         requests[requestId] = response;

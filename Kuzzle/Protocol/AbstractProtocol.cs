@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace Kuzzle.Protocol {
-  public delegate void ResponseReceiver(object sender, ApiResponse response);
-
   /// <summary>
   /// Abstract class laying the groundwork of network protocol communication
   /// between this SDK and Kuzzle backends.
@@ -34,9 +32,9 @@ namespace Kuzzle.Protocol {
     /// </summary>
     /// <param name="payload">Kuzzle API response.</param>
     protected void DispatchResponse(string payload) {
-      ResponseEvent?.Invoke(this, ApiResponse.FromString(payload));
+      ResponseEvent?.Invoke(this, payload);  //ApiResponse.FromString(payload));
     }
 
-    public event EventHandler<ApiResponse> ResponseEvent;
+    public event EventHandler<string> ResponseEvent;
   }
 }

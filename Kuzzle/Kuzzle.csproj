@@ -29,24 +29,25 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ApiResponse.cs" />
-    <Compile Include="Notification.cs" />
     <Compile Include="Protocol\AbstractProtocol.cs" />
     <Compile Include="Protocol\WebSocket.cs" />
     <Compile Include="Kuzzle.cs" />
-    <Compile Include="API\DocumentController.cs" />
-    <Compile Include="API\ServerController.cs" />
-    <Compile Include="API\BaseController.cs" />
     <Compile Include="Exceptions\ApiErrorException.cs" />
-    <Compile Include="API\AuthController.cs" />
     <Compile Include="API\ScrollableResults\SearchResult.cs" />
     <Compile Include="API\ScrollableResults\SearchOptions.cs" />
+    <Compile Include="API\Response.cs" />
+    <Compile Include="API\Notification.cs" />
+    <Compile Include="API\Controllers\Auth.cs" />
+    <Compile Include="API\Controllers\Base.cs" />
+    <Compile Include="API\Controllers\Document.cs" />
+    <Compile Include="API\Controllers\Server.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Protocol\" />
     <Folder Include="API\" />
     <Folder Include="Exceptions\" />
     <Folder Include="API\ScrollableResults\" />
+    <Folder Include="API\Controllers\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ManualTester {
   class MainClass {
-    static public void MessageReceiver(object sender, ApiResponse m) {
+    static public void MessageReceiver(object sender, Response m) {
       Console.WriteLine(JObject.FromObject(m));
     }
 

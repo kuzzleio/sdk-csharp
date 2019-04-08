@@ -18,7 +18,7 @@ namespace Kuzzle.API.ScrollableResults {
 
     internal SearchResult(
         Kuzzle kuzzle, JObject request, SearchOptions options,
-        ApiResponse response, int previouslyFetched = 0) {
+        Response response, int previouslyFetched = 0) {
       this.kuzzle = kuzzle;
       this.options = new SearchOptions(options);
       this.request = (JObject)request.DeepClone();
@@ -92,7 +92,7 @@ namespace Kuzzle.API.ScrollableResults {
 
       nextRequest.Merge(options);
 
-      ApiResponse response = await kuzzle.Query(nextRequest);
+      Response response = await kuzzle.Query(nextRequest);
 
       return new SearchResult(kuzzle, nextRequest, options, response, Fetched);
     }

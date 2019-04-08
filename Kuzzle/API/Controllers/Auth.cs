@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace Kuzzle.API {
-  public class AuthController : BaseController {
-    public AuthController(Kuzzle k) : base(k) { }
+namespace Kuzzle.API.Controllers {
+  public class Auth : Base {
+    public Auth(Kuzzle k) : base(k) { }
 
     /// <summary>
     /// Checks the validity of an authentication token.
@@ -12,7 +12,7 @@ namespace Kuzzle.API {
     public async Task<JObject> CheckTokenAsync(string token) {
       string jwt = kuzzle.Jwt;
       kuzzle.Jwt = null;
-      ApiResponse response;
+      Response response;
 
       try {
         response = await kuzzle.Query(new JObject {
@@ -38,7 +38,7 @@ namespace Kuzzle.API {
     public async Task<JObject> CreateMyCredentialsAsync(
         string strategy,
         JObject credentials) {
-      ApiResponse response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.Query(new JObject {
         { "controller", "auth" },
         { "action", "checkToken" },
         { "body", credentials },
@@ -53,7 +53,7 @@ namespace Kuzzle.API {
     /// specified authentication strategy.
     /// </summary>
     public async Task<bool> CredentialsExistAsync(string strategy) {
-      ApiResponse response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.Query(new JObject {
         { "controller", "auth" },
         { "action", "credentialsExist" },
         { "strategy", strategy }
@@ -82,7 +82,7 @@ namespace Kuzzle.API {
     /// Returns information about the currently logged in user.
     /// </summary>
     public async Task<JObject> GetCurrentUserAsync() {
-      ApiResponse response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.Query(new JObject {
         { "controller", "auth" },
         { "action", "getCurrentUser" }
       });
@@ -96,7 +96,7 @@ namespace Kuzzle.API {
     /// should never include any sensitive information.
     /// </summary>
     public async Task<JObject> GetMyCredentialsAsync(string strategy) {
-      ApiResponse response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.Query(new JObject {
         { "controller", "auth" },
         { "action", "getMyCredentials" },
         { "strategy", strategy }
@@ -110,7 +110,7 @@ namespace Kuzzle.API {
     /// current user.
     /// </summary>
     public async Task<JArray> GetMyRightsAsync() {
-      ApiResponse response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.Query(new JObject {
         { "controller", "auth" },
         { "action", "getMyRights" }
       });
@@ -122,7 +122,7 @@ namespace Kuzzle.API {
     /// Gets the exhaustive list of registered authentication strategies.
     /// </summary>
     public async Task<JArray> GetStrategiesAsync() {
-      ApiResponse response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.Query(new JObject {
         { "controller", "auth" },
         { "action", "getStrategies" }
       });
@@ -137,7 +137,7 @@ namespace Kuzzle.API {
         string strategy, JObject credentials, string expiresIn = null) {
       string jwt = kuzzle.Jwt;
       kuzzle.Jwt = null;
-      ApiResponse response;
+      Response response;
 
       try {
         response = await kuzzle.Query(new JObject {
@@ -172,7 +172,7 @@ namespace Kuzzle.API {
     /// Refreshes an authentication token.
     /// </summary>
     public async Task<JObject> RefreshTokenAsync(string expiresIn = null) {
-      ApiResponse response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.Query(new JObject {
         { "controller", "auth" },
         { "action", "login" },
         { "expiresIn", expiresIn }
@@ -189,7 +189,7 @@ namespace Kuzzle.API {
     public async Task<JObject> UpdateMyCredentialsAsync(
         string strategy,
         JObject credentials) {
-      ApiResponse response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.Query(new JObject {
         { "controller", "auth" },
         { "action", "updateMyCredentials" },
         { "strategy", strategy },
@@ -204,7 +204,7 @@ namespace Kuzzle.API {
     /// associated profiles cannot be updated)
     /// </summary>
     public async Task<JObject> UpdateSelfAsync(JObject content) {
-      ApiResponse response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.Query(new JObject {
         { "controller", "auth" },
         { "action", "updateSelf" },
         { "body", content }
@@ -221,7 +221,7 @@ namespace Kuzzle.API {
     public async Task<bool> ValidateMyCredentialsAsync(
         string strategy,
         JObject credentials) {
-      ApiResponse response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.Query(new JObject {
         { "controller", "auth" },
         { "action", "validateMyCredentials" },
         { "body", credentials },
