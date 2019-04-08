@@ -1,5 +1,0 @@
-namespace Kuzzle {
-  struct Request {
-
-  }
-}
