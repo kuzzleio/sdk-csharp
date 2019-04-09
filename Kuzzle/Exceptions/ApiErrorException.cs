@@ -5,7 +5,7 @@
     /// </summary>
     /// <param name="response">Kuzzle API Response.</param>
     public ApiErrorException(API.Response response)
-        : base(response.Error?.message, response.Status) {
+        : base(response.Error?.Message, response.Status) {
     }
   }
 }

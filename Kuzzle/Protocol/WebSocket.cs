@@ -95,7 +95,9 @@ namespace Kuzzle.Protocol {
           string message = "";
 
           do {
-            data = await socket.ReceiveAsync(segment, CancellationToken.None);
+            data = await socket.ReceiveAsync(
+              segment,
+              receiveCancellationToken.Token);
             message += Encoding.UTF8.GetString(buffer, 0, data.Count);
           } while (!data.EndOfMessage);
 
