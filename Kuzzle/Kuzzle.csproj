@@ -9,6 +9,17 @@
     <RootNamespace>Kuzzle</RootNamespace>
     <AssemblyName>kuzzlesdk</AssemblyName>
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+    <PackOnBuild>true</PackOnBuild>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <PackageLicenseUrl>https://github.com/kuzzleio/sdk-csharp/blob/master/LICENSE</PackageLicenseUrl>
+    <Owners>Kuzzle Team</Owners>
+    <PackageProjectUrl>https://kuzzle.io</PackageProjectUrl>
+    <Summary>Kuzzle Official C# SDK</Summary>
+    <Title>Kuzzle SDK</Title>
+    <PackageId>kuzzlesdk</PackageId>
+    <PackageVersion>0.1</PackageVersion>
+    <Authors>Kuzzle Team</Authors>
+    <Description>Official C# SDK for Kuzzle</Description>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
