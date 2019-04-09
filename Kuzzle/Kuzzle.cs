@@ -50,6 +50,7 @@ namespace Kuzzle {
       set {
         if (networkProtocol != null) {
           networkProtocol.ResponseEvent -= ResponsesListener;
+          NetworkProtocol.StateChanged -= StateChangeListener;
         }
 
         Jwt = null;
