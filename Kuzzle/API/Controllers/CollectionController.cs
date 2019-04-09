@@ -2,6 +2,9 @@
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.API.Controllers {
+  /// <summary>
+  /// Implements the "collection" Kuzzle API controller
+  /// </summary>
   public class CollectionController : BaseController {
     internal CollectionController(Kuzzle k) : base(k) { }
 

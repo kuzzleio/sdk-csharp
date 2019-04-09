@@ -8,6 +8,9 @@ using Newtonsoft.Json.Linq;
 using System;
 
 namespace KuzzleSdk {
+  /// <summary>
+  /// Main entry point for this SDK.
+  /// </summary>
   public sealed class Kuzzle {
     private AbstractProtocol networkProtocol;
 
@@ -15,14 +18,24 @@ namespace KuzzleSdk {
         requests = new Dictionary<string, TaskCompletionSource<Response>>();
 
     // General informations
+
+    /// <summary>
+    /// This SDK Version
+    /// </summary>
     public readonly string Version;
+
+    /// <summary>
+    /// Instance unique identifier.
+    /// </summary>
     public readonly string InstanceId;
 
     // Emitter for all responses not directly linked to a user request
     // (i.e. all real-time notifications)
     internal event EventHandler<Response> UnhandledResponse;
 
-    // Emitter for token expiration events
+    /// <summary>
+    /// Token expiration event
+    /// </summary>
     public event Action TokenExpired;
 
     internal void TokenHasExpired() {
@@ -30,9 +43,29 @@ namespace KuzzleSdk {
       TokenExpired?.Invoke();
     }
 
+    /// <summary>
+    /// Exposes actions from the "auth" Kuzzle API controller
+    /// </summary>
     public AuthController Auth { get; private set; }
+
+    /// <summary>
+    /// Exposes actions from the "collection" Kuzzle API controller
+    /// </summary>
+    public CollectionController Collection { get; private set; }
+
+    /// <summary>
+    /// Exposes actions from the "document" Kuzzle API controller
+    /// </summary>
     public DocumentController Document { get; private set; }
+
+    /// <summary>
+    /// Exposes actions from the "realtime" Kuzzle API controller
+    /// </summary>
     public RealtimeController Realtime { get; private set; }
+
+    /// <summary>
+    /// Exposes actions from the "server" Kuzzle API controller
+    /// </summary>
     public ServerController Server { get; private set; }
 
     /// <summary>
@@ -104,6 +137,7 @@ namespace KuzzleSdk {
 
       // Initializes the controllers
       Auth = new AuthController(this);
+      Collection = new CollectionController(this);
       Document = new DocumentController(this);
       Realtime = new RealtimeController(this);
       Server = new ServerController(this);
@@ -113,6 +147,11 @@ namespace KuzzleSdk {
       InstanceId = Guid.NewGuid().ToString();
     }
 
+    /// <summary>
+    /// Releases unmanaged resources and performs other cleanup operations 
+    /// before the <see cref="T:KuzzleSdk.Kuzzle"/>
+    /// is reclaimed by garbage collection.
+    /// </summary>
     ~Kuzzle() {
       NetworkProtocol.ResponseEvent -= ResponsesListener;
       NetworkProtocol.StateChanged -= StateChangeListener;

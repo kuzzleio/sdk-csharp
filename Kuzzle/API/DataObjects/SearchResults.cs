@@ -3,18 +3,53 @@ using KuzzleSdk.API.Options;
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.API.DataObjects {
+  /// <summary>
+  /// Easy to use wrapper for Kuzzle API search results
+  /// </summary>
   public class SearchResults {
+    /// <summary>
+    /// Kuzzle instance 
+    /// </summary>
     protected readonly Kuzzle kuzzle;
+
+    /// <summary>
+    /// Search options
+    /// </summary>
     protected readonly SearchOptions options;
+
+    /// <summary>
+    /// Search request of origin.
+    /// </summary>
     protected readonly JObject request;
 
-    // To be overloaded by specialized SearchResult children
+    /// <summary>
+    /// To be overloaded by specialized SearchResult children
+    /// </summary>
     protected readonly string scrollAction = "scroll";
 
+    /// <summary>
+    /// Search aggregates
+    /// </summary>
     public JObject Aggregations { get; private set; }
+
+    /// <summary>
+    /// Search results
+    /// </summary>
     public JArray Hits { get; private set; }
+
+    /// <summary>
+    /// Total number of found results
+    /// </summary>
     public int Total { get; private set; }
+
+    /// <summary>
+    /// Number of results fetched so far
+    /// </summary>
     public int Fetched { get; private set; }
+
+    /// <summary>
+    /// Scroll identifier (if any)
+    /// </summary>
     public string ScrollId { get; private set; }
 
     internal SearchResults(

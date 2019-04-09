@@ -6,43 +6,72 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.Protocol {
+  /// <summary>
+  /// WebSocket options.
+  /// </summary>
   public struct WebSocketOptions {
     private int? port;
     private bool? ssl;
-    private Int32? connectTimeout;
+    private int? connectTimeout;
 
+    /// <summary>
+    /// If true, connects using SSL.
+    /// </summary>
     public bool Ssl {
       get { return ssl ?? false; }
       set { ssl = value; }
     }
 
+    /// <summary>
+    /// Kuzzle server port.
+    /// </summary>
     public int Port {
       get { return port ?? 7512; }
       set { port = value; }
     }
 
-    public Int32 ConnectTimeout {
+    /// <summary>
+    /// Timeout (in milliseconds) after which a connection attempt aborts.
+    /// </summary>
+    public int ConnectTimeout {
       get { return connectTimeout ?? 30000; }
       set { connectTimeout = value; }
     }
   }
 
+  /// <summary>
+  /// WebSocket network protocol.
+  /// </summary>
   public class WebSocket : AbstractProtocol {
     private readonly string hostname;
     private ClientWebSocket socket;
     private WebSocketOptions options;
     private CancellationTokenSource receiveCancellationToken;
 
+    /// <summary>
+    /// Initializes a new instance of the 
+    /// <see cref="T:KuzzleSdk.Protocol.WebSocket"/> class.
+    /// </summary>
+    /// <param name="hostname">Kuzzle hostname (or IP address).</param>
     public WebSocket(string hostname) : this(hostname, new WebSocketOptions()) {
       State = ProtocolState.Closed;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the 
+    /// <see cref="T:KuzzleSdk.Protocol.WebSocket"/> class.
+    /// </summary>
+    /// <param name="hostname">Kuzzle hostname (or IP address).</param>
+    /// <param name="options">Connection options.</param>
     public WebSocket(string hostname, WebSocketOptions options) {
       this.hostname = hostname;
       this.options = options;
       socket = new ClientWebSocket();
     }
 
+    /// <summary>
+    /// Connects to a Kuzzle server.
+    /// </summary>
     public override async Task ConnectAsync() {
       if (socket?.State == WebSocketState.Connecting
           || socket?.State == WebSocketState.Open) {
@@ -63,12 +92,18 @@ namespace KuzzleSdk.Protocol {
       Listen();
     }
 
+    /// <summary>
+    /// Disconnects this instance.
+    /// </summary>
     public override void Disconnect() {
       receiveCancellationToken?.Cancel();
       socket?.Abort();
       CloseState();
     }
 
+    /// <summary>
+    /// Sends a formatted API request to a Kuzzle server.
+    /// </summary>
     public override async Task SendAsync(JObject payload) {
       var buffer = Encoding.UTF8.GetBytes(payload.ToString());
 

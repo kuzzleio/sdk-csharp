@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.API.Controllers {
+  /// <summary>
+  /// Implements the "auth" Kuzzle API controller
+  /// </summary>
   public sealed class AuthController : BaseController {
     internal AuthController(Kuzzle k) : base(k) { }
 

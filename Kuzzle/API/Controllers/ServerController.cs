@@ -3,6 +3,9 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.API.Controllers {
+  /// <summary>
+  /// Implements the "server" Kuzzle API controller
+  /// </summary>
   public sealed class ServerController : BaseController {
     internal ServerController(Kuzzle k) : base(k) { }
 

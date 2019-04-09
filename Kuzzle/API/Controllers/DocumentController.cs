@@ -4,6 +4,9 @@ using KuzzleSdk.API.DataObjects;
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.API.Controllers {
+  /// <summary>
+  /// Implements the "document" Kuzzle API controller
+  /// </summary>
   public sealed class DocumentController : BaseController {
     /// <summary>
     /// Sets document options inside the provided JSON object

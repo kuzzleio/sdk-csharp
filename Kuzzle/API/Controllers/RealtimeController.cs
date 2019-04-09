@@ -6,7 +6,13 @@ using KuzzleSdk.Protocol;
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.API.Controllers {
+  /// <summary>
+  /// Implements the "realtime" Kuzzle API controller
+  /// </summary>
   public sealed class RealtimeController : BaseController {
+    /// <summary>
+    /// Delegate to provide to the SubscribeAsync method
+    /// </summary>
     public delegate void NotificationHandler(Response notification);
 
     // rooms => channels
@@ -85,10 +91,11 @@ namespace KuzzleSdk.API.Controllers {
       kuzzle.TokenExpired += TokenExpiredListener;
     }
 
-    void Kuzzle_TokenExpired(object sender, EventArgs e) {
-    }
-
-
+    /// <summary>
+    /// Releases unmanaged resources and performs other cleanup operations 
+    /// before the <see cref="T:KuzzleSdk.API.Controllers.RealtimeController"/>
+    /// is reclaimed by garbage collection.
+    /// </summary>
     ~RealtimeController() {
       kuzzle.UnhandledResponse -= NotificationsListener;
       kuzzle.NetworkProtocol.StateChanged -= StateChangeListener;
