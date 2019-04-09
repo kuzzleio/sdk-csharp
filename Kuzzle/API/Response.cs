@@ -2,7 +2,7 @@ using System;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Kuzzle.API {
+namespace KuzzleSdk.API {
   /// <summary>
   /// Represents a Kuzzle API response
   /// </summary>

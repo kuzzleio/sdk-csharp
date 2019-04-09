@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace Kuzzle.Protocol {
+namespace KuzzleSdk.Protocol {
   /// <summary>
   /// Abstract class laying the groundwork of network protocol communication
   /// between this SDK and Kuzzle backends.

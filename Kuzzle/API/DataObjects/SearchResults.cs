@@ -1,8 +1,9 @@
 ﻿using System.Threading.Tasks;
+using KuzzleSdk.API.Options;
 using Newtonsoft.Json.Linq;
 
-namespace Kuzzle.API.ScrollableResults {
-  public class SearchResult {
+namespace KuzzleSdk.API.DataObjects {
+  public class SearchResults {
     protected readonly Kuzzle kuzzle;
     protected readonly SearchOptions options;
     protected readonly JObject request;
@@ -16,7 +17,7 @@ namespace Kuzzle.API.ScrollableResults {
     public int Fetched { get; private set; }
     public string ScrollId { get; private set; }
 
-    internal SearchResult(
+    internal SearchResults(
         Kuzzle kuzzle, JObject request, SearchOptions options,
         Response response, int previouslyFetched = 0) {
       this.kuzzle = kuzzle;
@@ -68,7 +69,7 @@ namespace Kuzzle.API.ScrollableResults {
     /// Returns a new SearchResult object which contain the subsequent results 
     /// of the search.
     /// </summary>
-    public async Task<SearchResult> NextAsync() {
+    public async Task<SearchResults> NextAsync() {
       if (Fetched >= Total) return null;
 
       JObject nextRequest = null;
@@ -94,7 +95,7 @@ namespace Kuzzle.API.ScrollableResults {
 
       Response response = await kuzzle.Query(nextRequest);
 
-      return new SearchResult(kuzzle, nextRequest, options, response, Fetched);
+      return new SearchResults(kuzzle, nextRequest, options, response, Fetched);
     }
   }
 }

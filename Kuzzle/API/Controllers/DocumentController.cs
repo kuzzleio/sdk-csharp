@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
-using Kuzzle.API.ScrollableResults;
+using KuzzleSdk.API.Options;
+using KuzzleSdk.API.DataObjects;
 using Newtonsoft.Json.Linq;
 
-namespace Kuzzle.API.Controllers {
-  public sealed class Document : Base {
+namespace KuzzleSdk.API.Controllers {
+  public sealed class DocumentController : BaseController {
     /// <summary>
     /// Sets document options inside the provided JSON object
     /// /!\ MUTATES THE PROVIDED OBJECT /!\
@@ -21,7 +22,7 @@ namespace Kuzzle.API.Controllers {
       }
     }
 
-    internal Document(Kuzzle k) : base(k) { }
+    internal DocumentController(Kuzzle k) : base(k) { }
 
     /// <summary>
     /// Counts documents in a collection.
@@ -335,7 +336,7 @@ namespace Kuzzle.API.Controllers {
     /// <summary>
     /// Searches documents.
     /// </summary>
-    public async Task<SearchResult> SeachAsync(
+    public async Task<SearchResults> SeachAsync(
         string index,
         string collection,
         JObject query,
@@ -353,7 +354,7 @@ namespace Kuzzle.API.Controllers {
       }
 
       Response response = await kuzzle.Query(request);
-      return new SearchResult(kuzzle, request, options, response);
+      return new SearchResults(kuzzle, request, options, response);
     }
 
     /// <summary>
@@ -404,9 +405,4 @@ namespace Kuzzle.API.Controllers {
       return (JObject)response.Result;
     }
   }
-
-  public class DocumentOptions {
-    public bool WaitForRefresh { get; set; } = false;
-    public int? RetryOnConflict { get; set; }
-  };
 }

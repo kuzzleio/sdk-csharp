@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Kuzzle.Protocol;
-using Newtonsoft.Json;
+using KuzzleSdk.API.Options;
+using KuzzleSdk.Protocol;
 using Newtonsoft.Json.Linq;
 
-namespace Kuzzle.API.Controllers {
-  public sealed class Realtime : Base {
+namespace KuzzleSdk.API.Controllers {
+  public sealed class RealtimeController : BaseController {
     public delegate void NotificationHandler(Response notification);
 
     // rooms => channels
@@ -79,7 +79,7 @@ namespace Kuzzle.API.Controllers {
       rooms.Remove(room);
     }
 
-    internal Realtime(Kuzzle k) : base(k) {
+    internal RealtimeController(Kuzzle k) : base(k) {
       kuzzle.UnhandledResponse += NotificationsListener;
       kuzzle.NetworkProtocol.StateChanged += StateChangeListener;
       kuzzle.TokenExpired += TokenExpiredListener;
@@ -89,7 +89,7 @@ namespace Kuzzle.API.Controllers {
     }
 
 
-    ~Realtime() {
+    ~RealtimeController() {
       kuzzle.UnhandledResponse -= NotificationsListener;
       kuzzle.NetworkProtocol.StateChanged -= StateChangeListener;
     }
@@ -166,20 +166,5 @@ namespace Kuzzle.API.Controllers {
 
       DelNotificationHandlers(roomId);
     }
-  }
-
-  [JsonObject(MemberSerialization.OptIn)]
-  public class SubscribeOptions {
-    [JsonProperty(PropertyName = "scope")]
-    public string Scope = "all";
-
-    [JsonProperty(PropertyName = "users")]
-    public string Users = "all";
-
-    [JsonProperty(PropertyName = "volatile")]
-    public JObject Volatile;
-
-    // not serialized on purpose: not a Kuzzle API option
-    public bool SubscribeToSelf = true;
   }
 }

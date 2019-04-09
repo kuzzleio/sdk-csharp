@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace Kuzzle.Protocol {
+namespace KuzzleSdk.Protocol {
   public struct WebSocketOptions {
     private int? port;
     private bool? ssl;

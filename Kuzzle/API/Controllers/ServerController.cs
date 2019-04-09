@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace Kuzzle.API.Controllers {
-  public sealed class Server : Base {
-    internal Server(Kuzzle k) : base(k) { }
+namespace KuzzleSdk.API.Controllers {
+  public sealed class ServerController : BaseController {
+    internal ServerController(Kuzzle k) : base(k) { }
 
     /// <summary>
     /// Returns the current server timestamp, in Epoch-millis format.

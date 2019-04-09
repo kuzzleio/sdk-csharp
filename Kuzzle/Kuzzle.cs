@@ -1,13 +1,13 @@
 ﻿using System.Reflection;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Kuzzle.Protocol;
-using Kuzzle.API;
-using Kuzzle.API.Controllers;
+using KuzzleSdk.Protocol;
+using KuzzleSdk.API;
+using KuzzleSdk.API.Controllers;
 using Newtonsoft.Json.Linq;
 using System;
 
-namespace Kuzzle {
+namespace KuzzleSdk {
   public sealed class Kuzzle {
     private AbstractProtocol networkProtocol;
 
@@ -30,10 +30,10 @@ namespace Kuzzle {
       TokenExpired?.Invoke();
     }
 
-    public Auth Auth { get; private set; }
-    public Document Document { get; private set; }
-    public Realtime Realtime { get; private set; }
-    public Server Server { get; private set; }
+    public AuthController Auth { get; private set; }
+    public DocumentController Document { get; private set; }
+    public RealtimeController Realtime { get; private set; }
+    public ServerController Server { get; private set; }
 
     /// <summary>
     /// Authentication token
@@ -103,10 +103,10 @@ namespace Kuzzle {
       NetworkProtocol.StateChanged += StateChangeListener;
 
       // Initializes the controllers
-      Auth = new Auth(this);
-      Document = new Document(this);
-      Realtime = new Realtime(this);
-      Server = new Server(this);
+      Auth = new AuthController(this);
+      Document = new DocumentController(this);
+      Realtime = new RealtimeController(this);
+      Server = new ServerController(this);
 
       // Initializes instance unique properties
       Version = typeof(Kuzzle).GetTypeInfo().Assembly.GetName().Version.ToString();

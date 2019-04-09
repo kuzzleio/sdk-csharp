@@ -1,4 +1,4 @@
-﻿namespace Kuzzle.Exceptions {
+﻿namespace KuzzleSdk.Exceptions {
   /// <summary>
   /// Root of all Kuzzle exceptions
   /// </summary>

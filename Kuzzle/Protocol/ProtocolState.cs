@@ -1,5 +1,4 @@
-﻿using System;
-namespace Kuzzle.Protocol {
+﻿namespace KuzzleSdk.Protocol {
   public enum ProtocolState {
     Open,
     Closed
