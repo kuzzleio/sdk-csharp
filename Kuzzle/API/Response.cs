@@ -7,9 +7,12 @@ namespace Kuzzle.API {
   /// Represents a Kuzzle API response
   /// </summary>
   public sealed class Response : EventArgs {
-    public struct ErrorResponse {
-      public int status;
-      public string message;
+    public class ErrorResponse {
+      [JsonProperty(PropertyName = "status")]
+      public int Status;
+
+      [JsonProperty(PropertyName = "message")]
+      public string Message;
     }
 
     /// <summary>
@@ -34,7 +37,7 @@ namespace Kuzzle.API {
     public readonly JToken Result;
 
     [JsonProperty(PropertyName = "error")]
-    public readonly ErrorResponse? Error;
+    public readonly ErrorResponse Error;
 
     [JsonProperty(PropertyName = "requestId")]
     public readonly string RequestId;

@@ -18,6 +18,11 @@ namespace Kuzzle.API.Controllers {
       channels = new Dictionary<string, List<Tuple<NotificationHandler, SubscribeOptions>>>();
 
     private void NotificationsListener(object sender, Response notification) {
+      if (notification.Type == "TokenExpired") {
+        kuzzle.TokenHasExpired();
+        return;
+      }
+
       var id = notification.Room;
       string sdkInstanceId = (string)notification.Volatile?["sdkInstanceId"];
 
@@ -31,10 +36,18 @@ namespace Kuzzle.API.Controllers {
       }
     }
 
+    private void ClearAllSubscriptions() {
+      rooms.Clear();
+      channels.Clear();
+    }
+
+    private void TokenExpiredListener() {
+      ClearAllSubscriptions();
+    }
+
     private void StateChangeListener(object sender, ProtocolState state) {
       if (state == ProtocolState.Closed) {
-        rooms.Clear();
-        channels.Clear();
+        ClearAllSubscriptions();
       }
     }
 
@@ -69,7 +82,12 @@ namespace Kuzzle.API.Controllers {
     internal Realtime(Kuzzle k) : base(k) {
       kuzzle.UnhandledResponse += NotificationsListener;
       kuzzle.NetworkProtocol.StateChanged += StateChangeListener;
+      kuzzle.TokenExpired += TokenExpiredListener;
     }
+
+    void Kuzzle_TokenExpired(object sender, EventArgs e) {
+    }
+
 
     ~Realtime() {
       kuzzle.UnhandledResponse -= NotificationsListener;

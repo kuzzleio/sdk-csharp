@@ -22,6 +22,14 @@ namespace Kuzzle {
     // (i.e. all real-time notifications)
     internal event EventHandler<Response> UnhandledResponse;
 
+    // Emitter for token expiration events
+    public event Action TokenExpired;
+
+    internal void TokenHasExpired() {
+      Jwt = null;
+      TokenExpired?.Invoke();
+    }
+
     public Auth Auth { get; private set; }
     public Document Document { get; private set; }
     public Realtime Realtime { get; private set; }
@@ -59,6 +67,10 @@ namespace Kuzzle {
 
       if (requests.ContainsKey(response.Room)) {
         if (response.Error != null) {
+          if (response.Error.Message == "Token expired") {
+            TokenHasExpired();
+          }
+
           requests[response.RequestId].SetException(
             new Exceptions.ApiErrorException(response));
         } else {
