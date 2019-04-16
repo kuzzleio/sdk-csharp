@@ -2,16 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageId>kuzzlesdk</PackageId>
+    <PreserveCompilationContext>false</PreserveCompilationContext>
+    <PackageId>Kuzzle.SDK</PackageId>
     <Authors>Kuzzle Team</Authors>
-    <PackageLicenseUrl>https://github.com/kuzzleio/sdk-csharp/LICENSE</PackageLicenseUrl>
+    <PackageLicenseUrl>https://github.com/kuzzleio/sdk-csharp/blob/master/LICENSE</PackageLicenseUrl>
     <Owners>Kuzzle Team</Owners>
     <PackageProjectUrl>https://github.com/kuzzleio/sdk-csharp</PackageProjectUrl>
     <Description>Official C# SDK for Kuzzle</Description>
     <RootNamespace>KuzzleSdk</RootNamespace>
     <ReleaseVersion>0.1.0</ReleaseVersion>
-    <PackageVersion>0.1.2</PackageVersion>
-    <PackOnBuild>true</PackOnBuild>
+    <PackageVersion>0.1.4</PackageVersion>
+    <PackOnBuild>false</PackOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">

@@ -120,9 +120,15 @@ namespace KuzzleSdk {
     }
 
     private void StateChangeListener(object sender, ProtocolState state) {
-      // If not connected anymore: clean up
+      // If not connected anymore: close tasks and clean up the requests buffer
       if (state == ProtocolState.Closed) {
-        requests.Clear();
+        lock (requests) {
+          foreach (var task in requests.Values) {
+            task.SetException(new Exceptions.ConnectionLostException());
+          }
+
+          requests.Clear();
+        }
       }
     }
 
