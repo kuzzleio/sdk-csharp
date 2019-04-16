@@ -8,6 +8,7 @@
     <RootNamespace>ManualTester</RootNamespace>
     <AssemblyName>ManualTester</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <ReleaseVersion>0.1.0</ReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,7 +39,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Kuzzle\Kuzzle.csproj">
-      <Project>{5F0C9EDA-E70D-448B-903D-657EC1E79304}</Project>
+      <Project>{73DE88CF-7A9E-4B4F-96AA-ED4DABFA67F8}</Project>
       <Name>Kuzzle</Name>
     </ProjectReference>
   </ItemGroup>
