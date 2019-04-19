@@ -96,7 +96,6 @@ namespace KuzzleSdk.Protocol {
     /// Disconnects this instance.
     /// </summary>
     public override void Disconnect() {
-      receiveCancellationToken?.Cancel();
       socket?.Abort();
       CloseState();
     }
@@ -140,6 +139,7 @@ namespace KuzzleSdk.Protocol {
             DispatchResponse(message);
           }
         }
+
         CloseState();
       }, receiveCancellationToken.Token);
     }
@@ -148,6 +148,8 @@ namespace KuzzleSdk.Protocol {
       if (State != ProtocolState.Closed) {
         State = ProtocolState.Closed;
         DispatchStateChange(State);
+        receiveCancellationToken?.Cancel();
+        receiveCancellationToken = null;
       }
     }
   }
