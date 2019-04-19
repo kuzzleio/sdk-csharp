@@ -204,14 +204,11 @@ namespace KuzzleSdk {
 
       NetworkProtocol.Send(query);
 
-      TaskCompletionSource<Response> response =
-        new TaskCompletionSource<Response>();
-
       lock (requests) {
-        requests[requestId] = response;
+        requests[requestId] = new TaskCompletionSource<Response>();
       }
 
-      return response.Task;
+      return requests[requestId].Task;
     }
   }
 }
