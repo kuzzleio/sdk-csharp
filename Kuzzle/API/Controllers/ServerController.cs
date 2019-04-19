@@ -13,7 +13,7 @@ namespace KuzzleSdk.API.Controllers {
     /// Returns the current server timestamp, in Epoch-millis format.
     /// </summary>
     public async Task<Int64> NowAsync() {
-      Response response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.QueryAsync(new JObject {
         { "controller", "server" },
         { "action", "now" }
       });
@@ -27,7 +27,7 @@ namespace KuzzleSdk.API.Controllers {
     /// </summary>
     /// <returns>Server information.</returns>
     public async Task<JObject> InfoAsync() {
-      Response response = await kuzzle.Query(new JObject{
+      Response response = await kuzzle.QueryAsync(new JObject{
         { "controller", "server" },
         { "action", "info" }
       });
@@ -39,7 +39,7 @@ namespace KuzzleSdk.API.Controllers {
     /// Checks that an administrator account exists.
     /// </summary>
     public async Task<bool> AdminExistsAsync() {
-      Response response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.QueryAsync(new JObject {
         { "controller", "server" },
         { "action", "adminExists" }
       });
@@ -51,7 +51,7 @@ namespace KuzzleSdk.API.Controllers {
     /// Returns all usage statistics
     /// </summary>
     public async Task<JObject> GetAllStatsAsync() {
-      Response response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.QueryAsync(new JObject {
         { "controller", "server" },
         { "action", "getAllStats" }
       });
@@ -63,7 +63,7 @@ namespace KuzzleSdk.API.Controllers {
     /// Returns the current Kuzzle configuration.
     /// </summary>
     public async Task<JObject> GetConfigAsync() {
-      Response response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.QueryAsync(new JObject {
         { "controller", "server" },
         { "action", "getConfig" }
       });
@@ -75,7 +75,7 @@ namespace KuzzleSdk.API.Controllers {
     /// Returns the most recent usage statistics snapshot.
     /// </summary>
     public async Task<JObject> GetLastStatsAsync() {
-      Response response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.QueryAsync(new JObject {
         { "controller", "server" },
         { "action", "getLastStats" }
       });
@@ -87,7 +87,7 @@ namespace KuzzleSdk.API.Controllers {
     /// Returns usage statistics snapshots within a provided timestamp range. 
     /// </summary>
     public async Task<JObject> GetStatsAsync(Int64 start, Int64 end) {
-      Response response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.QueryAsync(new JObject {
         { "controller", "server" },
         { "action", "getLastStats" },
         { "startTime", start},
