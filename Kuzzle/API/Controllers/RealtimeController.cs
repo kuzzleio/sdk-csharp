@@ -105,7 +105,7 @@ namespace KuzzleSdk.API.Controllers {
     /// Returns the number of other connections sharing the same subscription.
     /// </summary>
     public async Task<int> CountAsync(string roomId) {
-      Response response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.QueryAsync(new JObject {
         { "controller", "realtime" },
         { "action", "count" },
         { "body", new JObject{ { "roomId", roomId } } }
@@ -121,7 +121,7 @@ namespace KuzzleSdk.API.Controllers {
     /// </summary>
     public async Task PublishAsync(
         string index, string collection, JObject message) {
-      await kuzzle.Query(new JObject {
+      await kuzzle.QueryAsync(new JObject {
         { "controller", "realtime" },
         { "action", "publish" },
         { "index", index },
@@ -150,7 +150,7 @@ namespace KuzzleSdk.API.Controllers {
         request.Merge(options);
       }
 
-      Response response = await kuzzle.Query(request);
+      Response response = await kuzzle.QueryAsync(request);
 
       AddNotificationHandler(
         (string)response.Result["roomId"],
@@ -165,7 +165,7 @@ namespace KuzzleSdk.API.Controllers {
     /// Removes a subscription.
     /// </summary>
     public async Task UnsubscribeAsync(string roomId) {
-      await kuzzle.Query(new JObject {
+      await kuzzle.QueryAsync(new JObject {
         { "controller", "realtime" },
         { "action", "unsubscribe" },
         { "body", new JObject{ { "roomId", roomId } } }

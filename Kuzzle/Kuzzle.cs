@@ -183,7 +183,7 @@ namespace KuzzleSdk {
     /// </summary>
     /// <returns>API response</returns>
     /// <param name="query">Kuzzle API query</param>
-    public Task<Response> Query(JObject query) {
+    public Task<Response> QueryAsync(JObject query) {
       if (NetworkProtocol.State != ProtocolState.Open) {
         throw new Exceptions.NotConnectedException();
       }
@@ -202,10 +202,10 @@ namespace KuzzleSdk {
       query["volatile"]["sdkVersion"] = Version;
       query["volatile"]["sdkInstanceId"] = InstanceId;
 
-      NetworkProtocol.SendAsync(query).Wait();
+      NetworkProtocol.Send(query);
 
       TaskCompletionSource<Response> response =
-          new TaskCompletionSource<Response>();
+        new TaskCompletionSource<Response>();
 
       lock (requests) {
         requests[requestId] = response;

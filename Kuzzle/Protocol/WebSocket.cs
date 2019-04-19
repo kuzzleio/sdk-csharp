@@ -104,17 +104,17 @@ namespace KuzzleSdk.Protocol {
     /// <summary>
     /// Sends a formatted API request to a Kuzzle server.
     /// </summary>
-    public override async Task SendAsync(JObject payload) {
+    public override void Send(JObject payload) {
       var buffer = Encoding.UTF8.GetBytes(payload.ToString());
 
       if (State == ProtocolState.Closed) {
         CloseState();
       } else {
-        await socket?.SendAsync(
+        socket?.SendAsync(
           new ArraySegment<byte>(buffer),
           WebSocketMessageType.Text,
           true,
-          CancellationToken.None);
+          CancellationToken.None).Wait();
       }
     }
 

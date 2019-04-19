@@ -18,7 +18,7 @@ namespace KuzzleSdk.API.Controllers {
       Response response;
 
       try {
-        response = await kuzzle.Query(new JObject {
+        response = await kuzzle.QueryAsync(new JObject {
           { "controller", "auth" },
           { "action", "checkToken" },
           {
@@ -41,7 +41,7 @@ namespace KuzzleSdk.API.Controllers {
     public async Task<JObject> CreateMyCredentialsAsync(
         string strategy,
         JObject credentials) {
-      Response response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.QueryAsync(new JObject {
         { "controller", "auth" },
         { "action", "checkToken" },
         { "body", credentials },
@@ -56,7 +56,7 @@ namespace KuzzleSdk.API.Controllers {
     /// specified authentication strategy.
     /// </summary>
     public async Task<bool> CredentialsExistAsync(string strategy) {
-      Response response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.QueryAsync(new JObject {
         { "controller", "auth" },
         { "action", "credentialsExist" },
         { "strategy", strategy }
@@ -74,7 +74,7 @@ namespace KuzzleSdk.API.Controllers {
     /// the deleted credentials.
     /// </summary>
     public async Task DeleteMyCredentialsAsync(string strategy) {
-      await kuzzle.Query(new JObject {
+      await kuzzle.QueryAsync(new JObject {
         { "controller", "auth" },
         { "action", "deleteMyCredentials" },
         { "strategy", strategy }
@@ -85,7 +85,7 @@ namespace KuzzleSdk.API.Controllers {
     /// Returns information about the currently logged in user.
     /// </summary>
     public async Task<JObject> GetCurrentUserAsync() {
-      Response response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.QueryAsync(new JObject {
         { "controller", "auth" },
         { "action", "getCurrentUser" }
       });
@@ -99,7 +99,7 @@ namespace KuzzleSdk.API.Controllers {
     /// should never include any sensitive information.
     /// </summary>
     public async Task<JObject> GetMyCredentialsAsync(string strategy) {
-      Response response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.QueryAsync(new JObject {
         { "controller", "auth" },
         { "action", "getMyCredentials" },
         { "strategy", strategy }
@@ -113,7 +113,7 @@ namespace KuzzleSdk.API.Controllers {
     /// current user.
     /// </summary>
     public async Task<JArray> GetMyRightsAsync() {
-      Response response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.QueryAsync(new JObject {
         { "controller", "auth" },
         { "action", "getMyRights" }
       });
@@ -125,7 +125,7 @@ namespace KuzzleSdk.API.Controllers {
     /// Gets the exhaustive list of registered authentication strategies.
     /// </summary>
     public async Task<JArray> GetStrategiesAsync() {
-      Response response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.QueryAsync(new JObject {
         { "controller", "auth" },
         { "action", "getStrategies" }
       });
@@ -143,7 +143,7 @@ namespace KuzzleSdk.API.Controllers {
       Response response;
 
       try {
-        response = await kuzzle.Query(new JObject {
+        response = await kuzzle.QueryAsync(new JObject {
           { "controller", "auth" },
           { "action", "login" },
           { "strategy", strategy },
@@ -165,7 +165,7 @@ namespace KuzzleSdk.API.Controllers {
     /// If there were any, real-time subscriptions are cancelled.
     /// </summary>
     public async Task LogoutAsync() {
-      await kuzzle.Query(new JObject {
+      await kuzzle.QueryAsync(new JObject {
         { "controller", "auth" },
         { "action", "logout" }
       });
@@ -175,7 +175,7 @@ namespace KuzzleSdk.API.Controllers {
     /// Refreshes an authentication token.
     /// </summary>
     public async Task<JObject> RefreshTokenAsync(string expiresIn = null) {
-      Response response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.QueryAsync(new JObject {
         { "controller", "auth" },
         { "action", "login" },
         { "expiresIn", expiresIn }
@@ -192,7 +192,7 @@ namespace KuzzleSdk.API.Controllers {
     public async Task<JObject> UpdateMyCredentialsAsync(
         string strategy,
         JObject credentials) {
-      Response response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.QueryAsync(new JObject {
         { "controller", "auth" },
         { "action", "updateMyCredentials" },
         { "strategy", strategy },
@@ -207,7 +207,7 @@ namespace KuzzleSdk.API.Controllers {
     /// associated profiles cannot be updated)
     /// </summary>
     public async Task<JObject> UpdateSelfAsync(JObject content) {
-      Response response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.QueryAsync(new JObject {
         { "controller", "auth" },
         { "action", "updateSelf" },
         { "body", content }
@@ -224,7 +224,7 @@ namespace KuzzleSdk.API.Controllers {
     public async Task<bool> ValidateMyCredentialsAsync(
         string strategy,
         JObject credentials) {
-      Response response = await kuzzle.Query(new JObject {
+      Response response = await kuzzle.QueryAsync(new JObject {
         { "controller", "auth" },
         { "action", "validateMyCredentials" },
         { "body", credentials },

@@ -31,7 +31,7 @@ namespace KuzzleSdk.Protocol {
     /// Send the specified payload to Kuzzle.
     /// </summary>
     /// <param name="payload">Payload data to send across the network</param>
-    public abstract Task SendAsync(JObject payload);
+    public abstract void Send(JObject payload);
 
     /// <summary>
     /// Dispatch a message received from a Kuzzle server

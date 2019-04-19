@@ -11,7 +11,7 @@ namespace ManualTester {
     }
 
     static public async Task Run() {
-      var ws = new KuzzleSdk.Protocol.WebSocket("localhost");
+      var ws = new KuzzleSdk.Protocol.WebSocket("kuzzle");
       var kuzzle = new Kuzzle(ws);
 
       await kuzzle.ConnectAsync();
@@ -36,7 +36,9 @@ namespace ManualTester {
         //ws.Disconnect();
 
         Console.WriteLine("login = " + await kuzzle.Auth.LoginAsync("local",
-          new JObject { { "username", "foo" }, { "password", "bar" } }));
+          new JObject { { "username", "test" }, { "password", "test" } }));
+
+        await Task.Delay(5000);
         Console.WriteLine("current user = " + await kuzzle.Auth.GetCurrentUserAsync());
         //Console.WriteLine("documents: " +
         //await kuzzle.Document.CreateAsync("foo", "bar",

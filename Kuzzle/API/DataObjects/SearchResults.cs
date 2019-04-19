@@ -128,7 +128,7 @@ namespace KuzzleSdk.API.DataObjects {
 
       nextRequest.Merge(options);
 
-      Response response = await kuzzle.Query(nextRequest);
+      Response response = await kuzzle.QueryAsync(nextRequest);
 
       return new SearchResults(kuzzle, nextRequest, options, response, Fetched);
     }
