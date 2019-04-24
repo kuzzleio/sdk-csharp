@@ -26,9 +26,11 @@ namespace KuzzleSdk.API.Options {
     /// Copy constructor.
     /// </summary>
     internal SearchOptions(SearchOptions src) {
-      From = src.From;
-      Size = src.Size;
-      Scroll = string.Copy(src.Scroll);
+      if (src != null) {
+        From = src.From;
+        Size = src.Size;
+        Scroll = string.Copy(src.Scroll);
+      }
     }
   }
 }
