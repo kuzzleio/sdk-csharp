@@ -3,7 +3,7 @@
   <metadata>
     <id>kuzzlesdk</id>
     <title>Kuzzle SDK</title>
-    <version>0.1.6</version>
+    <version>0.1.7</version>
     <authors>Kuzzle Team</authors>
     <owners>Kuzzle Team</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
