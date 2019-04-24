@@ -339,7 +339,7 @@ namespace KuzzleSdk.API.Controllers {
     /// <summary>
     /// Searches documents.
     /// </summary>
-    public async Task<SearchResults> SeachAsync(
+    public async Task<SearchResults> SearchAsync(
         string index,
         string collection,
         JObject query,
