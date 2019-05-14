@@ -353,8 +353,10 @@ namespace KuzzleSdk.API.Controllers {
       };
 
       if (options != null) {
-        request.Merge(options);
+        request.Merge(JObject.FromObject(options));
       }
+
+      System.Console.WriteLine(request);
 
       Response response = await kuzzle.QueryAsync(request);
       return new SearchResults(kuzzle, request, options, response);

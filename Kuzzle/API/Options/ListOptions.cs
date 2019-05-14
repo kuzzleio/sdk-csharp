@@ -27,10 +27,16 @@ namespace KuzzleSdk.API.Options {
     /// <summary>
     /// Copy constructor.
     /// </summary>
-    internal ListOptions(ListOptions src) {
+    public ListOptions(ListOptions src) {
       From = src.From;
       Size = src.Size;
       Type = string.Copy(src.Type);
     }
+
+    /// <summary>
+    /// Initializes a new instance of the 
+    /// <see cref="T:KuzzleSdk.API.Options.ListOptions"/> class.
+    /// </summary>
+    public ListOptions() { }
   }
 }

@@ -147,7 +147,7 @@ namespace KuzzleSdk.API.Controllers {
       };
 
       if (options != null) {
-        request.Merge(options);
+        request.Merge(JObject.FromObject(options));
       }
 
       Response response = await kuzzle.QueryAsync(request);

@@ -40,7 +40,7 @@ namespace KuzzleSdk.API.Options {
     /// <summary>
     /// Copy constructor.
     /// </summary>
-    SubscribeOptions(SubscribeOptions src) {
+    public SubscribeOptions(SubscribeOptions src) {
       Scope = string.Copy(src.Scope);
       Users = string.Copy(src.Users);
       Volatile = (JObject)src.Volatile.DeepClone();

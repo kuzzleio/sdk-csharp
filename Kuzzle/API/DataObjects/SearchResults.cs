@@ -69,7 +69,8 @@ namespace KuzzleSdk.API.DataObjects {
     private JObject GetScrollRequest() {
       return new JObject {
         { "controller", (string)request["controller"] },
-        { "action", scrollAction }
+        { "action", scrollAction },
+        { "scrollId", ScrollId }
       };
     }
 
@@ -126,7 +127,7 @@ namespace KuzzleSdk.API.DataObjects {
         return null;
       }
 
-      nextRequest.Merge(options);
+      nextRequest.Merge(JObject.FromObject(options));
 
       Response response = await kuzzle.QueryAsync(nextRequest);
 
