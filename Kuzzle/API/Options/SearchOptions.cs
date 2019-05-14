@@ -25,12 +25,18 @@ namespace KuzzleSdk.API.Options {
     /// <summary>
     /// Copy constructor.
     /// </summary>
-    internal SearchOptions(SearchOptions src) {
+    public SearchOptions(SearchOptions src) {
       if (src != null) {
         From = src.From;
         Size = src.Size;
         Scroll = string.Copy(src.Scroll);
       }
     }
+
+    /// <summary>
+    /// Initializes a new instance of the 
+    /// <see cref="T:KuzzleSdk.API.Options.SearchOptions"/> class.
+    /// </summary>
+    public SearchOptions() { }
   }
 }
