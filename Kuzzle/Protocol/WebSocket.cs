@@ -47,6 +47,8 @@ namespace KuzzleSdk.Protocol {
     private ClientWebSocket socket;
     private WebSocketOptions options;
     private CancellationTokenSource receiveCancellationToken;
+    private ArraySegment<byte> incomingBuffer =
+      System.Net.WebSockets.WebSocket.CreateClientBuffer(200 * 1024, 4096);
 
     /// <summary>
     /// Initializes a new instance of the 
@@ -121,8 +123,6 @@ namespace KuzzleSdk.Protocol {
       receiveCancellationToken = new CancellationTokenSource();
 
       Task.Run(async () => {
-        byte[] buffer = new byte[255];
-        var segment = new ArraySegment<byte>(buffer);
         WebSocketReceiveResult data;
 
         while (socket.State == WebSocketState.Open) {
@@ -130,9 +130,11 @@ namespace KuzzleSdk.Protocol {
 
           do {
             data = await socket.ReceiveAsync(
-              segment,
+              incomingBuffer,
               receiveCancellationToken.Token);
-            message += Encoding.UTF8.GetString(buffer, 0, data.Count);
+
+            message += Encoding.UTF8.GetString(
+              incomingBuffer.Array, 0, data.Count);
           } while (!data.EndOfMessage);
 
           if (message.Length > 0) {

@@ -3,6 +3,8 @@ using KuzzleSdk;
 using Newtonsoft.Json.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using KuzzleSdk.API.Options;
+using KuzzleSdk.API.DataObjects;
 
 namespace ManualTester {
   class MainClass {
@@ -11,58 +13,26 @@ namespace ManualTester {
     }
 
     static public async Task Run() {
-      var ws = new KuzzleSdk.Protocol.WebSocket("kuzzle");
+      var opts = new KuzzleSdk.Protocol.WebSocketOptions { Ssl = true };
+      var ws = new KuzzleSdk.Protocol.WebSocket("uat.explorama.kuzzle.io", opts);
       var kuzzle = new Kuzzle(ws);
 
       await kuzzle.ConnectAsync();
 
       try {
-        //await kuzzle.Realtime.SubscribeAsync(
-        //  "foo",
-        //  "bar",
-        //  new JObject(),
-        //  notification => {
-        //    Console.WriteLine("NOTIFICATION RECEIVED=");
-        //    Console.WriteLine(JObject.FromObject(notification));
-        //  }
-        //);
+        await kuzzle.Auth.LoginAsync("local", new JObject {
+          {"username", "eneo"},
+          {"password", "eneo-password"}
+        }, "1m");
+        JObject query = new JObject();
+        SearchOptions options = new SearchOptions { Scroll = "1m", Size = 10 };
+        SearchResults results = await kuzzle.Document.SearchAsync(
+          "public", "missions", query, options);
 
-        //await kuzzle.Realtime.PublishAsync(
-        //  "foo",
-        //  "bar",
-        //  new JObject { { "foo", "bar" } });
-
-        //await Task.Delay(1000);
-        //ws.Disconnect();
-
-        //Console.WriteLine("login = " + await kuzzle.Auth.LoginAsync("local",
-        //new JObject { { "username", "foo" }, { "password", "bar" } }));
-
-        //await Task.Delay(5000);
-        //Console.WriteLine("current user = " + await kuzzle.Auth.GetCurrentUserAsync());
-        //Console.WriteLine("Is token valid? " + await kuzzle.Auth.CheckTokenAsync("foo"));
-        //Console.WriteLine("documents: " +
-        //await kuzzle.Document.CreateAsync("foo", "bar",
-        //new JObject { { "foo", "bar" } }, null));
-        ///new Kuzzle.API.DocumentOptions { WaitForRefresh = true }));
-
-        //Console.WriteLine("timestamp: " + await kuzzle.Server.NowAsync());
-
-        var opts = new KuzzleSdk.API.Options.SearchOptions {
-          Scroll = "1m", Size = 20
-        };
-        var results = await kuzzle.Document.SearchAsync(
-          "foo", "bar", new JObject(), opts);
-
-        Console.WriteLine("FETCHED = " + results.Fetched);
-        //Console.WriteLine("HITS = " + results.Hits);
-        Console.WriteLine("Scroll ID = " + results.ScrollId);
-
-
-        results = await results.NextAsync();
-        Console.WriteLine("FETCHED = " + results.Fetched);
-        //Console.WriteLine("HITS = " + results.Hits);
-        Console.WriteLine("Scroll ID = " + results.ScrollId);
+        do {
+          Console.WriteLine("FETCHED = " + results.Fetched);
+          results = await results.NextAsync();
+        } while (results != null);
       } catch (KuzzleSdk.Exceptions.ApiErrorException e) {
         ;
         Console.WriteLine("API Error code " + e.Status);
