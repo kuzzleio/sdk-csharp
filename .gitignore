@@ -1,1 +1,7 @@
 build/
+packages/
+.vs/
+
+*/bin/
+*/obj/
+*.csproj.nuget.cache

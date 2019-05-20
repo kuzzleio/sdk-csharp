@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PreserveCompilationContext>false</PreserveCompilationContext>
+    <PackageId>Kuzzle.SDK</PackageId>
+    <Authors>Kuzzle Team</Authors>
+    <PackageLicenseUrl>https://github.com/kuzzleio/sdk-csharp/blob/master/LICENSE</PackageLicenseUrl>
+    <Owners>Kuzzle Team</Owners>
+    <PackageProjectUrl>https://github.com/kuzzleio/sdk-csharp</PackageProjectUrl>
+    <Description>Official C# SDK for Kuzzle</Description>
+    <RootNamespace>KuzzleSdk</RootNamespace>
+    <ReleaseVersion>0.1.0</ReleaseVersion>
+    <PackageVersion>0.1.4</PackageVersion>
+    <PackOnBuild>false</PackOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
+    <DocumentationFile>bin\Release\netstandard2.0\Kuzzle.xml</DocumentationFile>
+    <NoStdLib>true</NoStdLib>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <NoStdLib>true</NoStdLib>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="NuGet.Build.Packaging" Version="0.2.2" />
+  </ItemGroup>
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Deployment.LinuxDeployData generatePcFile="False" />
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+</Project>

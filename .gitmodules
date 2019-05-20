@@ -1,3 +1,0 @@
-[submodule "sdk-cpp"]
-	path = sdk-cpp
-	url = https://github.com/kuzzleio/sdk-cpp
