@@ -45,13 +45,17 @@ namespace KuzzleSdk.API {
     /// <summary>
     /// Response payload (depends on the executed API action)
     /// </summary>
-    [JsonProperty(PropertyName = "result")]
+    [JsonProperty(
+      PropertyName = "result",
+      NullValueHandling = NullValueHandling.Ignore)]
     public readonly JToken Result;
 
     /// <summary>
     /// Error object (null if the request finished successfully)
     /// </summary>
-    [JsonProperty(PropertyName = "error")]
+    [JsonProperty(
+      PropertyName = "error",
+      NullValueHandling = NullValueHandling.Ignore)]
     public readonly ErrorResponse Error;
 
     /// <summary>
@@ -93,7 +97,9 @@ namespace KuzzleSdk.API {
     /// <summary>
     /// Volatile data.
     /// </summary>
-    [JsonProperty(PropertyName = "volatile")]
+    [JsonProperty(
+      PropertyName = "volatile",
+      NullValueHandling = NullValueHandling.Ignore)]
     public readonly JObject Volatile;
 
     // The following properties are specific to real-time notifications

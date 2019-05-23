@@ -149,7 +149,12 @@ namespace KuzzleSdk {
       Server = new ServerController(this);
 
       // Initializes instance unique properties
-      Version = typeof(Kuzzle).GetTypeInfo().Assembly.GetName().Version.ToString();
+      Version = typeof(Kuzzle)
+        .GetTypeInfo()
+        .Assembly
+        .GetName()
+        .Version
+        .ToString();
       InstanceId = Guid.NewGuid().ToString();
     }
 
@@ -199,6 +204,7 @@ namespace KuzzleSdk {
       if (query["volatile"] == null) {
         query["volatile"] = new JObject();
       }
+
       query["volatile"]["sdkVersion"] = Version;
       query["volatile"]["sdkInstanceId"] = InstanceId;
 

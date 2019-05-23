@@ -23,7 +23,9 @@ namespace KuzzleSdk.API.Options {
     /// Pass data to this room's other subscribers, once at the moment of 
     /// subscription, and once when leaving the room (whatever the reason).
     /// </summary>
-    [JsonProperty(PropertyName = "volatile")]
+    [JsonProperty(
+      PropertyName = "volatile",
+      NullValueHandling = NullValueHandling.Ignore)]
     public JObject Volatile;
 
     /// <summary>
@@ -43,7 +45,11 @@ namespace KuzzleSdk.API.Options {
     public SubscribeOptions(SubscribeOptions src) {
       Scope = string.Copy(src.Scope);
       Users = string.Copy(src.Users);
-      Volatile = (JObject)src.Volatile.DeepClone();
+
+      if (src.Volatile != null) {
+        Volatile = (JObject)src.Volatile.DeepClone();
+      }
+
       SubscribeToSelf = src.SubscribeToSelf;
     }
   }

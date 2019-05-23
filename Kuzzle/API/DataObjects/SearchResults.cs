@@ -112,7 +112,11 @@ namespace KuzzleSdk.API.DataObjects {
 
       if (ScrollId != null) {
         nextRequest = GetScrollRequest();
-      } else if (options.Size != null && request["body"]["sort"] != null) {
+      } else if (
+        options.Size != null &&
+        request["body"]["sort"] != null &&
+        request["body"]["sort"].Type != JTokenType.Null
+      ) {
         nextRequest = GetSearchAfterRequest();
       } else if (options.Size != null) {
         if (options.From != null && options.From > Total) {

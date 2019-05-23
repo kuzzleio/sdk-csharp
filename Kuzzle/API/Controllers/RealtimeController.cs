@@ -34,8 +34,11 @@ namespace KuzzleSdk.API.Controllers {
 
       if (channels.ContainsKey(id)) {
         foreach (Tuple<NotificationHandler, SubscribeOptions> n in channels[id]) {
-          if (n.Item2.SubscribeToSelf || sdkInstanceId == null
-              || sdkInstanceId != kuzzle.InstanceId) {
+          if (
+            n.Item2.SubscribeToSelf ||
+            sdkInstanceId == null ||
+            sdkInstanceId != kuzzle.InstanceId
+          ) {
             n.Item1(notification);
           }
         }
