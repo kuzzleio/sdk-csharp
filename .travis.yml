@@ -1,0 +1,23 @@
+language: csharp
+solution: sdk-csharp.sln
+sudo: required
+dist: xenial
+mono: none
+dotnet: 2.2
+install:
+  - dotnet restore
+
+script:
+  - dotnet build Kuzzle/Kuzzle.csproj -c Release
+
+deploy:
+  skip_cleanup: true
+  provider: script
+  email: support@kuzzle.io
+  script:
+    - nuget pack Kuzzle/Kuzzle.nuspec -OutputFileNamesWithoutVersion
+    - nuget push kuzzlesdk.nupkg -ApiKey ${NUGET_API_KEY} -Source nuget.org
+  on:
+    repo: kuzzleio/sdk-csharp
+    all_branches: true
+    condition: $TRAVIS_BRANCH = master
