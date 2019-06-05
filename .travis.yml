@@ -1,7 +1,8 @@
 language: csharp
 solution: sdk-csharp.sln
+sudo: required
 mono: none
-dotnet: 2.2.203
+dotnet: 2.2
 install:
   - dotnet restore
 
