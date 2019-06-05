@@ -1,7 +1,9 @@
 language: csharp
 solution: sdk-csharp.sln
+mono: none
+dotnet: 2.2.203
 install:
-  - nuget restore sdk-csharp.sln
+  - dotnet restore
 
 script:
   - dotnet build Kuzzle/Kuzzle.csproj -c Release
