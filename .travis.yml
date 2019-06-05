@@ -1,6 +1,7 @@
 language: csharp
 solution: sdk-csharp.sln
 sudo: required
+dist: xenial
 mono: none
 dotnet: 2.2
 install:
