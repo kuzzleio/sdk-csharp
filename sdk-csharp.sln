@@ -1,9 +1,9 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kuzzle", "Kuzzle\Kuzzle.csproj", "{73DE88CF-7A9E-4B4F-96AA-ED4DABFA67F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManualTester", "ManualTester\ManualTester.csproj", "{257AC775-5B78-4A53-BDBE-6F5BD3816172}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kuzzle.Tests", "Kuzzle.Tests\Kuzzle.Tests.csproj", "{8D2951A1-7EC8-4D2D-A9C9-2ECBD1917F40}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,10 +15,10 @@ Global
 		{73DE88CF-7A9E-4B4F-96AA-ED4DABFA67F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73DE88CF-7A9E-4B4F-96AA-ED4DABFA67F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73DE88CF-7A9E-4B4F-96AA-ED4DABFA67F8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{257AC775-5B78-4A53-BDBE-6F5BD3816172}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{257AC775-5B78-4A53-BDBE-6F5BD3816172}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{257AC775-5B78-4A53-BDBE-6F5BD3816172}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{257AC775-5B78-4A53-BDBE-6F5BD3816172}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D2951A1-7EC8-4D2D-A9C9-2ECBD1917F40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D2951A1-7EC8-4D2D-A9C9-2ECBD1917F40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D2951A1-7EC8-4D2D-A9C9-2ECBD1917F40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D2951A1-7EC8-4D2D-A9C9-2ECBD1917F40}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0

@@ -8,10 +8,22 @@ using Newtonsoft.Json.Linq;
 using System;
 
 namespace KuzzleSdk {
+  public interface IKuzzleApi {
+    string Jwt { get; set; }
+    string InstanceId { get; }
+    AbstractProtocol NetworkProtocol { get; set; }
+
+    Task<Response> QueryAsync(JObject query);
+    void DispatchTokenExpired();
+
+    event EventHandler<Response> UnhandledResponse;
+    event Action TokenExpired;
+  }
+
   /// <summary>
   /// Main entry point for this SDK.
   /// </summary>
-  public sealed class Kuzzle {
+  public sealed class Kuzzle : IKuzzleApi {
     private AbstractProtocol networkProtocol;
 
     private readonly Dictionary<string, TaskCompletionSource<Response>>
@@ -27,18 +39,18 @@ namespace KuzzleSdk {
     /// <summary>
     /// Instance unique identifier.
     /// </summary>
-    public readonly string InstanceId;
+    public string InstanceId { get; }
 
     // Emitter for all responses not directly linked to a user request
     // (i.e. all real-time notifications)
-    internal event EventHandler<Response> UnhandledResponse;
+    public event EventHandler<Response> UnhandledResponse;
 
     /// <summary>
     /// Token expiration event
     /// </summary>
     public event Action TokenExpired;
 
-    internal void TokenHasExpired() {
+    public void DispatchTokenExpired() {
       Jwt = null;
       TokenExpired?.Invoke();
     }
@@ -102,7 +114,7 @@ namespace KuzzleSdk {
       if (requests.ContainsKey(response.Room)) {
         if (response.Error != null) {
           if (response.Error.Message == "Token expired") {
-            TokenHasExpired();
+            DispatchTokenExpired();
           }
 
           requests[response.RequestId].SetException(
@@ -159,7 +171,7 @@ namespace KuzzleSdk {
     }
 
     /// <summary>
-    /// Releases unmanaged resources and performs other cleanup operations 
+    /// Releases unmanaged resources and performs other cleanup operations
     /// before the <see cref="T:KuzzleSdk.Kuzzle"/>
     /// is reclaimed by garbage collection.
     /// </summary>
