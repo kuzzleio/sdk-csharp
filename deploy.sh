@@ -1,7 +1,23 @@
 #!/bin/bash
 
-set -xe
+set -e
 
-nuget pack $TRAVIS_BUILD_DIR/Kuzzle/Kuzzle.nuspec -OutputFileNamesWithoutVersion -OutputDirectory $TRAVIS_BUILD_DIR
+function getXmlValue {
+  file=$1
+  value=$2
 
-nuget push kuzzlesdk.nupkg -ApiKey ${NUGET_API_KEY} -Source nuget.org
+  cat $file | grep "<${value}>" | perl -pe "s{.*<${value}>(.*)</${value}>.*}{\$1}"
+}
+
+function getNugetFilename {
+  file=$1
+
+  echo "$(getXmlValue $file id).$(getXmlValue $file version).nupkg"
+}
+
+NUSPEC_FILE="${TRAVIS_BUILD_DIR}/Kuzzle/Kuzzle.nuspec"
+NUPKG_FILE="${TRAVIS_BUILD_DIR}/$(getNugetFilename ${NUSPEC_FILE})"
+
+nuget pack ${NUSPEC_FILE} -OutputDirectory ${TRAVIS_BUILD_DIR}
+
+nuget push ${NUPKG_FILE} -ApiKey ${NUGET_API_KEY} -Source nuget.org
