@@ -4,10 +4,6 @@ sudo: required
 dist: xenial
 dotnet: 2.2
 mono: latest
-addons:
-  apt:
-    packages:
-      - nuget
 install:
   - dotnet restore
 
