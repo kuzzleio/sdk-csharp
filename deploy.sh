@@ -1,13 +1,13 @@
 #!/bin/bash
 
-set -e
+set -ex
 
 NUSPEC_FILE="${TRAVIS_BUILD_DIR}/Kuzzle/Kuzzle.nuspec"
 NUPKG_FILE="${TRAVIS_BUILD_DIR}/kuzzlesdk.nupkg"
 
 # current distributions have nuget v4 only but we need at least a v5 to
 # match the latest nuspec specifications
-nuget update
+nuget update -self
 
 nuget pack ${NUSPEC_FILE} -OutputDirectory ${TRAVIS_BUILD_DIR} -OutputFileNamesWithoutVersion
 
