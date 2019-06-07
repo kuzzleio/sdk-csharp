@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 using Newtonsoft.Json.Linq;
+
+[assembly: InternalsVisibleTo("Kuzzle.Tests")]
 
 namespace KuzzleSdk.API.Controllers {
   /// <summary>
   /// Implements the "auth" Kuzzle API controller
   /// </summary>
   public sealed class AuthController : BaseController {
-    internal AuthController(IApiQuery api) : base(api) { }
+    internal AuthController(IKuzzleApi api) : base(api) { }
 
     /// <summary>
     /// Checks the validity of an authentication token.

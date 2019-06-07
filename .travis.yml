@@ -9,6 +9,8 @@ install:
 
 script:
   - dotnet build $TRAVIS_BUILD_DIR/Kuzzle/Kuzzle.csproj -c Release
+  - dotnet build $TRAVIS_BUILD_DIR/Kuzzle.Tests/Kuzzle.csproj
+  - dotnet test
 
 deploy:
   skip_cleanup: true

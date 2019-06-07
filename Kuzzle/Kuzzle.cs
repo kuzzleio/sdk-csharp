@@ -11,7 +11,7 @@ namespace KuzzleSdk {
   public interface IKuzzleApi {
     string Jwt { get; set; }
     string InstanceId { get; }
-    AbstractProtocol NetworkProtocol { get; set; }
+    AbstractProtocol NetworkProtocol { get; }
 
     Task<Response> QueryAsync(JObject query);
     void DispatchTokenExpired();

@@ -1,7 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp2.2</TargetFrameworks>
+    <!--
+      Do not upgrade to netcoreapp2.2 (or 3 if released in a timely manner)
+      until msbuild+mono+monodevelop are compatible with it.
+    -->
+    <TargetFramework>netcoreapp2.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
     <ReleaseVersion>0.1.0</ReleaseVersion>
@@ -18,4 +22,8 @@
     <ProjectReference Include="..\Kuzzle\Kuzzle.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="API\" />
+    <Folder Include="API\Controllers\" />
+  </ItemGroup>
 </Project>

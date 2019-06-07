@@ -19,3 +19,25 @@ The complete SDK documentation is available [here](http://docs.kuzzle.io/sdk-ref
 
 The C# SDK implements the websocket protocol.
 
+## Compile & test
+
+Preprequisites:
+- .NET Core SDK 2.1 
+
+Compile with the following command lines:
+
+```
+$ dotnet restore
+$ dotnet build Kuzzle/Kuzzle.csproj -c Release
+```
+
+To start the unit tests using the command line:
+
+```
+$ dotnet test
+```
+
+## monodevelop
+
+If you're using monodevelop, you'll need at least mono 5.20+ (w/ msbuild 16+). Due to compatibility problems, you HAVE TO install .NET Core SDK 2.1, if you only have the 2.2 one, you won't be able to build the project with msbuild (which monodevelop uses).
+

@@ -25,7 +25,7 @@ namespace KuzzleSdk.API.Controllers {
       }
     }
 
-    internal DocumentController(IApiQuery api) : base(api) { }
+    internal DocumentController(IKuzzleApi api) : base(api) { }
 
     /// <summary>
     /// Counts documents in a collection.

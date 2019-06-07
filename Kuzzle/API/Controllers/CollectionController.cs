@@ -6,7 +6,7 @@ namespace KuzzleSdk.API.Controllers {
   /// Implements the "collection" Kuzzle API controller
   /// </summary>
   public class CollectionController : BaseController {
-    internal CollectionController(IApiQuery api) : base(api) { }
+    internal CollectionController(IKuzzleApi api) : base(api) { }
 
     /// <summary>
     /// Creates a new collection in Kuzzle via the persistence engine, in the 
