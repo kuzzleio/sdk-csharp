@@ -3,7 +3,7 @@ solution: sdk-csharp.sln
 sudo: required
 dist: xenial
 dotnet: 2.2
-mono: none
+mono: latest
 addons:
   apt:
     packages:
