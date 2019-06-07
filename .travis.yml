@@ -6,6 +6,7 @@ mono: none
 dotnet: 2.2
 addons:
   apt:
+    update: true
     packages:
       - nuget
 install:
