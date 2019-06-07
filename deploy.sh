@@ -2,22 +2,13 @@
 
 set -e
 
-function getXmlValue {
-  file=$1
-  value=$2
-
-  cat $file | grep "<${value}>" | perl -pe "s{.*<${value}>(.*)</${value}>.*}{\$1}"
-}
-
-function getNugetFilename {
-  file=$1
-
-  echo "$(getXmlValue $file id).$(getXmlValue $file version).nupkg"
-}
-
 NUSPEC_FILE="${TRAVIS_BUILD_DIR}/Kuzzle/Kuzzle.nuspec"
-NUPKG_FILE="${TRAVIS_BUILD_DIR}/$(getNugetFilename ${NUSPEC_FILE})"
+NUPKG_FILE="${TRAVIS_BUILD_DIR}/kuzzlesdk.nupkg"
 
-nuget pack ${NUSPEC_FILE} -OutputDirectory ${TRAVIS_BUILD_DIR}
+# current distributions have nuget v4 only but we need at least a v5 to
+# match the latest nuspec specifications
+nuget update
+
+nuget pack ${NUSPEC_FILE} -OutputDirectory ${TRAVIS_BUILD_DIR} -OutputFileNamesWithoutVersion
 
 nuget push ${NUPKG_FILE} -ApiKey ${NUGET_API_KEY} -Source nuget.org

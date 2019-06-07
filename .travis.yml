@@ -2,8 +2,11 @@ language: csharp
 solution: sdk-csharp.sln
 sudo: required
 dist: xenial
-mono: latest
 dotnet: 2.2
+addons:
+  apt:
+    packages:
+      - nuget
 install:
   - dotnet restore
 
