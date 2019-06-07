@@ -9,10 +9,9 @@ NUPKG_FILE="${TRAVIS_BUILD_DIR}/kuzzlesdk.nupkg"
 # match the latest nuspec specifications
 # But first we have some configuring to do to allow nuget to update itself
 # through SSL
-sudo mozroots --import --machine --sync
-sudo certmgr -ssl -m https://go.microsoft.com
-sudo certmgr -ssl -m https://nugetgallery.blob.core.windows.net
-sudo certmgr -ssl -m https://nuget.org
+yes | sudo certmgr -ssl -m https://go.microsoft.com
+yes | sudo certmgr -ssl -m https://nugetgallery.blob.core.windows.net
+yes | sudo certmgr -ssl -m https://nuget.org
 nuget update -self
 
 nuget pack ${NUSPEC_FILE} -OutputDirectory ${TRAVIS_BUILD_DIR} -OutputFileNamesWithoutVersion
