@@ -12,7 +12,7 @@ NUPKG_FILE="${TRAVIS_BUILD_DIR}/kuzzlesdk.nupkg"
 yes | sudo certmgr -ssl -m https://go.microsoft.com
 yes | sudo certmgr -ssl -m https://nugetgallery.blob.core.windows.net
 yes | sudo certmgr -ssl -m https://nuget.org
-nuget update -self
+sudo nuget update -self
 
 nuget pack ${NUSPEC_FILE} -OutputDirectory ${TRAVIS_BUILD_DIR} -OutputFileNamesWithoutVersion
 
