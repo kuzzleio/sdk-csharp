@@ -10,8 +10,13 @@ install:
 script:
   # incompatibilities with msbuild, so building with .net core instead
   - dotnet build $TRAVIS_BUILD_DIR/Kuzzle/Kuzzle.csproj -c Release
-  - dotnet build $TRAVIS_BUILD_DIR/Kuzzle.Tests/Kuzzle.csproj
-  - dotnet test
+  - dotnet build $TRAVIS_BUILD_DIR/Kuzzle.Tests/Kuzzle.Tests.csproj
+  - >
+    dotnet test
+        /p:CollectCoverage=true
+        /p:CoverletOutputFormat=lcov
+        /p:CoverletOutput=$TRAVIS_BUILD_DIR/lcov.info
+  - curl -s https://codecov.io/bash > codecov && bash codecov
 
 deploy:
   skip_cleanup: true

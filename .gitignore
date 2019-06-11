@@ -6,3 +6,5 @@ packages/
 */obj/
 *.csproj.nuget.cache
 mono_crash.*
+lcov.info
+codecov
