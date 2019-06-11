@@ -2,8 +2,9 @@
 
   <PropertyGroup>
     <!--
-      Do not upgrade to netcoreapp2.2 (or 3 if released in a timely manner)
+      Do not upgrade to netcoreapp2.2 or upper
       until msbuild+mono+monodevelop are compatible with it.
+      See https://github.com/NuGet/Home/issues/7956
     -->
     <TargetFramework>netcoreapp2.1</TargetFramework>
 
