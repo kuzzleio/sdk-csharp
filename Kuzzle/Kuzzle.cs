@@ -8,15 +8,48 @@ using Newtonsoft.Json.Linq;
 using System;
 
 namespace KuzzleSdk {
+  /// <summary>
+  /// Kuzzle API interface.
+  /// </summary>
   public interface IKuzzleApi {
+    /// <summary>
+    /// Gets or sets the authentication token.
+    /// </summary>
+    /// <value>The authentication token.</value>
     string Jwt { get; set; }
+
+    /// <summary>
+    /// Gets the instance identifier.
+    /// </summary>
+    /// <value>The instance identifier.</value>
     string InstanceId { get; }
+
+    /// <summary>
+    /// Gets the network protocol.
+    /// </summary>
+    /// <value>The network protocol.</value>
     AbstractProtocol NetworkProtocol { get; }
 
+    /// <summary>
+    /// Sends a query to Kuzzle's API
+    /// </summary>
+    /// <returns>The query response.</returns>
+    /// <param name="query">Kuzzle API query</param>
     Task<Response> QueryAsync(JObject query);
+
+    /// <summary>
+    /// Dispatches a TokenExpired event.
+    /// </summary>
     void DispatchTokenExpired();
 
+    /// <summary>
+    /// Occurs when an unhandled response is received.
+    /// </summary>
     event EventHandler<Response> UnhandledResponse;
+
+    /// <summary>
+    /// Occurs when the authentication token has expired
+    /// </summary>
     event Action TokenExpired;
   }
 
