@@ -1,6 +1,9 @@
-Official Kuzzle C# SDK - ALPHA VERSION
+[![Build Status](https://travis-ci.org/kuzzleio/sdk-csharp.svg?branch=master)](https://travis-ci.org/kuzzleio/kuzzle)
+[![codecov.io](http://codecov.io/github/kuzzleio/sdk-csharp/coverage.svg?branch=master)](http://codecov.io/github/kuzzleio/sdk-csharp?branch=master)
+[![Join the chat at https://gitter.im/kuzzleio/kuzzle](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/kuzzleio/kuzzle?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-======
+
+Official Kuzzle C# SDK - ALPHA VERSION
 
 ## About Kuzzle
 
