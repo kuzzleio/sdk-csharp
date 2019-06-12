@@ -16,8 +16,8 @@ namespace KuzzleSdk.API.Controllers {
     /// Checks the validity of an authentication token.
     /// </summary>
     public async Task<JObject> CheckTokenAsync(string token) {
-      string jwt = api.Jwt;
-      api.Jwt = null;
+      string save = api.AuthenticationToken;
+      api.AuthenticationToken = null;
       Response response;
 
       try {
@@ -32,7 +32,7 @@ namespace KuzzleSdk.API.Controllers {
           }
         });
       } finally {
-        api.Jwt = jwt;
+        api.AuthenticationToken = save;
       }
 
       return (JObject)response.Result;
@@ -46,7 +46,7 @@ namespace KuzzleSdk.API.Controllers {
         JObject credentials) {
       Response response = await api.QueryAsync(new JObject {
         { "controller", "auth" },
-        { "action", "checkToken" },
+        { "action", "createMyCredentials" },
         { "body", credentials },
         { "strategy", strategy }
       });
@@ -141,8 +141,8 @@ namespace KuzzleSdk.API.Controllers {
     /// </summary>
     public async Task<JObject> LoginAsync(
         string strategy, JObject credentials, string expiresIn = null) {
-      string jwt = api.Jwt;
-      api.Jwt = null;
+      string token = api.AuthenticationToken;
+      api.AuthenticationToken = null;
       Response response;
 
       try {
@@ -154,11 +154,11 @@ namespace KuzzleSdk.API.Controllers {
           { "expiresIn", expiresIn }
         });
       } catch (Exception) {
-        api.Jwt = jwt;
+        api.AuthenticationToken = token;
         throw;
       }
 
-      api.Jwt = (string)response.Result["jwt"];
+      api.AuthenticationToken = (string)response.Result["jwt"];
 
       return (JObject)response.Result;
     }
@@ -180,11 +180,11 @@ namespace KuzzleSdk.API.Controllers {
     public async Task<JObject> RefreshTokenAsync(string expiresIn = null) {
       Response response = await api.QueryAsync(new JObject {
         { "controller", "auth" },
-        { "action", "login" },
+        { "action", "refreshToken" },
         { "expiresIn", expiresIn }
       });
 
-      api.Jwt = (string)response.Result["jwt"];
+      api.AuthenticationToken = (string)response.Result["jwt"];
 
       return (JObject)response.Result;
     }

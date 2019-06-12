@@ -23,6 +23,10 @@ namespace Kuzzle.Tests.API {
       Mock = new Mock<IKuzzleApi>();
     }
 
+    public void SetResult(JToken apiResult) {
+      SetResult(apiResult.ToString());
+    }
+
     public void SetResult(string apiResult) {
       Mock
         .Setup(api => api.QueryAsync(It.IsAny<JObject>()))
