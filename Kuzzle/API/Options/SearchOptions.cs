@@ -29,10 +29,7 @@ namespace KuzzleSdk.API.Options {
       if (src != null) {
         From = src.From;
         Size = src.Size;
-
-        if (src.Scroll != null) {
-          Scroll = string.Copy(src.Scroll);
-        }
+        Scroll = string.Copy(src.Scroll);
       }
     }
 
