@@ -53,3 +53,6 @@ $ dotnet test
 
 If you're using monodevelop, you'll need at least mono 5.20+ (w/ msbuild 16+). Due to compatibility problems, you HAVE TO install .NET Core SDK 2.1, if you only have the 2.2 one, you won't be able to build the project with msbuild (which monodevelop uses).
 
+First, go to the official Mono download page to install the latest version of Mono: https://www.mono-project.com/download/stable/
+
+Then install the .NET Core SDK 2.1: https://dotnet.microsoft.com/download/dotnet-core/2.1
