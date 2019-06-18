@@ -18,6 +18,7 @@ namespace KuzzleSdk.API.Controllers {
     public async Task<JObject> CheckTokenAsync(string token) {
       string save = api.AuthenticationToken;
       api.AuthenticationToken = null;
+
       Response response;
 
       try {
@@ -143,6 +144,7 @@ namespace KuzzleSdk.API.Controllers {
         string strategy, JObject credentials, string expiresIn = null) {
       string token = api.AuthenticationToken;
       api.AuthenticationToken = null;
+
       Response response;
 
       try {
