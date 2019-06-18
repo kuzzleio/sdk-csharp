@@ -1,4 +1,4 @@
-﻿using Xunit;
+using Xunit;
 using KuzzleSdk.API.Controllers;
 using Newtonsoft.Json.Linq;
 using KuzzleSdk.Exceptions;
