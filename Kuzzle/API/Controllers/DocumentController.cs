@@ -8,23 +8,6 @@ namespace KuzzleSdk.API.Controllers {
   /// Implements the "document" Kuzzle API controller
   /// </summary>
   public sealed class DocumentController : BaseController {
-    /// <summary>
-    /// Sets document options inside the provided JSON object
-    /// /!\ MUTATES THE PROVIDED OBJECT /!\
-    /// Should only be used on object created internally.
-    /// </summary>
-    private void ApplyOptions(JObject obj, DocumentOptions opts) {
-      if (opts != null) {
-        if (opts.WaitForRefresh) {
-          obj["refresh"] = "wait_for";
-        }
-
-        if (opts.RetryOnConflict != null) {
-          obj["retryOnConflict"] = opts.RetryOnConflict;
-        }
-      }
-    }
-
     internal DocumentController(IKuzzleApi api) : base(api) { }
 
     /// <summary>
@@ -56,6 +39,7 @@ namespace KuzzleSdk.API.Controllers {
         JObject content,
         string id = null,
         DocumentOptions options = null) {
+
       var query = new JObject {
         { "controller", "document" },
         { "action", "create" },
@@ -65,7 +49,9 @@ namespace KuzzleSdk.API.Controllers {
         { "_id", id }
       };
 
-      ApplyOptions(query, options);
+      if (options != null) {
+        query.Merge(options.ToJson());
+      }
 
       Response response = await api.QueryAsync(query);
 
@@ -78,8 +64,8 @@ namespace KuzzleSdk.API.Controllers {
     public async Task<JObject> CreateOrReplaceAsync(
         string index,
         string collection,
-        string id,
         JObject content,
+        string id,
         DocumentOptions options = null) {
       var query = new JObject {
         { "controller", "document" },
@@ -90,7 +76,9 @@ namespace KuzzleSdk.API.Controllers {
         { "_id", id }
       };
 
-      ApplyOptions(query, options);
+      if (options != null) {
+        query.Merge(options.ToJson());
+      }
 
       Response response = await api.QueryAsync(query);
 
@@ -100,7 +88,7 @@ namespace KuzzleSdk.API.Controllers {
     /// <summary>
     /// Deletes a document.
     /// </summary>
-    public async Task<string> DeleteAsync(
+    public async Task DeleteAsync(
         string index,
         string collection,
         string id,
@@ -113,11 +101,11 @@ namespace KuzzleSdk.API.Controllers {
         { "_id", id }
       };
 
-      ApplyOptions(query, options);
+      if (options != null) {
+        query.Merge(options.ToJson());
+      }
 
-      Response response = await api.QueryAsync(query);
-
-      return (string)response.Result["_id"];
+      await api.QueryAsync(query);
     }
 
     /// <summary>
@@ -137,7 +125,9 @@ namespace KuzzleSdk.API.Controllers {
         { "collection", collection }
       };
 
-      ApplyOptions(query, options);
+      if (options != null) {
+        query.Merge(options.ToJson());
+      }
 
       Response response = await api.QueryAsync(request);
 
@@ -182,7 +172,9 @@ namespace KuzzleSdk.API.Controllers {
         { "collection", collection }
       };
 
-      ApplyOptions(request, options);
+      if (options != null) {
+        request.Merge(options.ToJson());
+      }
 
       Response response = await api.QueryAsync(request);
 
@@ -207,7 +199,9 @@ namespace KuzzleSdk.API.Controllers {
         { "collection", collection }
       };
 
-      ApplyOptions(request, options);
+      if (options != null) {
+        request.Merge(options.ToJson());
+      }
 
       Response response = await api.QueryAsync(request);
 
@@ -232,7 +226,9 @@ namespace KuzzleSdk.API.Controllers {
         { "collection", collection }
       };
 
-      ApplyOptions(request, options);
+      if (options != null) {
+        request.Merge(options.ToJson());
+      }
 
       Response response = await api.QueryAsync(request);
 
@@ -279,7 +275,9 @@ namespace KuzzleSdk.API.Controllers {
         { "collection", collection }
       };
 
-      ApplyOptions(request, options);
+      if (options != null) {
+        request.Merge(options.ToJson());
+      }
 
       Response response = await api.QueryAsync(request);
 
@@ -304,7 +302,9 @@ namespace KuzzleSdk.API.Controllers {
         { "collection", collection }
       };
 
-      ApplyOptions(request, options);
+      if (options != null) {
+        request.Merge(options.ToJson());
+      }
 
       Response response = await api.QueryAsync(request);
 
@@ -329,7 +329,9 @@ namespace KuzzleSdk.API.Controllers {
         { "_id", id }
       };
 
-      ApplyOptions(request, options);
+      if (options != null) {
+        request.Merge(options.ToJson());
+      }
 
       Response response = await api.QueryAsync(request);
 
@@ -380,7 +382,9 @@ namespace KuzzleSdk.API.Controllers {
         { "_id", id }
       };
 
-      ApplyOptions(request, options);
+      if (options != null) {
+        request.Merge(options.ToJson());
+      }
 
       Response response = await api.QueryAsync(request);
 

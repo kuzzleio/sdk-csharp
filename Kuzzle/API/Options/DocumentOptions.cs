@@ -1,4 +1,6 @@
-﻿namespace KuzzleSdk.API.Options {
+﻿using Newtonsoft.Json.Linq;
+
+namespace KuzzleSdk.API.Options {
   /// <summary>
   /// Options for the Document controller
   /// </summary>
@@ -14,5 +16,19 @@
     /// update.
     /// </summary>
     public int? RetryOnConflict { get; set; }
+
+    public JObject ToJson() {
+      var result = new JObject();
+
+      if (WaitForRefresh) {
+        result.Add("refresh", "wait_for");
+      }
+
+      if (RetryOnConflict != null) {
+        result.Add("retryOnConflict", RetryOnConflict);
+      }
+
+      return result;
+    }
   };
 }

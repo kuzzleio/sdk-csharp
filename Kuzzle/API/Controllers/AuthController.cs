@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Runtime.CompilerServices;
 using Newtonsoft.Json.Linq;
-
-[assembly: InternalsVisibleTo("Kuzzle.Tests")]
 
 namespace KuzzleSdk.API.Controllers {
   /// <summary>
