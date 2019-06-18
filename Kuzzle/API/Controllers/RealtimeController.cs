@@ -25,7 +25,7 @@ namespace KuzzleSdk.API.Controllers {
 
     private void NotificationsListener(object sender, Response notification) {
       if (notification.Type == "TokenExpired") {
-        kuzzle.TokenHasExpired();
+        api.DispatchTokenExpired();
         return;
       }
 
@@ -37,7 +37,7 @@ namespace KuzzleSdk.API.Controllers {
           if (
             n.Item2.SubscribeToSelf ||
             sdkInstanceId == null ||
-            sdkInstanceId != kuzzle.InstanceId
+            sdkInstanceId != api.InstanceId
           ) {
             n.Item1(notification);
           }
@@ -89,9 +89,9 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     internal RealtimeController(Kuzzle k) : base(k) {
-      kuzzle.UnhandledResponse += NotificationsListener;
-      kuzzle.NetworkProtocol.StateChanged += StateChangeListener;
-      kuzzle.TokenExpired += TokenExpiredListener;
+      api.UnhandledResponse += NotificationsListener;
+      api.NetworkProtocol.StateChanged += StateChangeListener;
+      api.TokenExpired += TokenExpiredListener;
     }
 
     /// <summary>
@@ -100,15 +100,15 @@ namespace KuzzleSdk.API.Controllers {
     /// is reclaimed by garbage collection.
     /// </summary>
     ~RealtimeController() {
-      kuzzle.UnhandledResponse -= NotificationsListener;
-      kuzzle.NetworkProtocol.StateChanged -= StateChangeListener;
+      api.UnhandledResponse -= NotificationsListener;
+      api.NetworkProtocol.StateChanged -= StateChangeListener;
     }
 
     /// <summary>
     /// Returns the number of other connections sharing the same subscription.
     /// </summary>
     public async Task<int> CountAsync(string roomId) {
-      Response response = await kuzzle.QueryAsync(new JObject {
+      Response response = await api.QueryAsync(new JObject {
         { "controller", "realtime" },
         { "action", "count" },
         { "body", new JObject{ { "roomId", roomId } } }
@@ -124,7 +124,7 @@ namespace KuzzleSdk.API.Controllers {
     /// </summary>
     public async Task PublishAsync(
         string index, string collection, JObject message) {
-      await kuzzle.QueryAsync(new JObject {
+      await api.QueryAsync(new JObject {
         { "controller", "realtime" },
         { "action", "publish" },
         { "index", index },
@@ -153,7 +153,7 @@ namespace KuzzleSdk.API.Controllers {
         request.Merge(JObject.FromObject(options));
       }
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
       AddNotificationHandler(
         (string)response.Result["roomId"],
@@ -168,7 +168,7 @@ namespace KuzzleSdk.API.Controllers {
     /// Removes a subscription.
     /// </summary>
     public async Task UnsubscribeAsync(string roomId) {
-      await kuzzle.QueryAsync(new JObject {
+      await api.QueryAsync(new JObject {
         { "controller", "realtime" },
         { "action", "unsubscribe" },
         { "body", new JObject{ { "roomId", roomId } } }

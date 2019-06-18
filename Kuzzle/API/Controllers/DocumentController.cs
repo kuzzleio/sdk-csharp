@@ -25,7 +25,7 @@ namespace KuzzleSdk.API.Controllers {
       }
     }
 
-    internal DocumentController(Kuzzle k) : base(k) { }
+    internal DocumentController(IKuzzleApi api) : base(api) { }
 
     /// <summary>
     /// Counts documents in a collection.
@@ -36,7 +36,7 @@ namespace KuzzleSdk.API.Controllers {
         string index,
         string collection,
         JObject query = null) {
-      Response response = await kuzzle.QueryAsync(new JObject {
+      Response response = await api.QueryAsync(new JObject {
         { "controller", "document" },
         { "action", "count" },
         { "body", query },
@@ -67,7 +67,7 @@ namespace KuzzleSdk.API.Controllers {
 
       ApplyOptions(query, options);
 
-      Response response = await kuzzle.QueryAsync(query);
+      Response response = await api.QueryAsync(query);
 
       return (JObject)response.Result;
     }
@@ -92,7 +92,7 @@ namespace KuzzleSdk.API.Controllers {
 
       ApplyOptions(query, options);
 
-      Response response = await kuzzle.QueryAsync(query);
+      Response response = await api.QueryAsync(query);
 
       return (JObject)response.Result;
     }
@@ -115,7 +115,7 @@ namespace KuzzleSdk.API.Controllers {
 
       ApplyOptions(query, options);
 
-      Response response = await kuzzle.QueryAsync(query);
+      Response response = await api.QueryAsync(query);
 
       return (string)response.Result["_id"];
     }
@@ -139,7 +139,7 @@ namespace KuzzleSdk.API.Controllers {
 
       ApplyOptions(query, options);
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
       return (JArray)response.Result["hits"];
     }
@@ -159,7 +159,7 @@ namespace KuzzleSdk.API.Controllers {
         { "_id", id }
       };
 
-      Response response = await kuzzle.QueryAsync(query);
+      Response response = await api.QueryAsync(query);
 
       return (JObject)response.Result;
     }
@@ -184,7 +184,7 @@ namespace KuzzleSdk.API.Controllers {
 
       ApplyOptions(request, options);
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
       return (JArray)response.Result["hits"];
     }
@@ -209,7 +209,7 @@ namespace KuzzleSdk.API.Controllers {
 
       ApplyOptions(request, options);
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
       return (JArray)response.Result["hits"];
     }
@@ -234,7 +234,7 @@ namespace KuzzleSdk.API.Controllers {
 
       ApplyOptions(request, options);
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
       return (JArray)response.Result["hits"];
     }
@@ -256,7 +256,7 @@ namespace KuzzleSdk.API.Controllers {
         { "collection", collection }
       };
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
       return (JArray)response.Result["hits"];
     }
@@ -281,7 +281,7 @@ namespace KuzzleSdk.API.Controllers {
 
       ApplyOptions(request, options);
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
       return (JArray)response.Result["hits"];
     }
@@ -306,7 +306,7 @@ namespace KuzzleSdk.API.Controllers {
 
       ApplyOptions(request, options);
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
       return (JArray)response.Result["hits"];
     }
@@ -331,7 +331,7 @@ namespace KuzzleSdk.API.Controllers {
 
       ApplyOptions(request, options);
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
       return (JObject)response.Result;
     }
@@ -358,8 +358,8 @@ namespace KuzzleSdk.API.Controllers {
 
       System.Console.WriteLine(request);
 
-      Response response = await kuzzle.QueryAsync(request);
-      return new SearchResults(kuzzle, request, options, response);
+      Response response = await api.QueryAsync(request);
+      return new SearchResults(api, request, options, response);
     }
 
     /// <summary>
@@ -382,7 +382,7 @@ namespace KuzzleSdk.API.Controllers {
 
       ApplyOptions(request, options);
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
       return (JObject)response.Result;
     }
@@ -405,7 +405,7 @@ namespace KuzzleSdk.API.Controllers {
         { "collection", collection }
       };
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
       return (JObject)response.Result;
     }
