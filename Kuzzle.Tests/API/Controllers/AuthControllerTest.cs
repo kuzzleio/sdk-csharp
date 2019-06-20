@@ -15,11 +15,10 @@ namespace Kuzzle.Tests.API.Controllers {
     }
 
     [Fact]
-    public async void CheckTokenAsyncTestSuccess() {
+    public async void CheckTokenAsyncTest() {
       string token = "foobar";
 
       _api.SetResult(@"{result: {foo: 123}}");
-      _api.Mock.SetupProperty(a => a.AuthenticationToken, "foo");
 
       JObject result = await _authController.CheckTokenAsync(token);
 
@@ -34,28 +33,9 @@ namespace Kuzzle.Tests.API.Controllers {
         result,
         new JTokenEqualityComparer());
 
-      _api.Mock.VerifySet(a => a.AuthenticationToken = null);
-      _api.Mock.VerifySet(a => a.AuthenticationToken = "foo");
-    }
-
-    [Fact]
-    public async void CheckTokenAsyncTestFailure() {
-      string token = "foobar";
-
-      _api.SetError();
-      _api.Mock.SetupProperty(a => a.AuthenticationToken, "foo");
-
-      await Assert.ThrowsAsync<ApiErrorException>(
-        () => _authController.CheckTokenAsync(token));
-
-      _api.Verify(new JObject {
-        { "controller", "auth" },
-        { "action", "checkToken" },
-        { "body", new JObject{ { "token", token } } }
-      });
-
-      _api.Mock.VerifySet(a => a.AuthenticationToken = null);
-      _api.Mock.VerifySet(a => a.AuthenticationToken = "foo");
+      _api.Mock.VerifySet(
+        a => a.AuthenticationToken = It.IsAny<string>(),
+        Times.Never);
     }
 
     [Fact]
@@ -189,15 +169,13 @@ namespace Kuzzle.Tests.API.Controllers {
     public async void LoginAsyncTestSuccess(string expiresIn) {
       var credentials = new JObject { { "fake", "credentials" } };
       var expected = JObject.Parse(@"{
-        ""_id"": ""<kuid>"",
-        ""jwt"": ""<encrypted token>"",
-        ""expiresAt"": 1321085955000,
-        ""ttl"": 360000
+        _id: '<kuid>',
+        jwt: '<encrypted token>',
+        expiresAt: 1321085955000,
+        ttl: 360000
       }");
 
       _api.SetResult(new JObject { { "result", expected } });
-
-      _api.Mock.SetupProperty(a => a.AuthenticationToken, "foo");
 
       JObject result = await _authController.LoginAsync(
         "foostrategy",
@@ -217,20 +195,19 @@ namespace Kuzzle.Tests.API.Controllers {
         result,
         new JTokenEqualityComparer());
 
-      _api.Mock.VerifySet(a => a.AuthenticationToken = null);
       _api.Mock.VerifySet(a => a.AuthenticationToken = "<encrypted token>");
     }
 
     [Fact]
     public async void LoginAsyncTestFailure() {
       _api.SetError();
-      _api.Mock.SetupProperty(a => a.AuthenticationToken, "foo");
 
       await Assert.ThrowsAsync<ApiErrorException>(
         () => _authController.LoginAsync("foostrategy", new JObject()));
 
-      _api.Mock.VerifySet(a => a.AuthenticationToken = null);
-      _api.Mock.VerifySet(a => a.AuthenticationToken = "foo");
+      _api.Mock.VerifySet(
+        a => a.AuthenticationToken = It.IsAny<string>(),
+        Times.Never);
     }
 
     [Fact]
@@ -250,15 +227,13 @@ namespace Kuzzle.Tests.API.Controllers {
     [InlineData("6d")]
     public async void RefreshTokenTestSuccess(string expiresIn) {
       var expected = JObject.Parse(@"{
-        ""_id"": ""<kuid>"",
-        ""jwt"": ""<encrypted token>"",
-        ""expiresAt"": 1321085955000,
-        ""ttl"": 360000
+        _id: '<kuid>',
+        jwt: '<encrypted token>',
+        expiresAt: 1321085955000,
+        ttl: 360000
       }");
 
       _api.SetResult(new JObject { { "result", expected } });
-
-      _api.Mock.SetupProperty(a => a.AuthenticationToken, "foo");
 
       JObject result = await _authController.RefreshTokenAsync(expiresIn);
 
@@ -279,7 +254,6 @@ namespace Kuzzle.Tests.API.Controllers {
     [Fact]
     public async void RefreshTokenTestFailure() {
       _api.SetError();
-      _api.Mock.SetupProperty(a => a.AuthenticationToken, "foo");
 
       await Assert.ThrowsAsync<ApiErrorException>(
         () => _authController.RefreshTokenAsync());
