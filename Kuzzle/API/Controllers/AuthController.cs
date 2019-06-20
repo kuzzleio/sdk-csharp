@@ -13,13 +13,7 @@ namespace KuzzleSdk.API.Controllers {
     /// Checks the validity of an authentication token.
     /// </summary>
     public async Task<JObject> CheckTokenAsync(string token) {
-      string save = api.AuthenticationToken;
-      api.AuthenticationToken = null;
-
-      Response response;
-
-      try {
-        response = await api.QueryAsync(new JObject {
+      Response response = await api.QueryAsync(new JObject {
           { "controller", "auth" },
           { "action", "checkToken" },
           {
@@ -29,9 +23,6 @@ namespace KuzzleSdk.API.Controllers {
             }
           }
         });
-      } finally {
-        api.AuthenticationToken = save;
-      }
 
       return (JObject)response.Result;
     }
@@ -40,8 +31,9 @@ namespace KuzzleSdk.API.Controllers {
     /// Creates new credentials for the current user.
     /// </summary>
     public async Task<JObject> CreateMyCredentialsAsync(
-        string strategy,
-        JObject credentials) {
+      string strategy,
+      JObject credentials
+    ) {
       Response response = await api.QueryAsync(new JObject {
         { "controller", "auth" },
         { "action", "createMyCredentials" },
@@ -138,24 +130,17 @@ namespace KuzzleSdk.API.Controllers {
     /// Authenticates a user.
     /// </summary>
     public async Task<JObject> LoginAsync(
-        string strategy, JObject credentials, string expiresIn = null) {
-      string token = api.AuthenticationToken;
-      api.AuthenticationToken = null;
-
-      Response response;
-
-      try {
-        response = await api.QueryAsync(new JObject {
-          { "controller", "auth" },
-          { "action", "login" },
-          { "strategy", strategy },
-          { "body", credentials },
-          { "expiresIn", expiresIn }
-        });
-      } catch (Exception) {
-        api.AuthenticationToken = token;
-        throw;
-      }
+      string strategy,
+      JObject credentials,
+      string expiresIn = null
+    ) {
+      Response response = await api.QueryAsync(new JObject {
+        { "controller", "auth" },
+        { "action", "login" },
+        { "strategy", strategy },
+        { "body", credentials },
+        { "expiresIn", expiresIn }
+      });
 
       api.AuthenticationToken = (string)response.Result["jwt"];
 
@@ -192,8 +177,9 @@ namespace KuzzleSdk.API.Controllers {
     /// Updates the credentials of the currently logged in user.
     /// </summary>
     public async Task<JObject> UpdateMyCredentialsAsync(
-        string strategy,
-        JObject credentials) {
+      string strategy,
+      JObject credentials
+    ) {
       Response response = await api.QueryAsync(new JObject {
         { "controller", "auth" },
         { "action", "updateMyCredentials" },
@@ -224,8 +210,9 @@ namespace KuzzleSdk.API.Controllers {
     /// This route neither creates nor modifies credentials.
     /// </summary>
     public async Task<bool> ValidateMyCredentialsAsync(
-        string strategy,
-        JObject credentials) {
+      string strategy,
+      JObject credentials
+    ) {
       Response response = await api.QueryAsync(new JObject {
         { "controller", "auth" },
         { "action", "validateMyCredentials" },

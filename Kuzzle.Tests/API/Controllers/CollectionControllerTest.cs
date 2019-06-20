@@ -17,6 +17,13 @@ namespace Kuzzle.Tests.API.Controllers {
       _collectionController = new CollectionController(_api.MockedObject);
     }
 
+    public static IEnumerable<object[]> GenerateListOptions() {
+      yield return new object[] { null, null, null };
+      yield return new object[] { null, null, "stored" };
+      yield return new object[] { -10, 42, "realtime" };
+      yield return new object[] { 12, null, null };
+    }
+
     [Theory]
     [
       MemberData(nameof(MockGenerators.GenerateMappings),
@@ -128,14 +135,13 @@ namespace Kuzzle.Tests.API.Controllers {
     }
 
     [Theory]
-    [
-      MemberData(nameof(MockGenerators.GenerateListOptions),
-      MemberType = typeof(MockGenerators))
-    ]
-    public async void ListAsyncTest(ListOptions opts) {
+    [MemberData(nameof(GenerateListOptions))]
+    public async void ListAsyncTest(int? from, int? size, string type) {
       _api.SetResult(@"{result: {foo: 123}}");
 
-      JObject result = await _collectionController.ListAsync("foo", opts);
+      JObject result = await _collectionController.ListAsync(
+        "foo", from, size, type
+      );
 
       var expected = new JObject {
         { "controller", "collection" },
@@ -143,9 +149,9 @@ namespace Kuzzle.Tests.API.Controllers {
         { "index", "foo" }
       };
 
-      if (opts != null) {
-        expected.Merge(JObject.FromObject(opts));
-      }
+      if (from != null) expected.Add("from", from);
+      if (size != null) expected.Add("size", size);
+      if (type != null) expected.Add("type", type);
 
       _api.Verify(expected);
 
