@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using KuzzleSdk;
 using KuzzleSdk.API;
@@ -21,6 +21,10 @@ namespace Kuzzle.Tests.API {
 
     public KuzzleApiMock() {
       Mock = new Mock<IKuzzleApi>();
+    }
+
+    public void SetResult(JToken apiResult) {
+      SetResult(apiResult.ToString());
     }
 
     public void SetResult(string apiResult) {

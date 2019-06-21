@@ -16,7 +16,7 @@ namespace KuzzleSdk {
     /// Gets or sets the authentication token.
     /// </summary>
     /// <value>The authentication token.</value>
-    string Jwt { get; set; }
+    string AuthenticationToken { get; set; }
 
     /// <summary>
     /// Gets the instance identifier.
@@ -84,7 +84,7 @@ namespace KuzzleSdk {
     public event Action TokenExpired;
 
     public void DispatchTokenExpired() {
-      Jwt = null;
+      AuthenticationToken = null;
       TokenExpired?.Invoke();
     }
 
@@ -116,7 +116,17 @@ namespace KuzzleSdk {
     /// <summary>
     /// Authentication token
     /// </summary>
-    public string Jwt { get; set; }
+    public string AuthenticationToken { get; set; }
+
+    /// <summary>
+    /// Authentication token (deprecated, use AuthenticationToken instead)
+    /// </summary>
+    [Obsolete(
+      "The Jwt property is deprecated, use AuthencationToken instead", false)]
+    string Jwt {
+      get { return AuthenticationToken; }
+      set { AuthenticationToken = value; }
+    }
 
     /// <summary>
     /// Network Protocol
@@ -131,7 +141,7 @@ namespace KuzzleSdk {
           NetworkProtocol.StateChanged -= StateChangeListener;
         }
 
-        Jwt = null;
+        AuthenticationToken = null;
         networkProtocol = value;
       }
     }
@@ -238,8 +248,8 @@ namespace KuzzleSdk {
         throw new Exceptions.NotConnectedException();
       }
 
-      if (Jwt != null) {
-        query["jwt"] = Jwt;
+      if (AuthenticationToken != null) {
+        query["jwt"] = AuthenticationToken;
       }
 
       string requestId = Guid.NewGuid().ToString();
