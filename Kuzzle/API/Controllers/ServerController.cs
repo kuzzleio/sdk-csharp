@@ -7,7 +7,7 @@ namespace KuzzleSdk.API.Controllers {
   /// Implements the "server" Kuzzle API controller
   /// </summary>
   public sealed class ServerController : BaseController {
-    internal ServerController(Kuzzle k) : base(k) { }
+    internal ServerController(IKuzzleApi api) : base(api) { }
 
     /// <summary>
     /// Returns the current server timestamp, in Epoch-millis format.
@@ -89,7 +89,7 @@ namespace KuzzleSdk.API.Controllers {
     public async Task<JObject> GetStatsAsync(Int64 start, Int64 end) {
       Response response = await api.QueryAsync(new JObject {
         { "controller", "server" },
-        { "action", "getLastStats" },
+        { "action", "getStats" },
         { "startTime", start},
         { "stopTime", end}
       });
