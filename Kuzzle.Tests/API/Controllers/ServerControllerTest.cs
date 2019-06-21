@@ -1,8 +1,6 @@
 using Xunit;
 using KuzzleSdk.API.Controllers;
 using Newtonsoft.Json.Linq;
-using KuzzleSdk.Exceptions;
-using Moq;
 using System;
 
 namespace Kuzzle.Tests.API.Controllers
