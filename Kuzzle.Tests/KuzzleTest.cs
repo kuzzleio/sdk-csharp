@@ -89,7 +89,8 @@ namespace Kuzzle.Tests {
 
     [Fact]
     public async void ResponseListenerTest() {
-      TaskCompletionSource<Response> responseTask = new TaskCompletionSource<Response>();
+      TaskCompletionSource<Response> responseTask =
+        new TaskCompletionSource<Response>();
       string requestId = "uniq-id";
       JObject apiResponse = new JObject {
         { "requestId", requestId },
@@ -113,7 +114,8 @@ namespace Kuzzle.Tests {
       _kuzzle.TokenExpired += delegate() {
         eventDispatched = true;
       };
-      TaskCompletionSource<Response> responseTask = new TaskCompletionSource<Response>();
+      TaskCompletionSource<Response> responseTask =
+        new TaskCompletionSource<Response>();
       string requestId = "uniq-id";
       JObject apiResponse = new JObject {
         { "requestId", requestId },
@@ -127,7 +129,10 @@ namespace Kuzzle.Tests {
 
 
       _kuzzle.ResponsesListener(_kuzzle, apiResponse.ToString());
-      ApiErrorException ex = await Assert.ThrowsAsync<ApiErrorException>(async () => await responseTask.Task);
+      ApiErrorException ex =
+        await Assert.ThrowsAsync<ApiErrorException>(async () => {
+          await responseTask.Task;
+        });
 
       Assert.True(eventDispatched);
       Assert.Equal(401, ex.Status);
@@ -157,15 +162,21 @@ namespace Kuzzle.Tests {
 
     [Fact]
     public async void StateChangeListenerTest () {
-      TaskCompletionSource<Response> responseTask1 = new TaskCompletionSource<Response>();
-      TaskCompletionSource<Response> responseTask2 = new TaskCompletionSource<Response>();
+      TaskCompletionSource<Response> responseTask1 =
+        new TaskCompletionSource<Response>();
+      TaskCompletionSource<Response> responseTask2 =
+        new TaskCompletionSource<Response>();
       _kuzzle.requests["request-id-1"] = responseTask1;
       _kuzzle.requests["request-id-2"] = responseTask2;
 
       _kuzzle.StateChangeListener(_kuzzle, ProtocolState.Closed);
 
-      await Assert.ThrowsAsync<ConnectionLostException>(async () => await responseTask1.Task);
-      await Assert.ThrowsAsync<ConnectionLostException>(async () => await responseTask2.Task);
+      await Assert.ThrowsAsync<ConnectionLostException>(async () => {
+        await responseTask1.Task;
+      });
+      await Assert.ThrowsAsync<ConnectionLostException>(async () => {
+        await responseTask2.Task;
+      });
       Assert.Empty(_kuzzle.requests.Keys);
     }
   }
