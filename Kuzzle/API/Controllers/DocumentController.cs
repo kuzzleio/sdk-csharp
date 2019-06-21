@@ -121,8 +121,7 @@ namespace KuzzleSdk.API.Controllers {
     public async Task<JArray> DeleteByQueryAsync(
       string index,
       string collection,
-      JObject query,
-      bool waitForRefresh = false
+      JObject query
     ) {
       var request = new JObject {
         { "controller", "document" },
@@ -131,8 +130,6 @@ namespace KuzzleSdk.API.Controllers {
         { "index", index },
         { "collection", collection }
       };
-
-      HandleRefreshOption(query, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 
@@ -235,7 +232,7 @@ namespace KuzzleSdk.API.Controllers {
 
       Response response = await api.QueryAsync(request);
 
-      return (JArray)response.Result["hits"];
+      return (JArray)response.Result;
     }
 
     /// <summary>
@@ -398,7 +395,7 @@ namespace KuzzleSdk.API.Controllers {
     /// the provided index and collection.
     /// This request does not store the document.
     /// </summary>
-    public async Task<JObject> ValidateAsync(
+    public async Task<bool> ValidateAsync(
       string index,
       string collection,
       JObject content
@@ -413,7 +410,7 @@ namespace KuzzleSdk.API.Controllers {
 
       Response response = await api.QueryAsync(request);
 
-      return (JObject)response.Result;
+      return (bool)response.Result["valid"];
     }
   }
 }
