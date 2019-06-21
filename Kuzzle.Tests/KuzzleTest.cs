@@ -1,7 +1,6 @@
 using Xunit;
 using Newtonsoft.Json.Linq;
 using KuzzleSdk.Exceptions;
-using Kuzzle.Tests.Protocol;
 using KuzzleSdk.Protocol;
 using KuzzleSdk.API;
 using System;
@@ -11,11 +10,11 @@ using Moq;
 namespace Kuzzle.Tests {
   public class KuzzleTest {
     private readonly KuzzleSdk.Kuzzle _kuzzle;
-    private readonly ProtocolMock _protocol;
+    private readonly Mock<AbstractProtocol> _protocol;
 
     public KuzzleTest() {
-      _protocol = new ProtocolMock();
-      _kuzzle = new KuzzleSdk.Kuzzle(_protocol.MockedObject);
+      _protocol = new Mock<AbstractProtocol>();
+      _kuzzle = new KuzzleSdk.Kuzzle(_protocol.Object);
     }
 
     [Fact]
@@ -48,14 +47,14 @@ namespace Kuzzle.Tests {
     public async void ConnectAsyncTest() {
       await _kuzzle.ConnectAsync();
 
-      _protocol.Mock.Verify(m => m.ConnectAsync(), Times.Once);
+      _protocol.Verify(m => m.ConnectAsync(), Times.Once);
     }
 
     [Fact]
     public void DisconnectTest() {
       _kuzzle.Disconnect();
 
-      _protocol.Mock.Verify(m => m.Disconnect(), Times.Once);
+      _protocol.Verify(m => m.Disconnect(), Times.Once);
     }
 
 
@@ -66,11 +65,11 @@ namespace Kuzzle.Tests {
         { "action", "testAction" }
       };
       _kuzzle.AuthenticationToken = "jwt auth token";
-      _protocol.SetSendResult(@"{ result: true }");
+      _protocol.Setup(protocol => protocol.Send(It.IsAny<JObject>()));
 
       _kuzzle.QueryAsync(request);
 
-      _protocol.Mock.Verify(
+      _protocol.Verify(
         protocol => protocol.Send(It.Is<JObject>(o => testSendArg(o))));
 
       Assert.Single(_kuzzle.requests);
