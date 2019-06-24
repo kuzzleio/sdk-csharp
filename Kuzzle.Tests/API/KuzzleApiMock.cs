@@ -20,7 +20,7 @@ namespace Kuzzle.Tests.API {
     }
 
     public KuzzleApiMock() {
-      Mock = new Mock<IKuzzleApi>();
+      Mock = new Mock<IKuzzleApi> { DefaultValue = DefaultValue.Mock };
     }
 
     public void SetResult(JToken apiResult) {
