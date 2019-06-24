@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using KuzzleSdk.API.Options;
 using KuzzleSdk.API;
+using Moq;
 
 namespace Kuzzle.Tests.API.Controllers
 {
@@ -16,11 +17,6 @@ namespace Kuzzle.Tests.API.Controllers
         {
             _api = new KuzzleApiMock();
             _realtimeController = new RealtimeController(_api.MockedObject);
-        }
-
-        private void MockNotificationHandler(Response notification)
-        {
-            Console.WriteLine(notification.Result);
         }
 
         [Fact]
@@ -91,8 +87,9 @@ namespace Kuzzle.Tests.API.Controllers
             {
                 expectedQuery.Merge(JObject.FromObject(options));
             }
+            Mock<RealtimeController.NotificationHandler> mockNotifHand = new Mock<RealtimeController.NotificationHandler>();
 
-            string res = await _realtimeController.SubscribeAsync(index, collection, filters, MockNotificationHandler, options);
+            string res = await _realtimeController.SubscribeAsync(index, collection, filters, mockNotifHand.Object, options);
 
             _api.Verify(expectedQuery);
             Assert.Equal(roomId, res);
@@ -113,7 +110,8 @@ namespace Kuzzle.Tests.API.Controllers
                     { "channel", channel } }
                 } }
             );
-            await _realtimeController.SubscribeAsync(index, collection, filters, MockNotificationHandler);
+            Mock<RealtimeController.NotificationHandler> mockNotifHand = new Mock<RealtimeController.NotificationHandler>();
+            await _realtimeController.SubscribeAsync(index, collection, filters, mockNotifHand.Object);
 
             //Then we can test if unsubcription is working
             _api.SetResult(new JObject {{
@@ -128,6 +126,38 @@ namespace Kuzzle.Tests.API.Controllers
                 {"action", "unsubscribe"},
                 {"body", new JObject {{ "roomId", roomId}}}
             });
+        }
+
+        [Fact]
+        public void NotificationHandlerTokenExpiredTest()
+        {
+            _api.Mock.Raise(m => m.UnhandledResponse += null, this, Response.FromString(@"{type: 'TokenExpired'}"));
+
+            _api.Mock.Verify(m => m.DispatchTokenExpired(), Times.Once());
+        }
+
+        [Fact]
+        public async void NotificationHandlerTest()
+        {
+            //First we subscribe to a collection
+            string index = "an_index";
+            string collection = "a_collection";
+            JObject filters = new JObject { { "studio", "pixar" } };
+            _api.SetResult(new JObject { {
+                "result", new JObject {
+                    { "roomId", "A113"},
+                    { "channel", "a_channel"} }
+                } }
+            );
+            Mock<RealtimeController.NotificationHandler> mockNotifHand = new Mock<RealtimeController.NotificationHandler>();
+            await _realtimeController.SubscribeAsync(index, collection, filters, mockNotifHand.Object);
+
+            //Then we trigger a notification
+            Response notif = Response.FromString("{room: 'a_channel'}");
+            _api.Mock.Raise(m => m.UnhandledResponse += null, this, notif);
+
+            //Then we can check that the handler has been called
+            mockNotifHand.Verify(m => m.Invoke(notif), Times.AtLeastOnce);
         }
     }
 }
