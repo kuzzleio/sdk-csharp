@@ -63,7 +63,10 @@ namespace Kuzzle.Tests.API.Controllers
         }
 
         [Theory]
-        [ClassData(typeof(SubscribeOptionGenerator))]
+        [
+            MemberData(nameof(MockGenerators.GenerateSubscribeOptions),
+            MemberType = typeof(MockGenerators))
+        ]
         public async void SubscribeAsyncTest(SubscribeOptions options)
         {
             string roomId = "A113";
@@ -125,21 +128,6 @@ namespace Kuzzle.Tests.API.Controllers
                 {"action", "unsubscribe"},
                 {"body", new JObject {{ "roomId", roomId}}}
             });
-        }
-    }
-
-    public class SubscribeOptionGenerator : TheoryData<SubscribeOptions>
-    {
-        public SubscribeOptionGenerator()
-        {
-            SubscribeOptions s = new SubscribeOptions();
-            Add(s);
-
-            SubscribeOptions s1 = new SubscribeOptions();
-            s1.Volatile = new JObject { { "reason", "test purpose" } };
-            Add(s1);
-
-            Add(null);
         }
     }
 }
