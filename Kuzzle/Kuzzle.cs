@@ -244,6 +244,10 @@ namespace KuzzleSdk {
     /// <returns>API response</returns>
     /// <param name="query">Kuzzle API query</param>
     public Task<Response> QueryAsync(JObject query) {
+      if (query == null){
+        throw new Exceptions.InternalException("You must provide a query", 400);
+      }
+
       if (NetworkProtocol.State != ProtocolState.Open) {
         throw new Exceptions.NotConnectedException();
       }
@@ -257,6 +261,8 @@ namespace KuzzleSdk {
 
       if (query["volatile"] == null) {
         query["volatile"] = new JObject();
+      } else if (!(query["volatile"] is JObject)) {
+        throw new Exceptions.InternalException("Volatile data must be a JObject", 400);
       }
 
       query["volatile"]["sdkVersion"] = Version;

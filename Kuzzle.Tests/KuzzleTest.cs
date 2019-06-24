@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using KuzzleSdk.Exceptions;
 using KuzzleSdk.Protocol;
 using KuzzleSdk.API;
+using KuzzleSdk.API.Controllers;
 using System;
 using System.Threading.Tasks;
 using Moq;
@@ -19,8 +20,8 @@ namespace Kuzzle.Tests {
 
     [Fact]
     public void DispatchTokenExpiredTest() {
+      _kuzzle.AuthenticationToken = "token";
       bool eventDispatched = false;
-
       _kuzzle.TokenExpired += delegate() {
         eventDispatched = true;
       };
@@ -33,14 +34,14 @@ namespace Kuzzle.Tests {
 
     [Fact]
     public void KuzzleConstructorTest() {
-      Assert.NotNull(_kuzzle.Auth);
-      Assert.NotNull(_kuzzle.Collection);
-      Assert.NotNull(_kuzzle.Document);
-      Assert.NotNull(_kuzzle.Realtime);
-      Assert.NotNull(_kuzzle.Server);
+      KuzzleSdk.Kuzzle kuzzle2 = new KuzzleSdk.Kuzzle(_protocol.Object);
 
-      Assert.NotNull(_kuzzle.Version);
-      Assert.NotNull(_kuzzle.InstanceId);
+      Assert.IsType<AuthController>(_kuzzle.Auth);
+      Assert.IsType<CollectionController>(_kuzzle.Collection);
+      Assert.IsType<DocumentController>(_kuzzle.Document);
+      Assert.IsType<RealtimeController>(_kuzzle.Realtime);
+      Assert.IsType<ServerController>(_kuzzle.Server);
+      Assert.NotEqual(_kuzzle.InstanceId, kuzzle2.InstanceId);
     }
 
     [Fact]
@@ -59,6 +60,29 @@ namespace Kuzzle.Tests {
 
 
     [Fact]
+    public async void QueryAsyncNullTest() {
+      JObject request = null;
+      _protocol.Setup(protocol => protocol.Send(It.IsAny<JObject>()));
+
+      await Assert.ThrowsAsync<InternalException>(async () => {
+        await _kuzzle.QueryAsync(request);
+      });
+    }
+
+    [Fact]
+    public async void QueryAsyncWrongVolatileTest() {
+      JObject request = new JObject {
+        { "volatile", "not a JObject" }
+      };
+
+      _protocol.Setup(protocol => protocol.Send(It.IsAny<JObject>()));
+
+      await Assert.ThrowsAsync<InternalException>(async () => {
+        await _kuzzle.QueryAsync(request);
+      });
+    }
+
+    [Fact]
     public void QueryAsyncTest() {
       JObject request = new JObject {
         { "controller", "test" },
@@ -74,14 +98,14 @@ namespace Kuzzle.Tests {
 
       Assert.Single(_kuzzle.requests);
     }
-    private bool testSendArg (JObject query) {
-      Assert.Equal("test", query["controller"]);
-      Assert.Equal("testAction", query["action"]);
-      Assert.Equal("jwt auth token", query["jwt"]);
-      Assert.True(JToken.DeepEquals(query["volatile"], new JObject {
+    private bool testSendArg (JObject request) {
+      Assert.Equal("test", request["controller"]);
+      Assert.Equal("testAction", request["action"]);
+      Assert.Equal("jwt auth token", request["jwt"]);
+      Assert.Equal(request["volatile"], new JObject {
         { "sdkVersion", _kuzzle.Version },
         { "sdkInstanceId", _kuzzle.InstanceId }
-      }));
+      }, new JTokenEqualityComparer());
 
       return true;
     }
