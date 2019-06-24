@@ -93,17 +93,17 @@ namespace KuzzleSdk.API.Controllers {
     /// The returned list is sorted in alphanumerical order.
     /// </summary>
     public async Task<JObject> ListAsync(
-        string index,
-        Options.ListOptions options = null) {
+      string index, int? from = null, int? size = null, string type = null
+    ) {
       var request = new JObject {
         { "controller", "collection" },
         { "action", "list" },
         { "index", index }
       };
 
-      if (options != null) {
-        request.Merge(JObject.FromObject(options));
-      }
+      if (from != null) request.Add("from", from);
+      if (size != null) request.Add("size", size);
+      if (type != null) request.Add("type", type);
 
       Response response = await api.QueryAsync(request);
 
