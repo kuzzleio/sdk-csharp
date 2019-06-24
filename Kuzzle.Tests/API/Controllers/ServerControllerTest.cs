@@ -54,26 +54,32 @@ namespace Kuzzle.Tests.API.Controllers
     
         [Fact]
         public async void InfoTest(){
-            _api.SetResult(@"{result: {cake: 'lie'}}");
+            JObject serverInfo = new JObject {{ "kuzzle", "installed"}};
+            _api.SetResult(new JObject {{ "result", new JObject {{ "serverInfo", serverInfo }} }});
 
-            await _serverController.InfoAsync();
+            JObject res = await _serverController.InfoAsync();
 
             _api.Verify(new JObject{ 
                 {"controller", "server"}, 
                 {"action", "info"}
             });
+            Assert.Equal<JObject>(serverInfo, res);
         }
 
         [Fact]
         public async void ConfigTest(){
-            _api.SetResult(@"{result: {cake: 'lie'}}");
+            _api.SetResult(@"{result: {limits: 'none'}}");
 
-            await _serverController.GetConfigAsync();
+            JObject res = await _serverController.GetConfigAsync();
 
             _api.Verify(new JObject{ 
                 {"controller", "server"}, 
                 {"action", "getConfig"}
             });
+            Assert.Equal<JObject>(
+                new JObject {{ "limits", "none"}},
+                res
+            );
         }
 
         [Fact]
@@ -97,7 +103,7 @@ namespace Kuzzle.Tests.API.Controllers
         }
 
         [Fact]
-        public async void GetiAllStatsTest(){
+        public async void GetAllStatsTest(){
             _api.SetResult(@"{ result: { cake: 'lie'} }");
 
             JObject res = await _serverController.GetAllStatsAsync();
