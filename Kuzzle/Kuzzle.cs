@@ -6,6 +6,9 @@ using KuzzleSdk.API;
 using KuzzleSdk.API.Controllers;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Kuzzle.Tests")]
 
 namespace KuzzleSdk {
   /// <summary>

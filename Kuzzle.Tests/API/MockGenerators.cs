@@ -34,5 +34,12 @@ namespace Kuzzle.Tests.API {
         }")
       };
     }
+
+    public static IEnumerable<object[]> GenerateSearchFilters() {
+      yield return new object[] { null };
+      yield return new object[] {
+        JObject.Parse(@"{ query: { match_all: {} } }")
+      };
+    }
   }
 }
