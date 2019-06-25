@@ -1,0 +1,18 @@
+---
+
+snippets:
+  mount: /mnt
+  path: doc/**/snippets/*.test.yml
+  templates: /mnt/.ci/doc/templates
+
+runners:
+  default: csharp
+
+  csharp:
+    service: doc-runner-csharp
+    path: /var/snippets/csharp
+    build:
+      run: dotnet build /mnt/Kuzzle/Kuzzle.csproj && mv /mnt/Kuzzle/bin/Debug/netstandard2.0/Kuzzle.dll /var/snippets/csharp/.
+    run:
+      before: dotnet build /mnt/Kuzzle/Kuzzle.csproj && mv /mnt/Kuzzle/bin/Debug/netstandard2.0/Kuzzle.dll /var/snippets/csharp/.
+      cmd: dotnet script {{ snippet.source }}
