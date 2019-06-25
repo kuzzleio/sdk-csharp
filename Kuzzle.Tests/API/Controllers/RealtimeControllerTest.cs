@@ -1,7 +1,9 @@
 using KuzzleSdk.API.Controllers;
 using Xunit;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using KuzzleSdk.API.Options;
 using KuzzleSdk.API;
 using Moq;
@@ -60,8 +62,7 @@ namespace Kuzzle.Tests.API.Controllers
 
         [Theory]
         [
-            MemberData(nameof(MockGenerators.GenerateSubscribeOptions),
-            MemberType = typeof(MockGenerators))
+            MemberData(nameof(SubscribeOptionsData))
         ]
         public async void SubscribeAsyncTest(SubscribeOptions options)
         {
@@ -111,21 +112,25 @@ namespace Kuzzle.Tests.API.Controllers
                 } }
             );
             Mock<RealtimeController.NotificationHandler> mockNotifHand = new Mock<RealtimeController.NotificationHandler>();
+
             await _realtimeController.SubscribeAsync(index, collection, filters, mockNotifHand.Object);
 
-            //Then we can test if unsubcription is working
+            //Then we test that Notification Handler is not called after the unsubscription. 
             _api.SetResult(new JObject {{
                 "result",  new JObject {{ "roomId", roomId }}
                 }}
             );
 
             await _realtimeController.UnsubscribeAsync(roomId);
-
             _api.Verify(new JObject {
                 {"controller", "realtime"},
                 {"action", "unsubscribe"},
                 {"body", new JObject {{ "roomId", roomId}}}
             });
+
+            Response notif = Response.FromString("{room: 'a_channel'}");
+            _api.Mock.Raise(m => m.UnhandledResponse += null, this, notif);
+            mockNotifHand.Verify(m => m.Invoke(notif), Times.Never);
         }
 
         [Fact]
@@ -158,6 +163,21 @@ namespace Kuzzle.Tests.API.Controllers
 
             //Then we can check that the handler has been called
             mockNotifHand.Verify(m => m.Invoke(notif), Times.AtLeastOnce);
+        }
+
+        public static IEnumerable<object[]> SubscribeOptionsData()
+        {
+            yield return new object[] { null };
+            yield return new object[] { new SubscribeOptions() };
+            yield return new object[] {
+                JsonConvert.DeserializeObject<SubscribeOptions>(@"{
+                    scope: 'all',
+                    users: 'all',
+                    volatile: {
+                        reason: 'test purpose'
+                    }
+                }")
+            };
         }
     }
 }
