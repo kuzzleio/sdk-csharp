@@ -88,9 +88,9 @@ namespace Kuzzle.Tests.API.Controllers
             {
                 expectedQuery.Merge(JObject.FromObject(options));
             }
-            Mock<RealtimeController.NotificationHandler> mockNotifHand = new Mock<RealtimeController.NotificationHandler>();
+            Mock<RealtimeController.NotificationHandler> notificationHandlerMock = new Mock<RealtimeController.NotificationHandler>();
 
-            string res = await _realtimeController.SubscribeAsync(index, collection, filters, mockNotifHand.Object, options);
+            string res = await _realtimeController.SubscribeAsync(index, collection, filters, notificationHandlerMock.Object, options);
 
             _api.Verify(expectedQuery);
             Assert.Equal(roomId, res);
@@ -111,9 +111,9 @@ namespace Kuzzle.Tests.API.Controllers
                     { "channel", channel } }
                 } }
             );
-            Mock<RealtimeController.NotificationHandler> mockNotifHand = new Mock<RealtimeController.NotificationHandler>();
+            Mock<RealtimeController.NotificationHandler> notificationHandlerMock = new Mock<RealtimeController.NotificationHandler>();
 
-            await _realtimeController.SubscribeAsync(index, collection, filters, mockNotifHand.Object);
+            await _realtimeController.SubscribeAsync(index, collection, filters, notificationHandlerMock.Object);
 
             //Then we test that Notification Handler is not called after the unsubscription. 
             _api.SetResult(new JObject {{
@@ -130,7 +130,7 @@ namespace Kuzzle.Tests.API.Controllers
 
             Response notif = Response.FromString("{room: 'a_channel'}");
             _api.Mock.Raise(m => m.UnhandledResponse += null, this, notif);
-            mockNotifHand.Verify(m => m.Invoke(notif), Times.Never);
+            notificationHandlerMock.Verify(m => m.Invoke(notif), Times.Never);
         }
 
         [Fact]
@@ -154,15 +154,15 @@ namespace Kuzzle.Tests.API.Controllers
                     { "channel", "a_channel"} }
                 } }
             );
-            Mock<RealtimeController.NotificationHandler> mockNotifHand = new Mock<RealtimeController.NotificationHandler>();
-            await _realtimeController.SubscribeAsync(index, collection, filters, mockNotifHand.Object);
+            Mock<RealtimeController.NotificationHandler> notificationHandlerMock = new Mock<RealtimeController.NotificationHandler>();
+            await _realtimeController.SubscribeAsync(index, collection, filters, notificationHandlerMock.Object);
 
             //Then we trigger a notification
             Response notif = Response.FromString("{room: 'a_channel'}");
             _api.Mock.Raise(m => m.UnhandledResponse += null, this, notif);
 
             //Then we can check that the handler has been called
-            mockNotifHand.Verify(m => m.Invoke(notif), Times.AtLeastOnce);
+            notificationHandlerMock.Verify(m => m.Invoke(notif), Times.AtLeastOnce);
         }
 
         public static IEnumerable<object[]> SubscribeOptionsData()
