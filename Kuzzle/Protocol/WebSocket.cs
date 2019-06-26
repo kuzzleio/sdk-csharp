@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -16,9 +17,12 @@ namespace KuzzleSdk.Protocol {
     private readonly ClientWebSocket socket;
     private readonly CancellationToken connectTimeout;
     private CancellationTokenSource receiveCancellationToken;
+    private CancellationTokenSource sendCancellationToken;
     private ArraySegment<byte> incomingBuffer =
       System.Net.WebSockets.WebSocket.CreateClientBuffer(
         receiveBufferSize, sendBufferSize);
+    private readonly BlockingCollection<JObject> sendQueue =
+      new BlockingCollection<JObject>();
 
     /// <summary>
     /// Initializes a new instance of the 
@@ -65,19 +69,24 @@ namespace KuzzleSdk.Protocol {
     /// Sends a formatted API request to a Kuzzle server.
     /// </summary>
     public override void Send(JObject payload) {
-      var buffer = Encoding.UTF8.GetBytes(payload.ToString());
+      sendQueue.Add(payload);
+    }
 
-      if (State == ProtocolState.Closed) {
-        CloseState();
-      } else {
-        socket
-          .SendAsync(
+    private void Dequeue() {
+      sendCancellationToken = new CancellationTokenSource();
+
+      Task.Run(async () => {
+        while (socket.State == WebSocketState.Open) {
+          var payload = sendQueue.Take();
+          var buffer = Encoding.UTF8.GetBytes(payload.ToString());
+
+          await socket.SendAsync(
             new ArraySegment<byte>(buffer),
             WebSocketMessageType.Text,
             true,
-            CancellationToken.None)
-          .Wait();
-      }
+            sendCancellationToken.Token);
+        }
+      }, sendCancellationToken.Token);
     }
 
     private void Listen() {
@@ -123,6 +132,8 @@ namespace KuzzleSdk.Protocol {
         DispatchStateChange(State);
         receiveCancellationToken?.Cancel();
         receiveCancellationToken = null;
+        sendCancellationToken?.Cancel();
+        sendCancellationToken = null;
       }
     }
   }
