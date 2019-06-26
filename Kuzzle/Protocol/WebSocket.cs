@@ -78,7 +78,7 @@ namespace KuzzleSdk.Protocol {
 
       Task.Run(async () => {
         while (socket.State == WebSocketState.Open) {
-          var payload = sendQueue.Take();
+          var payload = sendQueue.Take(sendCancellationToken.Token);
           var buffer = Encoding.UTF8.GetBytes(payload.ToString());
 
           await socket.SendAsync(
