@@ -70,11 +70,13 @@ namespace KuzzleSdk.Protocol {
       if (State == ProtocolState.Closed) {
         CloseState();
       } else {
-        socket.SendAsync(
-          new ArraySegment<byte>(buffer),
-          WebSocketMessageType.Text,
-          true,
-          CancellationToken.None).Wait();
+        socket
+          .SendAsync(
+            new ArraySegment<byte>(buffer),
+            WebSocketMessageType.Text,
+            true,
+            CancellationToken.None)
+          .Wait();
       }
     }
 
@@ -82,33 +84,28 @@ namespace KuzzleSdk.Protocol {
       receiveCancellationToken = new CancellationTokenSource();
 
       Task.Run(async () => {
-        WebSocketReceiveResult data;
+        WebSocketReceiveResult wsResult;
+        StringBuilder messageBuilder = new StringBuilder(receiveBufferSize * 2);
 
         while (socket.State == WebSocketState.Open) {
-          StringBuilder messageBuilder = null;
-          string message = null;
+          string message;
 
           do {
-            data = await socket.ReceiveAsync(
+            wsResult = await socket.ReceiveAsync(
               incomingBuffer,
               receiveCancellationToken.Token);
 
-            string payload = Encoding.UTF8.GetString(
-              incomingBuffer.Array, 0, data.Count);
+            message = Encoding.UTF8.GetString(
+              incomingBuffer.Array, 0, wsResult.Count);
 
-            if (messageBuilder == null) {
-              if (!data.EndOfMessage) {
-                messageBuilder = new StringBuilder(payload, data.Count * 2);
-              } else {
-                message = payload;
-              }
-            } else {
-              messageBuilder.Append(payload);
+            if (!wsResult.EndOfMessage || messageBuilder.Length > 0) {
+              messageBuilder.Append(message);
             }
-          } while (!data.EndOfMessage);
+          } while (!wsResult.EndOfMessage);
 
-          if (messageBuilder != null) {
+          if (messageBuilder.Length > 0) {
             message = messageBuilder.ToString();
+            messageBuilder.Clear();
           }
 
           if (!string.IsNullOrEmpty(message)) {
