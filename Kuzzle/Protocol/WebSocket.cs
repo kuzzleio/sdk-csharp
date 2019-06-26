@@ -7,86 +7,45 @@ using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.Protocol {
   /// <summary>
-  /// WebSocket options.
-  /// </summary>
-  public struct WebSocketOptions {
-    private int? port;
-    private bool? ssl;
-    private int? connectTimeout;
-
-    /// <summary>
-    /// If true, connects using SSL.
-    /// </summary>
-    public bool Ssl {
-      get { return ssl ?? false; }
-      set { ssl = value; }
-    }
-
-    /// <summary>
-    /// Kuzzle server port.
-    /// </summary>
-    public int Port {
-      get { return port ?? 7512; }
-      set { port = value; }
-    }
-
-    /// <summary>
-    /// Timeout (in milliseconds) after which a connection attempt aborts.
-    /// </summary>
-    public int ConnectTimeout {
-      get { return connectTimeout ?? 30000; }
-      set { connectTimeout = value; }
-    }
-  }
-
-  /// <summary>
   /// WebSocket network protocol.
   /// </summary>
   public class WebSocket : AbstractProtocol {
-    private readonly string hostname;
-    private ClientWebSocket socket;
-    private WebSocketOptions options;
+    private const int receiveBufferSize = 64 * 1024;
+    private const int sendBufferSize = 8 * 1024;
+    private readonly Uri uri;
+    private readonly ClientWebSocket socket;
+    private readonly CancellationToken connectTimeout;
     private CancellationTokenSource receiveCancellationToken;
     private ArraySegment<byte> incomingBuffer =
-      System.Net.WebSockets.WebSocket.CreateClientBuffer(200 * 1024, 4096);
+      System.Net.WebSockets.WebSocket.CreateClientBuffer(
+        receiveBufferSize, sendBufferSize);
 
     /// <summary>
     /// Initializes a new instance of the 
     /// <see cref="T:KuzzleSdk.Protocol.WebSocket"/> class.
     /// </summary>
-    /// <param name="hostname">Kuzzle hostname (or IP address).</param>
-    public WebSocket(string hostname) : this(hostname, new WebSocketOptions()) {
+    /// <param name="uri">URI pointing to a Kuzzle endpoint.</param>
+    /// <param name="cancellationToken">Connection cancellation token</param>
+    public WebSocket(Uri uri, CancellationToken cancellationToken) {
+      this.uri = uri ?? throw new ArgumentNullException(nameof(uri));
+      connectTimeout = cancellationToken;
       State = ProtocolState.Closed;
-    }
-
-    /// <summary>
-    /// Initializes a new instance of the 
-    /// <see cref="T:KuzzleSdk.Protocol.WebSocket"/> class.
-    /// </summary>
-    /// <param name="hostname">Kuzzle hostname (or IP address).</param>
-    /// <param name="options">Connection options.</param>
-    public WebSocket(string hostname, WebSocketOptions options) {
-      this.hostname = hostname;
-      this.options = options;
       socket = new ClientWebSocket();
+      socket.Options.SetBuffer(receiveBufferSize, sendBufferSize);
     }
 
     /// <summary>
     /// Connects to a Kuzzle server.
     /// </summary>
     public override async Task ConnectAsync() {
-      if (socket?.State == WebSocketState.Connecting
-          || socket?.State == WebSocketState.Open) {
+      if (
+        socket.State == WebSocketState.Connecting ||
+        socket.State == WebSocketState.Open
+      ) {
         return;
       }
 
-      Uri uri = new Uri("ws" + (options.Ssl ? "s" : "") + "://"
-        + hostname + ":" + options.Port);
-
-      CancellationTokenSource source =
-          new CancellationTokenSource(options.ConnectTimeout);
-
-      await socket.ConnectAsync(uri, source.Token);
+      await socket.ConnectAsync(uri, connectTimeout);
 
       State = ProtocolState.Open;
       DispatchStateChange(State);
@@ -98,7 +57,7 @@ namespace KuzzleSdk.Protocol {
     /// Disconnects this instance.
     /// </summary>
     public override void Disconnect() {
-      socket?.Abort();
+      socket.Abort();
       CloseState();
     }
 
@@ -111,7 +70,7 @@ namespace KuzzleSdk.Protocol {
       if (State == ProtocolState.Closed) {
         CloseState();
       } else {
-        socket?.SendAsync(
+        socket.SendAsync(
           new ArraySegment<byte>(buffer),
           WebSocketMessageType.Text,
           true,
@@ -126,18 +85,33 @@ namespace KuzzleSdk.Protocol {
         WebSocketReceiveResult data;
 
         while (socket.State == WebSocketState.Open) {
-          string message = "";
+          StringBuilder messageBuilder = null;
+          string message = null;
 
           do {
             data = await socket.ReceiveAsync(
               incomingBuffer,
               receiveCancellationToken.Token);
 
-            message += Encoding.UTF8.GetString(
+            string payload = Encoding.UTF8.GetString(
               incomingBuffer.Array, 0, data.Count);
+
+            if (messageBuilder == null) {
+              if (!data.EndOfMessage) {
+                messageBuilder = new StringBuilder(payload, data.Count * 2);
+              } else {
+                message = payload;
+              }
+            } else {
+              messageBuilder.Append(payload);
+            }
           } while (!data.EndOfMessage);
 
-          if (message.Length > 0) {
+          if (messageBuilder != null) {
+            message = messageBuilder.ToString();
+          }
+
+          if (!string.IsNullOrEmpty(message)) {
             DispatchResponse(message);
           }
         }
