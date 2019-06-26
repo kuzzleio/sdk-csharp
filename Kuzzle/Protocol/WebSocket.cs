@@ -54,6 +54,7 @@ namespace KuzzleSdk.Protocol {
       State = ProtocolState.Open;
       DispatchStateChange(State);
 
+      Dequeue();
       Listen();
     }
 
