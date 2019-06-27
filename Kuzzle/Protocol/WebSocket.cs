@@ -87,7 +87,7 @@ namespace KuzzleSdk.Protocol {
             true,
             sendCancellationToken.Token);
         }
-      }, sendCancellationToken.Token);
+      }, CancellationToken.None);
     }
 
     private void Listen() {
@@ -124,7 +124,7 @@ namespace KuzzleSdk.Protocol {
         }
 
         CloseState();
-      }, receiveCancellationToken.Token);
+      }, CancellationToken.None);
     }
 
     private void CloseState() {
