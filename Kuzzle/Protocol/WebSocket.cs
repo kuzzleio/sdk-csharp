@@ -15,7 +15,6 @@ namespace KuzzleSdk.Protocol {
     private const int sendBufferSize = 8 * 1024;
     private readonly Uri uri;
     private readonly ClientWebSocket socket;
-    private readonly CancellationToken connectTimeout;
     private CancellationTokenSource receiveCancellationToken;
     private CancellationTokenSource sendCancellationToken;
     private ArraySegment<byte> incomingBuffer =
@@ -29,10 +28,8 @@ namespace KuzzleSdk.Protocol {
     /// <see cref="T:KuzzleSdk.Protocol.WebSocket"/> class.
     /// </summary>
     /// <param name="uri">URI pointing to a Kuzzle endpoint.</param>
-    /// <param name="cancellationToken">Connection cancellation token</param>
-    public WebSocket(Uri uri, CancellationToken cancellationToken) {
+    public WebSocket(Uri uri) {
       this.uri = uri ?? throw new ArgumentNullException(nameof(uri));
-      connectTimeout = cancellationToken;
       State = ProtocolState.Closed;
       socket = new ClientWebSocket();
       socket.Options.SetBuffer(receiveBufferSize, sendBufferSize);
@@ -41,7 +38,10 @@ namespace KuzzleSdk.Protocol {
     /// <summary>
     /// Connects to a Kuzzle server.
     /// </summary>
-    public override async Task ConnectAsync() {
+    /// <param name="cancellationToken">Connection cancellation token</param>
+    public override async Task ConnectAsync(
+      CancellationToken cancellationToken
+    ) {
       if (
         socket.State == WebSocketState.Connecting ||
         socket.State == WebSocketState.Open
@@ -49,7 +49,7 @@ namespace KuzzleSdk.Protocol {
         return;
       }
 
-      await socket.ConnectAsync(uri, connectTimeout);
+      await socket.ConnectAsync(uri, cancellationToken);
 
       State = ProtocolState.Open;
       DispatchStateChange(State);

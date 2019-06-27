@@ -20,7 +20,7 @@ namespace KuzzleSdk.Protocol {
     /// <summary>
     /// Connect this instance.
     /// </summary>
-    public abstract Task ConnectAsync();
+    public abstract Task ConnectAsync(CancellationToken cancellationToken);
 
     /// <summary>
     /// Disconnect this instance.
