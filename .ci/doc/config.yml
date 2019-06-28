@@ -11,8 +11,9 @@ runners:
   csharp:
     service: doc-runner-csharp
     path: /var/snippets/csharp
+    lint:
+      cmd: echo "lint me master"
     build:
-      run: dotnet build /mnt/Kuzzle/Kuzzle.csproj && mv /mnt/Kuzzle/bin/Debug/netstandard2.0/Kuzzle.dll /var/snippets/csharp/.
+      cmd: dotnet build /mnt/Kuzzle/Kuzzle.csproj && mv /mnt/Kuzzle/bin/Debug/netstandard2.0/Kuzzle.dll /var/snippets/csharp/.
     run:
-      before: dotnet build /mnt/Kuzzle/Kuzzle.csproj && mv /mnt/Kuzzle/bin/Debug/netstandard2.0/Kuzzle.dll /var/snippets/csharp/.
       cmd: dotnet script {{ snippet.source }}

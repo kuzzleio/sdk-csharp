@@ -1,8 +1,8 @@
 FROM amd64/debian:stretch-slim
 
-# LABEL io.kuzzle.vendor="Kuzzle <support@kuzzle.io>"
-# LABEL description="Runner for csharp documentation snippets"
-# LABEL name="kuzzleio/doc-runner:csharp"
+LABEL io.kuzzle.vendor="Kuzzle <support@kuzzle.io>"
+LABEL description="Runner for csharp documentation snippets"
+LABEL name="kuzzleio/doc-runner:csharp"
 
 ENV DOTNET_CLI_TELEMETRY_OPTOUT 1
 
@@ -28,9 +28,5 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E03280
   && dotnet tool install -g dotnet-script
 
 ENV PATH $PATH:/root/.dotnet/tools
-
-RUN mkdir /nodejs && curl http://nodejs.org/dist/v8.9.0/node-v8.9.0-linux-x64.tar.gz | tar xvzf - -C /nodejs --strip-components=1
-
-ENV PATH $PATH:/nodejs/bin
 
 WORKDIR /app
