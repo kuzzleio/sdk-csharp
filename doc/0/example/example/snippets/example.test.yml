@@ -4,6 +4,6 @@ hooks:
   before:
   after:
 template: default
-expected: Does not exists
+expected: Does not exist
 sdk: csharp
 version: 0
