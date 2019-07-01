@@ -28,4 +28,7 @@
     <Folder Include="API\" />
     <Folder Include="API\Controllers\" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="API\Controllers\BulkController.cs" />
+  </ItemGroup>
 </Project>
