@@ -38,7 +38,7 @@ namespace KuzzleSdk.API.Controllers {
         {"controller", "bulk"},
         {"action", "mWrite"},
         {"notify", notify},
-
+        {"refresh", refresh},
         {"body", new JObject {
             {"documents", documents}
           }
@@ -51,9 +51,9 @@ namespace KuzzleSdk.API.Controllers {
     public async Task<JObject> WriteAsync(
         string index,
         string collection,
-        string docContent,
+        string documentContent,
         string documentId = null,
-        string refresh=null,
+        string refresh = null,
         bool? notify = null
       ) {
 
@@ -61,10 +61,11 @@ namespace KuzzleSdk.API.Controllers {
         {"index", index},
         {"collection", collection},
         {"controller", "bulk"},
-        {"action", "mWrite"},
+        {"action", "write"},
+        {"_id", documentId},
         {"notify", notify},
         {"refresh", refresh},
-        {"body", docContent}
+        {"body", documentContent}
       });
 
       return (JObject)response.Result;
