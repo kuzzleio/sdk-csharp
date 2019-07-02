@@ -1,5 +1,4 @@
-﻿using System;
-using KuzzleSdk.API.Controllers;
+﻿using KuzzleSdk.API.Controllers;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
