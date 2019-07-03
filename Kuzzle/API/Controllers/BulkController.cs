@@ -32,7 +32,7 @@ namespace KuzzleSdk.API.Controllers {
     /// <summary>
     /// Create or replace multiple documents directly into the storage engine.
     /// </summary>
-    public async Task<JObject> mWriteAsync(
+    public async Task<JObject> MWriteAsync(
         string index,
         string collection,
         JArray documents,

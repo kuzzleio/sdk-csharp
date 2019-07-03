@@ -41,7 +41,7 @@ namespace Kuzzle.Tests.API.Controllers {
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    public async void mWriteAsyncTestSuccess(bool notify) {
+    public async void MWriteAsyncTestSuccess(bool notify) {
       JObject expected = JObject.Parse(@"{hits: [
       {_id: '<documentId>', _source: {}, _version: 2, created: false},
       {_id: '<otherDocumentId>', _source: {}, _version: 1, created: true}],
