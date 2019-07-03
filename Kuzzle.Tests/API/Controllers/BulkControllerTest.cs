@@ -1,4 +1,5 @@
 ﻿using KuzzleSdk.API.Controllers;
+using KuzzleSdk.Utils;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -39,9 +40,11 @@ namespace Kuzzle.Tests.API.Controllers {
     }
 
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public async void MWriteAsyncTestSuccess(bool notify) {
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(true, true)]
+    public async void MWriteAsyncTestSuccess(bool notify, bool refresh) {
       JObject expected = JObject.Parse(@"{hits: [
       {_id: '<documentId>', _source: {}, _version: 2, created: false},
       {_id: '<otherDocumentId>', _source: {}, _version: 1, created: true}],
@@ -52,32 +55,34 @@ namespace Kuzzle.Tests.API.Controllers {
       {_id: '<otherDocumentId>', _source: {}, _version: 1, created: true}],
       total: 2}}");
 
-      JObject result = await _bulkController.mWriteAsync("foo", "bar", JArray.Parse(@"[
+      JObject result = await _bulkController.MWriteAsync("foo", "bar", JArray.Parse(@"[
           {_id: '<documentId>', body: {}},
-          {_id: '<otherDocumentId>', body:{}}]"), "wait_for", notify);
+          {_id: '<otherDocumentId>', body:{}}]"), refresh, notify);
 
-      _api.Verify(new JObject {
+      JObject verifyQuery = new JObject {
           {"index", "foo"},
           {"collection", "bar"},
           {"controller", "bulk"},
           {"action", "mWrite"},
-          {"notify", notify},
-          {"refresh", "wait_for"},
           {"body", JObject.Parse(@"{documents: [
           {_id: '<documentId>', body: {}},
           {_id: '<otherDocumentId>', body:{}}]}")}
-      });
+      };
+
+      QueryUtils.HandleRefreshOption(verifyQuery, refresh);
+      QueryUtils.HandleNotifyOption(verifyQuery, notify);
+
+      _api.Verify(verifyQuery);
 
       Assert.Equal<JObject>(expected, result, new JTokenEqualityComparer());
     }
   
-
     [Theory]
-    [InlineData("Some input", "foobar", null)]
-    [InlineData("", "documentId", null)]
-    [InlineData("Some input", "foobar", true)]
-    [InlineData("Some input", "foobar", false)]
-    public async void WriteAsyncTestSuccess(string documentInput, string documentId, bool? notify) {
+    [InlineData("Some input", "foobar", false, false)]
+    [InlineData("", "documentId", false, false)]
+    [InlineData("Some input", "foobar", true, false)]
+    [InlineData("Some input", "foobar", false, true)]
+    public async void WriteAsyncTestSuccess(string documentInput, string documentId, bool notify, bool refresh = false) {
       JObject expected = JObject.Parse(
       @"{_id: '<documentId>',
       _version: 1,
@@ -94,19 +99,22 @@ namespace Kuzzle.Tests.API.Controllers {
         "bar",
         documentInput,
         documentId,
-        "wait_for",
+        refresh,
         notify);
 
-      _api.Verify(new JObject {
+      JObject verifyQuery = new JObject {
             {"index", "foo"},
             {"collection", "bar"},
             {"controller", "bulk"},
             {"action", "write"},
             {"_id", documentId},
-            {"notify", notify},
-            {"refresh", "wait_for"},
             {"body", documentInput}
-        });
+        };
+
+      QueryUtils.HandleRefreshOption(verifyQuery, refresh);
+      QueryUtils.HandleNotifyOption(verifyQuery, notify);
+
+      _api.Verify(verifyQuery);
 
       Assert.Equal<JObject>(expected, result, new JTokenEqualityComparer());
     }

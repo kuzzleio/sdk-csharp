@@ -2,6 +2,7 @@
 using KuzzleSdk.API.Controllers;
 using KuzzleSdk.API.DataObjects;
 using KuzzleSdk.API.Options;
+using KuzzleSdk.Utils;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -82,7 +83,7 @@ namespace Kuzzle.Tests.API.Controllers {
         { "_id", id }
       };
 
-      if (refresh) expected.Add("refresh", "wait_for");
+      QueryUtils.HandleRefreshOption(expected, refresh);
 
       _api.Verify(expected);
 
@@ -114,7 +115,7 @@ namespace Kuzzle.Tests.API.Controllers {
         { "_id", "fooid" }
       };
 
-      if (refresh) expected.Add("refresh", "wait_for");
+      QueryUtils.HandleRefreshOption(expected, refresh);
 
       _api.Verify(expected);
 
@@ -138,7 +139,7 @@ namespace Kuzzle.Tests.API.Controllers {
         { "_id", "fooid" }
       };
 
-      if (refresh) expected.Add("refresh", "wait_for");
+      QueryUtils.HandleRefreshOption(expected, refresh);
 
       _api.Verify(expected);
     }
@@ -211,7 +212,7 @@ namespace Kuzzle.Tests.API.Controllers {
       expected.Add("body", new JObject());
       ((JObject)expected["body"]).Add("documents", documents);
 
-      if (refresh) expected.Add("refresh", "wait_for");
+      QueryUtils.HandleRefreshOption(expected, refresh);
 
       _api.Verify(expected);
 
@@ -245,7 +246,7 @@ namespace Kuzzle.Tests.API.Controllers {
       expected.Add("body", new JObject());
       ((JObject)expected["body"]).Add("documents", documents);
 
-      if (refresh) expected.Add("refresh", "wait_for");
+      QueryUtils.HandleRefreshOption(expected, refresh);
 
       _api.Verify(expected);
 
@@ -279,7 +280,7 @@ namespace Kuzzle.Tests.API.Controllers {
       expected.Add("body", new JObject());
       ((JObject)expected["body"]).Add("ids", ids);
 
-      if (refresh) expected.Add("refresh", "wait_for");
+      QueryUtils.HandleRefreshOption(expected, refresh);
 
       _api.Verify(expected);
 
@@ -339,7 +340,7 @@ namespace Kuzzle.Tests.API.Controllers {
       expected.Add("body", new JObject());
       ((JObject)expected["body"]).Add("documents", documents);
 
-      if (refresh) expected.Add("refresh", "wait_for");
+      QueryUtils.HandleRefreshOption(expected, refresh);
 
       _api.Verify(expected);
 
@@ -387,7 +388,7 @@ namespace Kuzzle.Tests.API.Controllers {
       expected.Add("body", new JObject());
       ((JObject)expected["body"]).Add("documents", documents);
 
-      if (refresh) expected.Add("refresh", "wait_for");
+      QueryUtils.HandleRefreshOption(expected, refresh);
 
       expected.Add("retryOnConflict", retries ?? 0);
 
@@ -423,7 +424,7 @@ namespace Kuzzle.Tests.API.Controllers {
         { "_id", "fooid" }
       };
 
-      if (refresh) expected.Add("refresh", "wait_for");
+      QueryUtils.HandleRefreshOption(expected, refresh);
 
       _api.Verify(expected);
 
@@ -518,7 +519,7 @@ namespace Kuzzle.Tests.API.Controllers {
         { "body", changes }
       };
 
-      if (refresh) expected.Add("refresh", "wait_for");
+      QueryUtils.HandleRefreshOption(expected, refresh);
 
       expected.Add("retryOnConflict", retries ?? 0);
 

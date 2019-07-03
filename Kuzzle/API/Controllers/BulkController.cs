@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using KuzzleSdk.Utils;
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.API.Controllers {
@@ -30,54 +31,60 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     /// <summary>
-    /// Create or replace multiple documents directly into the storage engine.
+    /// Creates or replaces multiple documents directly into the storage engine.
     /// </summary>
     public async Task<JObject> MWriteAsync(
         string index,
         string collection,
         JArray documents,
-        string refresh = null,
-        bool? notify = null
+        bool waitForRefesh = false,
+        bool notify = false
       ) {
 
-      Response response = await api.QueryAsync(new JObject {
+      JObject query = new JObject {
         {"index", index},
         {"collection", collection},
         {"controller", "bulk"},
         {"action", "mWrite"},
-        {"notify", notify},
-        {"refresh", refresh},
         {"body", new JObject {
             {"documents", documents}
           }
         }
-      });
+      };
+
+      QueryUtils.HandleRefreshOption(query, waitForRefesh);
+      QueryUtils.HandleNotifyOption(query, notify);
+
+      Response response = await api.QueryAsync(query);
 
       return (JObject)response.Result;
     }
 
     /// <summary>
-    /// Create or replace a document directly into the storage engine.
+    /// Creates or replaces a document directly into the storage engine.
     /// </summary>
     public async Task<JObject> WriteAsync(
         string index,
         string collection,
         string documentContent,
         string documentId = null,
-        string refresh = null,
-        bool? notify = null
+        bool waitForRefresh = false,
+        bool notify = false
       ) {
 
-      Response response = await api.QueryAsync(new JObject {
+      JObject query = new JObject {
         {"index", index},
         {"collection", collection},
         {"controller", "bulk"},
         {"action", "write"},
         {"_id", documentId},
-        {"notify", notify},
-        {"refresh", refresh},
         {"body", documentContent}
-      });
+      };
+
+      QueryUtils.HandleRefreshOption(query, waitForRefresh);
+      QueryUtils.HandleNotifyOption(query, notify);
+
+      Response response = await api.QueryAsync(query);
 
       return (JObject)response.Result;
     }

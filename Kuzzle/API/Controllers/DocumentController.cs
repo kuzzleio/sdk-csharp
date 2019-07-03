@@ -2,17 +2,13 @@
 using KuzzleSdk.API.Options;
 using KuzzleSdk.API.DataObjects;
 using Newtonsoft.Json.Linq;
+using KuzzleSdk.Utils;
 
 namespace KuzzleSdk.API.Controllers {
   /// <summary>
   /// Implements the "document" Kuzzle API controller
   /// </summary>
   public sealed class DocumentController : BaseController {
-    private void HandleRefreshOption(JObject query, bool waitForRefresh) {
-      if (waitForRefresh) {
-        query.Add("refresh", "wait_for");
-      }
-    }
 
     internal DocumentController(IKuzzleApi api) : base(api) { }
 
@@ -57,7 +53,7 @@ namespace KuzzleSdk.API.Controllers {
         { "_id", id }
       };
 
-      HandleRefreshOption(query, waitForRefresh);
+      QueryUtils.HandleRefreshOption(query, waitForRefresh);
 
       Response response = await api.QueryAsync(query);
 
@@ -83,7 +79,7 @@ namespace KuzzleSdk.API.Controllers {
         { "_id", id }
       };
 
-      HandleRefreshOption(query, waitForRefresh);
+      QueryUtils.HandleRefreshOption(query, waitForRefresh);
 
       Response response = await api.QueryAsync(query);
 
@@ -107,7 +103,7 @@ namespace KuzzleSdk.API.Controllers {
         { "_id", id }
       };
 
-      HandleRefreshOption(query, waitForRefresh);
+      QueryUtils.HandleRefreshOption(query, waitForRefresh);
 
       Response response = await api.QueryAsync(query);
 
@@ -176,7 +172,7 @@ namespace KuzzleSdk.API.Controllers {
         { "collection", collection }
       };
 
-      HandleRefreshOption(request, waitForRefresh);
+      QueryUtils.HandleRefreshOption(request, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 
@@ -202,7 +198,7 @@ namespace KuzzleSdk.API.Controllers {
         { "collection", collection }
       };
 
-      HandleRefreshOption(request, waitForRefresh);
+      QueryUtils.HandleRefreshOption(request, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 
@@ -228,7 +224,7 @@ namespace KuzzleSdk.API.Controllers {
         { "collection", collection }
       };
 
-      HandleRefreshOption(request, waitForRefresh);
+      QueryUtils.HandleRefreshOption(request, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 
@@ -277,7 +273,7 @@ namespace KuzzleSdk.API.Controllers {
         { "collection", collection }
       };
 
-      HandleRefreshOption(request, waitForRefresh);
+      QueryUtils.HandleRefreshOption(request, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 
@@ -305,7 +301,7 @@ namespace KuzzleSdk.API.Controllers {
         { "retryOnConflict", retryOnConflict }
       };
 
-      HandleRefreshOption(request, waitForRefresh);
+      QueryUtils.HandleRefreshOption(request, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 
@@ -331,7 +327,7 @@ namespace KuzzleSdk.API.Controllers {
         { "_id", id }
       };
 
-      HandleRefreshOption(request, waitForRefresh);
+      QueryUtils.HandleRefreshOption(request, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 
@@ -382,7 +378,7 @@ namespace KuzzleSdk.API.Controllers {
         { "retryOnConflict", retryOnConflict }
       };
 
-      HandleRefreshOption(request, waitForRefresh);
+      QueryUtils.HandleRefreshOption(request, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 
