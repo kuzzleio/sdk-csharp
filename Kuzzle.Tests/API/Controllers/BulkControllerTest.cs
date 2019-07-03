@@ -13,7 +13,7 @@ namespace Kuzzle.Tests.API.Controllers {
     }
 
     [Fact]
-    public async void ImportTestSuccess() {
+    public async void ImportAsyncTestSuccess() {
 
       JObject expected = JObject.Parse(@"{items: [{create: {_id: 'documentId', status: 201}}]}");
 
@@ -41,7 +41,7 @@ namespace Kuzzle.Tests.API.Controllers {
     [Theory]
     [InlineData(false)]
     [InlineData(true)]
-    public async void mWriteTestSuccess(bool notify) {
+    public async void mWriteAsyncTestSuccess(bool notify) {
       JObject expected = JObject.Parse(@"{hits: [
       {_id: '<documentId>', _source: {}, _version: 2, created: false},
       {_id: '<otherDocumentId>', _source: {}, _version: 1, created: true}],
@@ -77,7 +77,7 @@ namespace Kuzzle.Tests.API.Controllers {
     [InlineData("", "documentId", null)]
     [InlineData("Some input", "foobar", true)]
     [InlineData("Some input", "foobar", false)]
-    public async void WriteTestSuccess(string documentInput, string documentId, bool? notify) {
+    public async void WriteAsyncTestSuccess(string documentInput, string documentId, bool? notify) {
       JObject expected = JObject.Parse(
       @"{_id: '<documentId>',
       _version: 1,
