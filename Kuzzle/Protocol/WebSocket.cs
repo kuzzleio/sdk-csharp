@@ -8,13 +8,32 @@ using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.Protocol {
   /// <summary>
+  /// Interface exposing the same properties as ClientWebSocket, to make
+  /// our WebSocket class testable via duck typing.
+  /// </summary>
+  internal interface IClientWebSocket {
+    WebSocketState State { get; }
+
+    Task ConnectAsync(Uri uri, CancellationToken cancellationToken);
+    Task SendAsync(
+      ArraySegment<byte> buffer,
+      WebSocketMessageType messageType,
+      bool endOfMessage,
+      CancellationToken cancellationToken);
+    Task<WebSocketReceiveResult> ReceiveAsync(
+      ArraySegment<byte> buffer,
+      CancellationToken cancellationToken);
+    void Abort();
+  }
+
+  /// <summary>
   /// WebSocket network protocol.
   /// </summary>
   public class WebSocket : AbstractProtocol {
     private const int receiveBufferSize = 64 * 1024;
     private const int sendBufferSize = 8 * 1024;
     private readonly Uri uri;
-    private readonly ClientWebSocket socket;
+    private IClientWebSocket socket;
     private CancellationTokenSource receiveCancellationToken;
     private CancellationTokenSource sendCancellationToken;
     private ArraySegment<byte> incomingBuffer =
@@ -22,6 +41,14 @@ namespace KuzzleSdk.Protocol {
         receiveBufferSize, sendBufferSize);
     private readonly BlockingCollection<JObject> sendQueue =
       new BlockingCollection<JObject>();
+
+    internal virtual dynamic CreateClientSocket() {
+      var s = new ClientWebSocket();
+
+      s.Options.SetBuffer(receiveBufferSize, sendBufferSize);
+
+      return s;
+    }
 
     /// <summary>
     /// Initializes a new instance of the 
@@ -31,8 +58,6 @@ namespace KuzzleSdk.Protocol {
     public WebSocket(Uri uri) {
       this.uri = uri ?? throw new ArgumentNullException(nameof(uri));
       State = ProtocolState.Closed;
-      socket = new ClientWebSocket();
-      socket.Options.SetBuffer(receiveBufferSize, sendBufferSize);
     }
 
     /// <summary>
@@ -42,12 +67,11 @@ namespace KuzzleSdk.Protocol {
     public override async Task ConnectAsync(
       CancellationToken cancellationToken
     ) {
-      if (
-        socket.State == WebSocketState.Connecting ||
-        socket.State == WebSocketState.Open
-      ) {
+      if (socket != null) {
         return;
       }
+
+      socket = CreateClientSocket();
 
       await socket.ConnectAsync(uri, cancellationToken);
 
@@ -62,7 +86,7 @@ namespace KuzzleSdk.Protocol {
     /// Disconnects this instance.
     /// </summary>
     public override void Disconnect() {
-      socket.Abort();
+      socket?.Abort();
       CloseState();
     }
 

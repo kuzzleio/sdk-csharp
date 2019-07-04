@@ -7,6 +7,7 @@ using KuzzleSdk.API.Controllers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 [assembly: InternalsVisibleTo("Kuzzle.Tests")]
 
@@ -229,8 +230,8 @@ namespace KuzzleSdk {
     /// <summary>
     /// Establish a network connection
     /// </summary>
-    public async Task ConnectAsync() {
-      await NetworkProtocol.ConnectAsync();
+    public async Task ConnectAsync(CancellationToken cancellationToken) {
+      await NetworkProtocol.ConnectAsync(cancellationToken);
     }
 
     /// <summary>
