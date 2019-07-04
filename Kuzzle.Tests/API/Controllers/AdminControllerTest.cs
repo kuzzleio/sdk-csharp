@@ -3,6 +3,7 @@ using KuzzleSdk.API.Controllers;
 using Newtonsoft.Json.Linq;
 using KuzzleSdk.Exceptions;
 using Moq;
+using KuzzleSdk.Utils;
 
 namespace Kuzzle.Tests.API.Controllers {
   public class AdminControllerTest {
@@ -36,9 +37,11 @@ namespace Kuzzle.Tests.API.Controllers {
     }
 
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public async void LoadFixturesAsyncTestSuccess(bool value) {
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(true, true)]
+    public async void LoadFixturesAsyncTestSuccess(bool value, bool waitForRefresh) {
 
       _api.SetResult(new JObject {
           {"result", new JObject {{"acknowledge", value}}
@@ -47,12 +50,11 @@ namespace Kuzzle.Tests.API.Controllers {
 
       bool result = await _adminController.LoadFixturesAsync(
         JObject.Parse(@"{foo: [{create: {_id: 'bar'}}, {field: 'value', field2: true}]}"),
-        "wait_for");
+        waitForRefresh);
 
-      _api.Verify(new JObject {
+      JObject verifyQuery = new JObject {
         {"controller", "admin"},
         {"action", "loadFixtures"},
-        {"refresh", "wait_for"},
         {"body", new JObject {
           {"index-name", new JObject{
             {"foo", new JArray {
@@ -61,29 +63,34 @@ namespace Kuzzle.Tests.API.Controllers {
             }}
           }}
         }}
-      });
+      };
+
+      QueryUtils.HandleRefreshOption(verifyQuery, waitForRefresh);
+
+      _api.Verify(verifyQuery);
         
       Assert.Equal(value, result);
     }
 
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public async void LoadMappingsAsyncTestSuccess(bool value) {
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(true, true)]
+    public async void LoadMappingsAsyncTestSuccess(bool value, bool waitForRefresh) {
 
       _api.SetResult(new JObject {
           {"result", new JObject {{"acknowledge", value}}
         }
       });
 
-      bool result = await _adminController.LoadFixturesAsync(
+      bool result = await _adminController.LoadMappingsAsync(
         JObject.Parse(@"{foo: {properties: {field1: {}, field2: {}}}}"),
-        "wait_for");
+        waitForRefresh);
 
-      _api.Verify(new JObject {
+      JObject verifyQuery = new JObject {
         {"controller", "admin"},
-        {"action", "loadFixtures"},
-        {"refresh", "wait_for"},
+        {"action", "loadMappings"},
         {"body", new JObject {
           {"index-name", new JObject{
             {"foo", new JObject {
@@ -94,7 +101,153 @@ namespace Kuzzle.Tests.API.Controllers {
             }}
           }}
         }}
+      };
+
+      QueryUtils.HandleRefreshOption(verifyQuery, waitForRefresh);
+
+      _api.Verify(verifyQuery);
+
+      Assert.Equal(value, result);
+    }
+
+    [Theory]
+    [InlineData(false, false)]
+    [InlineData(true, false)]
+    [InlineData(false, true)]
+    [InlineData(true, true)]
+    public async void LoadSecuritiesAsyncTestSuccess(bool value, bool waitForRefresh) {
+
+      _api.SetResult(new JObject {
+          {"result", new JObject {{"acknowledge", value}}
+        }
       });
+
+      bool result = await _adminController.LoadSecuritiesAsync(
+        JObject.Parse(@"{roles: {foobar: {foo: 'bar', bar: 'foo'}}}"),
+        waitForRefresh);
+
+      JObject verifyQuery = new JObject {
+        {"controller", "admin"},
+        {"action", "loadSecurities"},
+        {"body", new JObject {
+          {"roles", new JObject{
+            {"foobar", new JObject {
+              {"foo", "bar"},
+              {"bar", "foo"}
+            }}
+          }}
+        }}
+      };
+
+      QueryUtils.HandleRefreshOption(verifyQuery, waitForRefresh);
+
+      _api.Verify(verifyQuery);
+
+      Assert.Equal(value, result);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async void ResetCacheAsyncTestSuccess(bool value) {
+      _api.SetResult(new JObject {
+          {"result", new JObject {{"acknowledge", value}}
+        }
+      });
+
+      bool result = await _adminController.ResetCacheAsync("foobar");
+
+      JObject verifyQuery = new JObject {
+        {"controller", "admin"},
+        {"action", "resetCache"},
+        {"database", "foobar"}
+      };
+
+      _api.Verify(verifyQuery);
+
+      Assert.Equal(value, result);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async void ResetDatabaseAsyncTestSuccess(bool value) {
+      _api.SetResult(new JObject {
+          {"result", new JObject {{"acknowledge", value}}
+        }
+      });
+
+      bool result = await _adminController.ResetDatabaseAsync();
+
+      JObject verifyQuery = new JObject {
+        {"controller", "admin"},
+        {"action", "resetDatabase"},
+      };
+
+      _api.Verify(verifyQuery);
+
+      Assert.Equal(value, result);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async void ResetKuzzleDataAsyncTestSuccess(bool value) {
+      _api.SetResult(new JObject {
+          {"result", new JObject {{"acknowledge", value}}
+        }
+      });
+
+      bool result = await _adminController.ResetKuzzleDataAsync();
+
+      JObject verifyQuery = new JObject {
+        {"controller", "admin"},
+        {"action", "resetKuzzleData"},
+      };
+
+      _api.Verify(verifyQuery);
+
+      Assert.Equal(value, result);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async void ResetSecurityAsyncTestSuccess(bool value) {
+      _api.SetResult(new JObject {
+          {"result", new JObject {{"acknowledge", value}}
+        }
+      });
+
+      bool result = await _adminController.ResetSecurityAsync();
+
+      JObject verifyQuery = new JObject {
+        {"controller", "admin"},
+        {"action", "resetSecurity"},
+      };
+
+      _api.Verify(verifyQuery);
+
+      Assert.Equal(value, result);
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async void ShutdownAsyncTestSuccess(bool value) {
+      _api.SetResult(new JObject {
+          {"result", new JObject {{"acknowledge", value}}
+        }
+      });
+
+      bool result = await _adminController.ShutdownAsync();
+
+      JObject verifyQuery = new JObject {
+        {"controller", "admin"},
+        {"action", "shutdown"},
+      };
+
+      _api.Verify(verifyQuery);
 
       Assert.Equal(value, result);
     }

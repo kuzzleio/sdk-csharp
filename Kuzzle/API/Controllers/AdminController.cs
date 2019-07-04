@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using KuzzleSdk.Utils;
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.API.Controllers {
@@ -24,17 +25,20 @@ namespace KuzzleSdk.API.Controllers {
     /// <summary>
     /// Load fixtures into the storage layer.
     /// </summary>
-    public async Task<bool> LoadFixturesAsync(JObject indexName, string refresh = null) {
+    public async Task<bool> LoadFixturesAsync(JObject indexName, bool waitForRefresh = false) {
 
-      Response response = await api.QueryAsync(new JObject {
+      JObject query = new JObject {
         {"controller", "admin"},
         {"action", "loadFixtures"},
-        {"refresh", refresh},
         {"body", new JObject {
             {"index-name", indexName}
           }
         }
-      });
+      };
+
+      QueryUtils.HandleRefreshOption(query, waitForRefresh);
+
+      Response response = await api.QueryAsync(query);
 
       return (bool)response.Result["acknowledge"];
     }
@@ -42,17 +46,20 @@ namespace KuzzleSdk.API.Controllers {
     /// <summary>
     /// Apply mappings to the storage layer.
     /// </summary>
-    public async Task<bool> LoadMappingsAsync(JObject indexName, string refresh = null) {
+    public async Task<bool> LoadMappingsAsync(JObject indexName, bool waitForRefresh = false) {
 
-      Response response = await api.QueryAsync(new JObject {
+      JObject query = new JObject {
         {"controller", "admin"},
         {"action", "loadMappings"},
-        {"refresh", refresh},
         {"body", new JObject {
             {"index-name", indexName}
           }
         }
-      });
+      };
+
+      QueryUtils.HandleRefreshOption(query, waitForRefresh);
+
+      Response response = await api.QueryAsync(query);
 
       return (bool)response.Result["acknowledge"];
     }
@@ -60,14 +67,17 @@ namespace KuzzleSdk.API.Controllers {
     /// <summary>
     /// Load roles, profiles and users into the storage layer.
     /// </summary>
-    public async Task<bool> LoadSecuritiesAsync(JObject body, string refresh = null) {
+    public async Task<bool> LoadSecuritiesAsync(JObject body, bool waitForRefresh = false) {
 
-      Response response = await api.QueryAsync(new JObject {
+      JObject query = new JObject {
         {"controller", "admin"},
         {"action", "loadSecurities"},
-        {"refresh", refresh},
         {"body", body}
-      });
+      };
+
+      QueryUtils.HandleRefreshOption(query, waitForRefresh);
+
+      Response response = await api.QueryAsync(query);
 
       return (bool)response.Result["acknowledge"];
     }
@@ -90,7 +100,7 @@ namespace KuzzleSdk.API.Controllers {
     /// Asynchronously deletes all indexes created by users.
     /// Neither Kuzzle internal indexes nor Plugin indexes are deleted.
     /// </summary>
-    public async Task<bool> ResetDatabaseAsync(string database) {
+    public async Task<bool> ResetDatabaseAsync() {
 
       Response response = await api.QueryAsync(new JObject {
         {"controller", "admin"},
