@@ -117,6 +117,11 @@ namespace KuzzleSdk {
     public ServerController Server { get; private set; }
 
     /// <summary>
+    /// Exposes actions from the "bulk" Kuzzle API controller
+    /// </summary>
+    public BulkController Bulk { get; private set; }
+
+    /// <summary>
     /// Authentication token
     /// </summary>
     public string AuthenticationToken { get; set; }
@@ -205,6 +210,7 @@ namespace KuzzleSdk {
       Document = new DocumentController(this);
       Realtime = new RealtimeController(this);
       Server = new ServerController(this);
+      Bulk = new BulkController(this);
 
       // Initializes instance unique properties
       Version = typeof(Kuzzle)
