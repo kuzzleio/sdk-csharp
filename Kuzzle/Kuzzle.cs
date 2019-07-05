@@ -105,7 +105,7 @@ namespace KuzzleSdk {
     /// Exposes actions from the "document" Kuzzle API controller
     /// </summary>
     public DocumentController Document { get; private set; }
-	
+  
     /// <summary>
     /// Exposes actions from the "index" Kuzzle API controller
     /// </summary>
@@ -208,7 +208,7 @@ namespace KuzzleSdk {
       Auth = new AuthController(this);
       Collection = new CollectionController(this);
       Document = new DocumentController(this);
-			Index = new IndexController(this);
+      Index = new IndexController(this);
       Realtime = new RealtimeController(this);
       Server = new ServerController(this);
 
