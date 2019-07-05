@@ -88,7 +88,7 @@ namespace KuzzleSdk.API.Controllers {
       rooms.Remove(room);
     }
 
-    internal RealtimeController(Kuzzle k) : base(k) {
+    internal RealtimeController(IKuzzleApi api) : base(api) {
       api.UnhandledResponse += NotificationsListener;
       api.NetworkProtocol.StateChanged += StateChangeListener;
       api.TokenExpired += TokenExpiredListener;
@@ -113,8 +113,7 @@ namespace KuzzleSdk.API.Controllers {
         { "action", "count" },
         { "body", new JObject{ { "roomId", roomId } } }
       });
-
-      return (int)response.Result;
+      return (int)response.Result["count"];
     }
 
     /// <summary>

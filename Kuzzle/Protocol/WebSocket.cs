@@ -32,8 +32,8 @@ namespace KuzzleSdk.Protocol {
   public class WebSocket : AbstractProtocol {
     private const int receiveBufferSize = 64 * 1024;
     private const int sendBufferSize = 8 * 1024;
+    internal dynamic socket;
     private readonly Uri uri;
-    private IClientWebSocket socket;
     private CancellationTokenSource receiveCancellationToken;
     private CancellationTokenSource sendCancellationToken;
     private ArraySegment<byte> incomingBuffer =
@@ -46,7 +46,6 @@ namespace KuzzleSdk.Protocol {
       var s = new ClientWebSocket();
 
       s.Options.SetBuffer(receiveBufferSize, sendBufferSize);
-
       return s;
     }
 
@@ -86,7 +85,6 @@ namespace KuzzleSdk.Protocol {
     /// Disconnects this instance.
     /// </summary>
     public override void Disconnect() {
-      socket?.Abort();
       CloseState();
     }
 
@@ -153,6 +151,8 @@ namespace KuzzleSdk.Protocol {
 
     private void CloseState() {
       if (State != ProtocolState.Closed) {
+        socket.Abort();
+        socket = null;
         State = ProtocolState.Closed;
         DispatchStateChange(State);
         receiveCancellationToken?.Cancel();

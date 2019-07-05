@@ -63,7 +63,7 @@ namespace KuzzleSdk {
   public sealed class Kuzzle : IKuzzleApi {
     private AbstractProtocol networkProtocol;
 
-    private readonly Dictionary<string, TaskCompletionSource<Response>>
+    internal readonly Dictionary<string, TaskCompletionSource<Response>>
         requests = new Dictionary<string, TaskCompletionSource<Response>>();
 
     // General informations
@@ -155,7 +155,7 @@ namespace KuzzleSdk {
     /// </summary>
     /// <param name="sender">Network Protocol instance</param>
     /// <param name="payload">raw API Response</param>
-    private void ResponsesListener(object sender, string payload) {
+    internal void ResponsesListener(object sender, string payload) {
       Response response = Response.FromString(payload);
 
       if (requests.ContainsKey(response.Room)) {
@@ -178,7 +178,7 @@ namespace KuzzleSdk {
       }
     }
 
-    private void StateChangeListener(object sender, ProtocolState state) {
+    internal void StateChangeListener(object sender, ProtocolState state) {
       // If not connected anymore: close tasks and clean up the requests buffer
       if (state == ProtocolState.Closed) {
         lock (requests) {
@@ -248,6 +248,10 @@ namespace KuzzleSdk {
     /// <returns>API response</returns>
     /// <param name="query">Kuzzle API query</param>
     public Task<Response> QueryAsync(JObject query) {
+      if (query == null){
+        throw new Exceptions.InternalException("You must provide a query", 400);
+      }
+
       if (NetworkProtocol.State != ProtocolState.Open) {
         throw new Exceptions.NotConnectedException();
       }
@@ -259,9 +263,10 @@ namespace KuzzleSdk {
       string requestId = Guid.NewGuid().ToString();
       query["requestId"] = requestId;
 
-      // Injecting SDK version + instance ID
       if (query["volatile"] == null) {
         query["volatile"] = new JObject();
+      } else if (!(query["volatile"] is JObject)) {
+        throw new Exceptions.InternalException("Volatile data must be a JObject", 400);
       }
 
       query["volatile"]["sdkVersion"] = Version;
