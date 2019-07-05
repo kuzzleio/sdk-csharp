@@ -12,6 +12,7 @@ namespace Kuzzle.Client {
 
       kuzzle.ConnectAsync(CancellationToken.None).Wait();
 
+
       Task.Run(async () => {
         while (true) {
           Task.Run(async () => {
