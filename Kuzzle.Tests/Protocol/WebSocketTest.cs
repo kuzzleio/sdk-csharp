@@ -94,14 +94,15 @@ namespace Kuzzle.Tests.Protocol {
       _ws.MockSocket.Verify(s => s.Abort(), Times.Once);
     }
 
-    [Fact(Skip = "oh noes")]
+    [Fact]
     public void DisconnectWithoutEverConnecting() {
+      Assert.Equal(ProtocolState.Closed, _ws.State);
+      Assert.Equal(0, _ws.StateChangesCount);
+
       _ws.Disconnect();
 
       Assert.Equal(ProtocolState.Closed, _ws.State);
       Assert.Equal(0, _ws.StateChangesCount);
-
-      _ws.MockSocket.Verify(s => s.Abort(), Times.Never);
     }
   }
 }

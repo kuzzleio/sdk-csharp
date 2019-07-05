@@ -103,11 +103,17 @@ namespace KuzzleSdk.Protocol {
           var payload = sendQueue.Take(sendCancellationToken.Token);
           var buffer = Encoding.UTF8.GetBytes(payload.ToString());
 
-          await socket.SendAsync(
-            new ArraySegment<byte>(buffer),
-            WebSocketMessageType.Text,
-            true,
-            sendCancellationToken.Token);
+          try {
+            await socket.SendAsync(
+              new ArraySegment<byte>(buffer),
+              WebSocketMessageType.Text,
+              true,
+              sendCancellationToken.Token);
+          }
+          catch (Exception e) {
+            CloseState();
+            throw e;
+          }
         }
       }, CancellationToken.None);
     }
@@ -120,12 +126,18 @@ namespace KuzzleSdk.Protocol {
         StringBuilder messageBuilder = new StringBuilder(receiveBufferSize * 2);
 
         while (socket.State == WebSocketState.Open) {
-          string message;
-
+          string message = "";
+          
           do {
-            wsResult = await socket.ReceiveAsync(
-              incomingBuffer,
-              receiveCancellationToken.Token);
+            try {
+              wsResult = await socket.ReceiveAsync(
+                incomingBuffer,
+                receiveCancellationToken.Token);
+            }
+            catch (Exception e) {
+              CloseState();
+              throw e;
+            }
 
             message = Encoding.UTF8.GetString(
               incomingBuffer.Array, 0, wsResult.Count);
@@ -144,8 +156,6 @@ namespace KuzzleSdk.Protocol {
             DispatchResponse(message);
           }
         }
-
-        CloseState();
       }, CancellationToken.None);
     }
 
