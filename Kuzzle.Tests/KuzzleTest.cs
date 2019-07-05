@@ -7,6 +7,7 @@ using KuzzleSdk.API.Controllers;
 using System;
 using System.Threading.Tasks;
 using Moq;
+using System.Threading;
 
 namespace Kuzzle.Tests {
   public class KuzzleTest {
@@ -22,7 +23,7 @@ namespace Kuzzle.Tests {
     public void DispatchTokenExpiredTest() {
       _kuzzle.AuthenticationToken = "token";
       bool eventDispatched = false;
-      _kuzzle.TokenExpired += delegate() {
+      _kuzzle.TokenExpired += delegate () {
         eventDispatched = true;
       };
 
@@ -46,9 +47,9 @@ namespace Kuzzle.Tests {
 
     [Fact]
     public async void ConnectAsyncTest() {
-      await _kuzzle.ConnectAsync();
+      await _kuzzle.ConnectAsync(CancellationToken.None);
 
-      _protocol.Verify(m => m.ConnectAsync(), Times.Once);
+      _protocol.Verify(m => m.ConnectAsync(CancellationToken.None), Times.Once);
     }
 
     [Fact]
@@ -98,7 +99,7 @@ namespace Kuzzle.Tests {
 
       Assert.Single(_kuzzle.requests);
     }
-    private bool testSendArg (JObject request) {
+    private bool testSendArg(JObject request) {
       Assert.Equal("test", request["controller"]);
       Assert.Equal("testAction", request["action"]);
       Assert.Equal("jwt auth token", request["jwt"]);
@@ -134,7 +135,7 @@ namespace Kuzzle.Tests {
     [Fact]
     public async void ResponseListenerTokenExpiredTest() {
       bool eventDispatched = false;
-      _kuzzle.TokenExpired += delegate() {
+      _kuzzle.TokenExpired += delegate () {
         eventDispatched = true;
       };
       TaskCompletionSource<Response> responseTask =
@@ -165,7 +166,7 @@ namespace Kuzzle.Tests {
     [Fact]
     public void ResponseListenerUnhandledTest() {
       bool eventDispatched = false;
-      _kuzzle.UnhandledResponse += delegate(object sender, Response response) {
+      _kuzzle.UnhandledResponse += delegate (object sender, Response response) {
         eventDispatched = true;
 
         Assert.Equal("i am the result", response.Result);
@@ -184,7 +185,7 @@ namespace Kuzzle.Tests {
     }
 
     [Fact]
-    public async void StateChangeListenerTest () {
+    public async void StateChangeListenerTest() {
       TaskCompletionSource<Response> responseTask1 =
         new TaskCompletionSource<Response>();
       TaskCompletionSource<Response> responseTask2 =

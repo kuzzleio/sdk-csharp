@@ -12,7 +12,7 @@ namespace KuzzleSdk.Protocol {
   /// our WebSocket class testable via duck typing.
   /// </summary>
   internal interface IClientWebSocket {
-    WebSocketState State { get; }
+    WebSocketState State { get; set; }
 
     Task ConnectAsync(Uri uri, CancellationToken cancellationToken);
     Task SendAsync(

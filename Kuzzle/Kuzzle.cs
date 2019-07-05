@@ -11,6 +11,9 @@ using System.Threading;
 
 [assembly: InternalsVisibleTo("Kuzzle.Tests")]
 
+// Allow using Moq on internal objects/interfaces
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
+
 namespace KuzzleSdk {
   /// <summary>
   /// Kuzzle API interface.
@@ -248,7 +251,7 @@ namespace KuzzleSdk {
     /// <returns>API response</returns>
     /// <param name="query">Kuzzle API query</param>
     public Task<Response> QueryAsync(JObject query) {
-      if (query == null){
+      if (query == null) {
         throw new Exceptions.InternalException("You must provide a query", 400);
       }
 
