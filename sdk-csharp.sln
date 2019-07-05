@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kuzzle", "Kuzzle\Kuzzle.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kuzzle.Tests", "Kuzzle.Tests\Kuzzle.Tests.csproj", "{8D2951A1-7EC8-4D2D-A9C9-2ECBD1917F40}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kuzzle.Client", "Kuzzle.Client\Kuzzle.Client.csproj", "{F4B9A2B2-5C50-4FFE-8191-6B6D9D719AB3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{8D2951A1-7EC8-4D2D-A9C9-2ECBD1917F40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D2951A1-7EC8-4D2D-A9C9-2ECBD1917F40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D2951A1-7EC8-4D2D-A9C9-2ECBD1917F40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4B9A2B2-5C50-4FFE-8191-6B6D9D719AB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4B9A2B2-5C50-4FFE-8191-6B6D9D719AB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4B9A2B2-5C50-4FFE-8191-6B6D9D719AB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4B9A2B2-5C50-4FFE-8191-6B6D9D719AB3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		Policies = $0

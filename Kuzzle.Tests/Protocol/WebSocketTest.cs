@@ -43,7 +43,7 @@ namespace Kuzzle.Tests.Protocol {
       await _ws.ConnectAsync(CancellationToken.None);
 
       Assert.True(_ws.SocketCreated);
-      Mock.Verify(_ws => _ws.ConnectAsync(uri, CancellationToken.None);
+      Mock.Verify(_ws => _ws.ConnectAsync(uri, CancellationToken.None));
     }
   }
 }
