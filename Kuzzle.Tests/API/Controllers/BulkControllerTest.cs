@@ -78,9 +78,9 @@ namespace Kuzzle.Tests.API.Controllers {
     }
   
     [Theory]
-    [InlineData("Some input", "foobar", false, false)]
-    [InlineData("", "documentId", false, false)]
-    [InlineData("Some input", "foobar", true, false)]
+    [InlineData("Some input", "foobar", false)]
+    [InlineData("", "documentId", false)]
+    [InlineData("Some input", "foobar", true)]
     [InlineData("Some input", "foobar", false, true)]
     public async void WriteAsyncTestSuccess(string documentInput, string documentId, bool notify, bool refresh = false) {
       JObject expected = JObject.Parse(
