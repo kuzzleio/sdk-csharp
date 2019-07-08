@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using KuzzleSdk.API.Options;
+using KuzzleSdk.Offline.Subscription;
 using KuzzleSdk.Protocol;
 using Newtonsoft.Json.Linq;
 
@@ -46,6 +47,7 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     private void ClearAllSubscriptions() {
+      api.GetOfflineManager().GetSubscriptionRecoverer().ClearAllSubscriptions();
       rooms.Clear();
       channels.Clear();
     }
@@ -81,6 +83,7 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     private void DelNotificationHandlers(string room) {
+      api.GetOfflineManager().GetSubscriptionRecoverer().Remove((obj) => obj.RoomId == room);
       foreach (string channel in rooms[room]) {
         channels.Remove(channel);
       }
@@ -140,6 +143,33 @@ namespace KuzzleSdk.API.Controllers {
     public async Task<string> SubscribeAsync(
         string index, string collection, JObject filters,
         NotificationHandler handler, SubscribeOptions options = null) {
+      string roomId = await RecovererSubscribe(index, collection, filters, handler, options);
+      return roomId;
+    }
+
+    /// <summary>
+    /// Removes a subscription.
+    /// </summary>
+    public async Task UnsubscribeAsync(string roomId) {
+      await api.QueryAsync(new JObject {
+        { "controller", "realtime" },
+        { "action", "unsubscribe" },
+        { "body", new JObject{ { "roomId", roomId } } }
+      });
+
+      DelNotificationHandlers(roomId);
+    }
+
+    /// <summary>
+    /// Subscribes by providing a set of filters: messages, document changes 
+    /// and, optionally, user events matching the provided filters will 
+    /// generate real-time notifications, sent to you in real-time by Kuzzle.
+    /// and add the Subscription to the SubscriptionRecoverer for Offline Mode
+    /// </summary>
+    /// <param name="addToRecoverer">If set to <c>true</c> add to recoverer.</param>
+    internal async Task<string> RecovererSubscribe(
+        string index, string collection, JObject filters,
+        NotificationHandler handler, SubscribeOptions options = null, bool addToRecoverer = true) {
       var request = new JObject {
         { "controller", "realtime" },
         { "action", "subscribe" },
@@ -160,20 +190,20 @@ namespace KuzzleSdk.API.Controllers {
         handler,
         options ?? new SubscribeOptions());
 
+      if (addToRecoverer) {
+        api.GetOfflineManager().GetSubscriptionRecoverer().Add(new Subscription(
+          index,
+          collection,
+          filters,
+          handler,
+          (string)response.Result["roomId"],
+          (string)response.Result["channel"],
+          options
+        ));
+      }
+
       return (string)response.Result["roomId"];
     }
 
-    /// <summary>
-    /// Removes a subscription.
-    /// </summary>
-    public async Task UnsubscribeAsync(string roomId) {
-      await api.QueryAsync(new JObject {
-        { "controller", "realtime" },
-        { "action", "unsubscribe" },
-        { "body", new JObject{ { "roomId", roomId } } }
-      });
-
-      DelNotificationHandlers(roomId);
-    }
   }
 }

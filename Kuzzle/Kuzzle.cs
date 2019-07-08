@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using KuzzleSdk.API.Offline;
 
 [assembly: InternalsVisibleTo("Kuzzle.Tests")]
 
@@ -55,6 +56,8 @@ namespace KuzzleSdk {
     /// Occurs when the authentication token has expired
     /// </summary>
     event Action TokenExpired;
+
+    OfflineManager GetOfflineManager();
   }
 
   /// <summary>
@@ -173,6 +176,9 @@ namespace KuzzleSdk {
         lock (requests) {
           requests.Remove(response.RequestId);
         }
+
+        offlineManager.GetQueryReplayer().Remove((obj) => obj["requestId"].ToString() == response.RequestId);
+
       } else {
         UnhandledResponse?.Invoke(this, response);
       }
@@ -191,11 +197,19 @@ namespace KuzzleSdk {
       }
     }
 
+    private OfflineManager offlineManager;
+
     /// <summary>
     /// Initialize a new instance of the <see cref="T:Kuzzle.Kuzzle"/> class.
     /// </summary>
     /// <param name="networkProtocol">Network protocol.</param>
-    public Kuzzle(AbstractProtocol networkProtocol) {
+    public Kuzzle(
+      AbstractProtocol networkProtocol,
+      int minTokenDuration = 3600000,
+      int maxQueueSize = -1,
+      int maxRequestDelay = 1000,
+      Func<JObject, bool> queueFiler = null
+      ) {
       NetworkProtocol = networkProtocol;
       NetworkProtocol.ResponseEvent += ResponsesListener;
       NetworkProtocol.StateChanged += StateChangeListener;
@@ -206,6 +220,13 @@ namespace KuzzleSdk {
       Document = new DocumentController(this);
       Realtime = new RealtimeController(this);
       Server = new ServerController(this);
+
+      offlineManager = new OfflineManager(networkProtocol, this) {
+        MinTokenDuration = minTokenDuration,
+        MaxQueueSize = maxQueueSize,
+        MaxRequestDelay = maxRequestDelay,
+        QueueFilter = queueFiler
+      };
 
       // Initializes instance unique properties
       Version = typeof(Kuzzle)
@@ -252,7 +273,7 @@ namespace KuzzleSdk {
         throw new Exceptions.InternalException("You must provide a query", 400);
       }
 
-      if (NetworkProtocol.State != ProtocolState.Open) {
+      if (NetworkProtocol.State == ProtocolState.Closed) {
         throw new Exceptions.NotConnectedException();
       }
 
@@ -272,13 +293,21 @@ namespace KuzzleSdk {
       query["volatile"]["sdkVersion"] = Version;
       query["volatile"]["sdkInstanceId"] = InstanceId;
 
-      NetworkProtocol.Send(query);
+      if (NetworkProtocol.State == ProtocolState.Open) {
+        NetworkProtocol.Send(query);
+      } else if (NetworkProtocol.State == ProtocolState.Reconnecting) {
+        offlineManager.GetQueryReplayer().Enqueue(query);
+      }
 
       lock (requests) {
         requests[requestId] = new TaskCompletionSource<Response>();
       }
 
       return requests[requestId].Task;
+    }
+
+    public OfflineManager GetOfflineManager() {
+      return offlineManager;
     }
   }
 }

@@ -31,6 +31,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="API\Options\DocumentOptions.cs" />
+    <Compile Remove="Offline\Handlers\ConnectionHandler.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Offline\Subscription\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

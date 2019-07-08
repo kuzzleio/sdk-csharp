@@ -144,6 +144,8 @@ namespace KuzzleSdk.API.Controllers {
 
       api.AuthenticationToken = (string)response.Result["jwt"];
 
+      api.GetOfflineManager().GetTokenVerifier().ChangeUser(credentials["username"]?.ToString());
+
       return (JObject)response.Result;
     }
 
@@ -162,6 +164,21 @@ namespace KuzzleSdk.API.Controllers {
     /// Refreshes an authentication token.
     /// </summary>
     public async Task<JObject> RefreshTokenAsync(string expiresIn = null) {
+      Response response = await api.QueryAsync(new JObject {
+        { "controller", "auth" },
+        { "action", "refreshToken" },
+        { "expiresIn", expiresIn }
+      });
+
+      api.AuthenticationToken = (string)response.Result["jwt"];
+
+      return (JObject)response.Result;
+    }
+
+    /// <summary>
+    /// Refreshes an authentication token.
+    /// </summary>
+    internal async Task<JObject> RefreshTokenAsync(Int64 expiresIn) {
       Response response = await api.QueryAsync(new JObject {
         { "controller", "auth" },
         { "action", "refreshToken" },

@@ -36,6 +36,7 @@ namespace KuzzleSdk.Protocol {
     private readonly Uri uri;
     private CancellationTokenSource receiveCancellationToken;
     private CancellationTokenSource sendCancellationToken;
+    private CancellationTokenSource reconnectCancellationToken;
     private ArraySegment<byte> incomingBuffer =
       System.Net.WebSockets.WebSocket.CreateClientBuffer(
         receiveBufferSize, sendBufferSize);
@@ -47,6 +48,43 @@ namespace KuzzleSdk.Protocol {
 
       s.Options.SetBuffer(receiveBufferSize, sendBufferSize);
       return s;
+    }
+
+    private bool keepAlive = false;
+    private bool autoReconnect = false;
+    private int reconnectionDelay = 1000;
+    private int reconnectionRetries = 20;
+
+    /// <summary>
+    /// Actively keep the connection alive
+    /// </summary>
+    public bool KeepAlive {
+      get { return keepAlive; }
+      set { keepAlive = value; }
+    }
+
+    /// <summary>
+    /// Try to reestablish connection on an unexpected network loss
+    /// </summary>
+    public bool AutoReconnect {
+      get { return autoReconnect; }
+      set { autoReconnect = value; }
+    }
+
+    /// <summary>
+    /// The number of milliseconds between 2 automatic reconnections attempts
+    /// </summary>
+    public int ReconnectionDelay {
+      get { return reconnectionDelay; }
+      set { reconnectionDelay = value; }
+    }
+
+    /// <summary>
+    /// The maximum number of automatic reconnections attempts
+    /// </summary>
+    public int ReconnectionRetries {
+      get { return reconnectionRetries; }
+      set { reconnectionRetries = value; }
     }
 
     /// <summary>
@@ -69,7 +107,7 @@ namespace KuzzleSdk.Protocol {
       if (socket != null) {
         return;
       }
-
+        
       socket = CreateClientSocket();
 
       await socket.ConnectAsync(uri, cancellationToken);
@@ -85,7 +123,7 @@ namespace KuzzleSdk.Protocol {
     /// Disconnects this instance.
     /// </summary>
     public override void Disconnect() {
-      CloseState();
+      CloseState(false);
     }
 
     /// <summary>
@@ -102,13 +140,18 @@ namespace KuzzleSdk.Protocol {
         while (socket.State == WebSocketState.Open) {
           var payload = sendQueue.Take(sendCancellationToken.Token);
           var buffer = Encoding.UTF8.GetBytes(payload.ToString());
-
-          await socket.SendAsync(
+           try {
+            await socket.SendAsync(
             new ArraySegment<byte>(buffer),
             WebSocketMessageType.Text,
             true,
             sendCancellationToken.Token);
+          } catch (Exception e) {
+            CloseState(autoReconnect);
+            throw e;
+          }
         }
+
       }, CancellationToken.None);
     }
 
@@ -118,47 +161,103 @@ namespace KuzzleSdk.Protocol {
       Task.Run(async () => {
         WebSocketReceiveResult wsResult;
         StringBuilder messageBuilder = new StringBuilder(receiveBufferSize * 2);
-
-        while (socket.State == WebSocketState.Open) {
-          string message;
+          while (socket.State == WebSocketState.Open) {
+            string message;
 
           do {
-            wsResult = await socket.ReceiveAsync(
-              incomingBuffer,
-              receiveCancellationToken.Token);
+            try {
 
-            message = Encoding.UTF8.GetString(
-              incomingBuffer.Array, 0, wsResult.Count);
+              wsResult = await socket.ReceiveAsync(
+                incomingBuffer,
+                receiveCancellationToken.Token);
 
-            if (!wsResult.EndOfMessage || messageBuilder.Length > 0) {
-              messageBuilder.Append(message);
+              message = Encoding.UTF8.GetString(
+                incomingBuffer.Array, 0, wsResult.Count);
+
+              if (!wsResult.EndOfMessage || messageBuilder.Length > 0) {
+                messageBuilder.Append(message);
+              }
+
+            } catch (Exception e) {
+              CloseState(autoReconnect);
+              throw e;
             }
+
           } while (!wsResult.EndOfMessage);
 
           if (messageBuilder.Length > 0) {
-            message = messageBuilder.ToString();
-            messageBuilder.Clear();
-          }
+              message = messageBuilder.ToString();
+              messageBuilder.Clear();
+            }
 
-          if (!string.IsNullOrEmpty(message)) {
-            DispatchResponse(message);
+            if (!string.IsNullOrEmpty(message)) {
+              DispatchResponse(message);
+            }
           }
-        }
-
-        CloseState();
       }, CancellationToken.None);
     }
 
-    private void CloseState() {
+    public void CancelReconnection() {
+      if (reconnectCancellationToken != null) {
+        reconnectCancellationToken.Cancel();
+      }
+    }
+
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+    private async Task Reconnect() {
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+      if (State == ProtocolState.Reconnecting) {
+        return;
+      }
+
+      socket.Abort();
+      socket = null;
+      receiveCancellationToken?.Cancel();
+      receiveCancellationToken = null;
+      sendCancellationToken?.Cancel();
+      sendCancellationToken = null;
+      reconnectCancellationToken = new CancellationTokenSource();
+
+      State = ProtocolState.Reconnecting;
+      DispatchStateChange(State);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+      Task.Run(async () => {
+        for (int i = 0; i < reconnectionRetries; i++) {
+          try {
+            Console.WriteLine("Attempt #" + i);
+            await ConnectAsync(reconnectCancellationToken.Token);
+            return;
+          } catch (Exception) {
+            socket.Abort();
+            socket = null;
+            receiveCancellationToken?.Cancel();
+            receiveCancellationToken = null;
+            sendCancellationToken?.Cancel();
+            sendCancellationToken = null;
+            await Task.Delay(reconnectionDelay, reconnectCancellationToken.Token);
+          }
+        }
+        CloseState(false);
+      }, reconnectCancellationToken.Token);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+    }
+
+    private void CloseState(bool tryReconnect) {
       if (State != ProtocolState.Closed) {
-        socket.Abort();
-        socket = null;
-        State = ProtocolState.Closed;
-        DispatchStateChange(State);
-        receiveCancellationToken?.Cancel();
-        receiveCancellationToken = null;
-        sendCancellationToken?.Cancel();
-        sendCancellationToken = null;
+        if (tryReconnect) {
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+          Reconnect();
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        } else {
+          socket.Abort();
+          socket = null;
+          State = ProtocolState.Closed;
+          DispatchStateChange(State);
+          receiveCancellationToken?.Cancel();
+          receiveCancellationToken = null;
+          sendCancellationToken?.Cancel();
+          sendCancellationToken = null;
+        }
       }
     }
   }

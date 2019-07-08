@@ -9,6 +9,12 @@
     Open,
 
     /// <summary>
+    /// The network protocol accepts new requests.
+    /// But place them in a Queue until it reconnects
+    /// </summary>
+    Reconnecting,
+
+    /// <summary>
     /// The network protocol does not accept requests.
     /// </summary>
     Closed
