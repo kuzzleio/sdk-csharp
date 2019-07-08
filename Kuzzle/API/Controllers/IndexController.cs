@@ -11,14 +11,12 @@ namespace KuzzleSdk.API.Controllers {
     /// <summary>
     /// Creates a new index in Kuzzle via the persistence engine.
     /// </summary>
-    public async Task<JObject> CreateAsync(string index) {
-      Response response = await api.QueryAsync(new JObject {
+    public async Task CreateAsync(string index) {
+      await api.QueryAsync(new JObject {
         { "controller", "index" },
         { "action", "create" },
         { "index", index },
       });
-
-      return (JObject)response.Result;
     }
 
     /// <summary>
@@ -111,17 +109,13 @@ namespace KuzzleSdk.API.Controllers {
     /// <summary>
     /// Changes the autoRefresh configuration of the given index.
     /// </summary>
-    public async Task<bool> SetAutoRefreshAsync(string index, bool autoRefresh) {
-      var request = new JObject {
+    public async Task SetAutoRefreshAsync(string index, bool autoRefresh) {
+      await api.QueryAsync(new JObject {
         { "controller", "index" },
         { "action", "setAutoRefresh" }, 
         { "index", index },
         { "body", new JObject { { "autoRefresh", autoRefresh } } }
-      };
-
-      Response response = await api.QueryAsync(request);
-
-      return (bool)response.Result["response"];
+      });
     }
   }
 }

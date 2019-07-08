@@ -23,12 +23,7 @@ namespace Kuzzle.Tests.API.Controllers {
         }
       ");
 
-      Assert.Equal(
-          new JObject {
-            { "acknowledged", true },
-            { "shards_acknowledged", true }
-          }, await _indexController.CreateAsync("foo")
-      );
+      await _indexController.CreateAsync("foo");
       
       _api.Verify(new JObject {
         { "controller", "index" },
@@ -186,10 +181,7 @@ namespace Kuzzle.Tests.API.Controllers {
         { "result" , new JObject { { "response", autoRefresh } } } 
       });
 
-      Assert.Equal(
-        autoRefresh, 
-        await _indexController.SetAutoRefreshAsync("foo", autoRefresh)
-      );
+      await _indexController.SetAutoRefreshAsync("foo", autoRefresh);
 
       _api.Verify(new JObject {
         { "controller", "index" },

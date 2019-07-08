@@ -39,6 +39,7 @@ namespace Kuzzle.Tests {
       Assert.IsType<AuthController>(_kuzzle.Auth);
       Assert.IsType<CollectionController>(_kuzzle.Collection);
       Assert.IsType<DocumentController>(_kuzzle.Document);
+      Assert.IsType<IndexController>(_kuzzle.Index);
       Assert.IsType<RealtimeController>(_kuzzle.Realtime);
       Assert.IsType<ServerController>(_kuzzle.Server);
       Assert.NotEqual(_kuzzle.InstanceId, kuzzle2.InstanceId);
