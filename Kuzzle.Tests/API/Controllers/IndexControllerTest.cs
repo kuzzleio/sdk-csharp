@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using KuzzleSdk.API.Controllers;
-using KuzzleSdk.API.DataObjects;
-using KuzzleSdk.API.Options;
-using Newtonsoft.Json;
+﻿using KuzzleSdk.API.Controllers;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -65,7 +60,7 @@ namespace Kuzzle.Tests.API.Controllers {
     [InlineData(true)]
     [InlineData(false)]
     public async void ExistsAsyncTest(bool result) {
-      _api.SetResult($"{{result:{result.ToString().ToLower()}}}");
+      _api.SetResult(new JObject { { "result" , result } } );
 
       Assert.Equal(
         result, 
@@ -83,7 +78,7 @@ namespace Kuzzle.Tests.API.Controllers {
     [InlineData(true)]
     [InlineData(false)]
     public async void GetAutoRefreshAsyncTest(bool result) {
-      _api.SetResult($"{{result:{result.ToString().ToLower()}}}");
+      _api.SetResult(new JObject { { "result" , result } } );
 
       Assert.Equal(
         result, 
@@ -100,7 +95,9 @@ namespace Kuzzle.Tests.API.Controllers {
     [Fact]
     public async void ListAsyncTest() {
       var indexes = new JArray { "foo", "bar", "zoo" };
-      _api.SetResult($"{{result:{{indexes:{indexes.ToString().ToLower()}}}}}");
+      _api.SetResult(new JObject { 
+        { "result" , new JObject { { "indexes", indexes } } } 
+      });
 
       Assert.Equal(
         indexes,
@@ -117,8 +114,9 @@ namespace Kuzzle.Tests.API.Controllers {
     [Fact]
     public async void MDeleteAsyncTest() {
       var indexes = new JArray { "foo", "bar", "zoo" };
-      _api.SetResult(
-          $"{{result:{{indexes:{indexes.ToString().ToLower()}}}}}");
+      _api.SetResult(new JObject { 
+        { "result" , new JObject { { "indexes", indexes } } } 
+      });
 
       Assert.Equal(
         indexes, 
@@ -183,19 +181,21 @@ namespace Kuzzle.Tests.API.Controllers {
     [Theory]
     [InlineData(true)]
     [InlineData(false)]
-    public async void SetAutoRefreshAsyncTest(bool result) {
-      _api.SetResult($"{{result:{{response:{result.ToString().ToLower()}}}}}");
+    public async void SetAutoRefreshAsyncTest(bool autoRefresh) {
+      _api.SetResult(new JObject { 
+        { "result" , new JObject { { "response", autoRefresh } } } 
+      });
 
       Assert.Equal(
-        result, 
-        await _indexController.SetAutoRefreshAsync("foo", result)
+        autoRefresh, 
+        await _indexController.SetAutoRefreshAsync("foo", autoRefresh)
       );
 
       _api.Verify(new JObject {
         { "controller", "index" },
         { "action", "setAutoRefresh" }, 
         { "index", "foo" },
-        { "body", new JObject { { "autoRefresh", result } } }
+        { "body", new JObject { { "autoRefresh", autoRefresh } } }
       });
     }
   }
