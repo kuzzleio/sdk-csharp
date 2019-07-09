@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
+using Kuzzle.Tests.Utils;
 using KuzzleSdk.API.Controllers;
 using KuzzleSdk.API.DataObjects;
 using KuzzleSdk.API.Options;
-using KuzzleSdk.Utils;
 using Newtonsoft.Json.Linq;
 using Xunit;
 

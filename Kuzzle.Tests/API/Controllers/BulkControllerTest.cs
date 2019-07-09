@@ -1,5 +1,5 @@
-﻿using KuzzleSdk.API.Controllers;
-using KuzzleSdk.Utils;
+﻿using Kuzzle.Tests.Utils;
+using KuzzleSdk.API.Controllers;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
