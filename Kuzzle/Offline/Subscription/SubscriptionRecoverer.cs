@@ -18,7 +18,7 @@ namespace KuzzleSdk.Offline.Subscription {
     private RealtimeController realtimeController;
     private List<Subscription> subscriptions;
 
-    public SubscriptionRecoverer(OfflineManager offlineManager, RealtimeController realtimeController) {
+    public SubscriptionRecoverer(IOfflineManager offlineManager, RealtimeController realtimeController) {
       this.realtimeController = realtimeController;
       subscriptions = new List<Subscription>();
     }

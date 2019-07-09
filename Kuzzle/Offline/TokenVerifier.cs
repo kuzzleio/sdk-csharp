@@ -11,11 +11,11 @@ namespace KuzzleSdk.Offline {
   }
 
   public class TokenVerifier : ITokenVerifier {
-    private OfflineManager offlineManager;
+    private IOfflineManager offlineManager;
     private Kuzzle kuzzle;
     private string username = "";
 
-    public TokenVerifier(OfflineManager offlineManager, Kuzzle kuzzle) {
+    public TokenVerifier(IOfflineManager offlineManager, Kuzzle kuzzle) {
       this.offlineManager = offlineManager;
       this.kuzzle = kuzzle;
     }

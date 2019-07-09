@@ -32,7 +32,7 @@ namespace KuzzleSdk {
     private Int64 startTime;
     private Kuzzle kuzzle;
     private List<TimedQuery> queue;
-    private OfflineManager offlineManager;
+    private IOfflineManager offlineManager;
     private CancellationTokenSource cancellationTokenSource;
 
     /// <summary>
@@ -49,7 +49,7 @@ namespace KuzzleSdk {
     /// <summary>
     /// Constructor of the QueryReplayer class.
     /// </summary>
-    public QueryReplayer(OfflineManager offlineManager, Kuzzle kuzzle) {
+    public QueryReplayer(IOfflineManager offlineManager, Kuzzle kuzzle) {
       queue = new List<TimedQuery>();
       this.offlineManager = offlineManager;
       this.kuzzle = kuzzle;
