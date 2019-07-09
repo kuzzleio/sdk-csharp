@@ -7,6 +7,7 @@ using KuzzleSdk.API.Controllers;
 using System;
 using System.Threading.Tasks;
 using Moq;
+using System.Threading;
 
 namespace Kuzzle.Tests {
   public class KuzzleTest {
@@ -46,9 +47,9 @@ namespace Kuzzle.Tests {
 
     [Fact]
     public async void ConnectAsyncTest() {
-      await _kuzzle.ConnectAsync();
+      await _kuzzle.ConnectAsync(CancellationToken.None);
 
-      _protocol.Verify(m => m.ConnectAsync(), Times.Once);
+      _protocol.Verify(m => m.ConnectAsync(CancellationToken.None), Times.Once);
     }
 
     [Fact]

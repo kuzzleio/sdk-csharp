@@ -8,7 +8,26 @@ using KuzzleSdk.Protocol;
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk {
-  public class QueryReplayer {
+
+  public interface IQueryReplayer {
+    int Count { get; }
+    bool Lock { get; set; }
+    bool WaitLoginToReplay { get; set; }
+
+    bool Enqueue(JObject query);
+    JObject Dequeue();
+
+    void RejectAllQueries(Exception exception);
+    void RejectQueries(Predicate<JObject> predicate, Exception exception);
+    bool Remove(Predicate<JObject> predicate);
+
+    CancellationTokenSource ReplayQueries(bool resetWaitLogin = true);
+    CancellationTokenSource ReplayQueries(Predicate<JObject> predicate, bool resetWaitLogin = true);
+
+    void CancelReplay();
+  }
+
+  public class QueryReplayer : IQueryReplayer {
 
     private Int64 startTime;
     private Kuzzle kuzzle;
@@ -20,12 +39,12 @@ namespace KuzzleSdk {
     /// Does the QueryReplayer accepts new queries.
     /// Should only be true if there is an 'auth:login' or 'auth:logout' call in the queue
     /// </summary>
-    internal bool Lock { get; set; } = false;
+    public bool Lock { get; set; } = false;
 
     /// <summary>
     /// True if the QueryReplayer has to wait a login call before replaying the queue
     /// </summary>
-    internal bool WaitLoginToReplay { get; set; } = false;
+    public bool WaitLoginToReplay { get; set; } = false;
 
     /// <summary>
     /// Constructor of the QueryReplayer class.

@@ -57,7 +57,7 @@ namespace KuzzleSdk {
     /// </summary>
     event Action TokenExpired;
 
-    OfflineManager GetOfflineManager();
+    IOfflineManager GetOfflineManager();
   }
 
   /// <summary>
@@ -306,7 +306,7 @@ namespace KuzzleSdk {
       return requests[requestId].Task;
     }
 
-    public OfflineManager GetOfflineManager() {
+    public IOfflineManager GetOfflineManager() {
       return offlineManager;
     }
   }

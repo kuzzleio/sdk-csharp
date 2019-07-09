@@ -5,7 +5,15 @@ using KuzzleSdk.API.Controllers;
 using KuzzleSdk.API.Offline;
 
 namespace KuzzleSdk.Offline.Subscription {
-  public class SubscriptionRecoverer {
+
+  public interface ISubscriptionRecoverer {
+    void Add(Subscription subscription);
+    void Remove(Predicate<Subscription> predicate);
+    void ClearAllSubscriptions();
+    void RenewSubscriptions();
+  }
+
+  public class SubscriptionRecoverer : ISubscriptionRecoverer {
 
     private RealtimeController realtimeController;
     private List<Subscription> subscriptions;

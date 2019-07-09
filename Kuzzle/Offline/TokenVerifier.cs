@@ -3,7 +3,14 @@ using System.Threading.Tasks;
 using KuzzleSdk.API.Offline;
 
 namespace KuzzleSdk.Offline {
-  public class TokenVerifier {
+
+  public interface ITokenVerifier {
+    Task<bool> IsTokenValid();
+    Task ChangeUser(string username);
+    Task CheckRefreshToken();
+  }
+
+  public class TokenVerifier : ITokenVerifier {
     private OfflineManager offlineManager;
     private Kuzzle kuzzle;
     private string username = "";

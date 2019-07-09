@@ -6,7 +6,21 @@ using KuzzleSdk.Protocol;
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.API.Offline {
-  public class OfflineManager {
+
+  public interface IOfflineManager {
+    int MaxQueueSize { get; set; }
+    int MinTokenDuration { get; set; }
+    int MaxRequestDelay { get; set; }
+    Func<JObject, bool> QueueFilter { get; set; }
+    bool AutoRecover { get; set; }
+
+    AbstractProtocol GetNetworkProtocol();
+    ITokenVerifier GetTokenVerifier();
+    ISubscriptionRecoverer GetSubscriptionRecoverer();
+    IQueryReplayer GetQueryReplayer();
+  }
+
+  public class OfflineManager : IOfflineManager {
 
     private ProtocolState previousState = ProtocolState.Closed;
     private int maxQueueSize = -1;
@@ -68,40 +82,16 @@ namespace KuzzleSdk.API.Offline {
       return networkProtocol;
     }
 
-    public QueryReplayer GetQueryReplayer() {
+    public IQueryReplayer GetQueryReplayer() {
       return queryReplayer;
     }
 
-    public TokenVerifier GetTokenVerifier() {
+    public ITokenVerifier GetTokenVerifier() {
       return tokenVerifier;
     }
 
-    public SubscriptionRecoverer GetSubscriptionRecoverer() {
+    public ISubscriptionRecoverer GetSubscriptionRecoverer() {
       return subscriptionRecoverer;
-    }
-
-
-    private async Task AfterReconnection(bool tokenValid) {
-      if (tokenValid) {
-        if (AutoRecover) {
-          queryReplayer.ReplayQueries();
-        }
-        subscriptionRecoverer.RenewSubscriptions();
-      } else {
-         if (queryReplayer.Lock) {
-          queryReplayer.RejectQueries((obj) =>
-          (obj["controller"] == null
-          || obj["action"] == null)
-          || obj["controller"].ToString() != "auth"
-          || (obj["action"].ToString() != "login" && obj["action"].ToString() != "logout"),
-          new KuzzleSdk.Exceptions.NotConnectedException());
-          if (AutoRecover) {
-            queryReplayer.ReplayQueries();
-          }
-        } else {
-          queryReplayer.RejectQueries((obj) => true, new KuzzleSdk.Exceptions.NotConnectedException());
-        }
-      }
     }
 
     internal void StateChangeListener(object sender, ProtocolState state) {
