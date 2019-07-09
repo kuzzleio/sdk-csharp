@@ -224,7 +224,6 @@ namespace KuzzleSdk.Protocol {
       Task.Run(async () => {
         for (int i = 0; i < reconnectionRetries; i++) {
           try {
-            Console.WriteLine("Attempt #" + i);
             await ConnectAsync(reconnectCancellationToken.Token);
             return;
           } catch (Exception) {

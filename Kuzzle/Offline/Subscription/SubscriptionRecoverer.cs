@@ -51,7 +51,6 @@ namespace KuzzleSdk.Offline.Subscription {
       subscription.Options,
       false);
       subscription.RoomId = roomId;
-      Console.WriteLine("RESUBSCRIBE [" + subscription.Index + ", " + subscription.Collection + "] : " + roomId + " (" + subscription.RoomId + ")");
     }
 
     public void RenewSubscriptions() {

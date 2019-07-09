@@ -26,14 +26,12 @@ namespace KuzzleSdk.Offline {
 
     public async Task ChangeUser(string username) {
       if (this.username != username) {
-        Console.WriteLine("REJECT ALL QUERIES => USERNAMES NOT MATCHING");
-        if (offlineManager.AutoRecover) {
+      if (offlineManager.AutoRecover) {
           offlineManager.GetQueryReplayer().RejectAllQueries(new KuzzleSdk.Exceptions.ConnectionLostException());
         }
         offlineManager.GetSubscriptionRecoverer().ClearAllSubscriptions();
       } else {
         if (offlineManager.GetQueryReplayer().WaitLoginToReplay) {
-          Console.WriteLine("REPLAY ALL QUERIES => USERNAMES MATCHING");
           if (offlineManager.AutoRecover) {
             offlineManager.GetQueryReplayer().ReplayQueries();
           }
@@ -53,12 +51,8 @@ namespace KuzzleSdk.Offline {
             && obj["controller"].ToString() == "auth"
             && obj["action"].ToString() == "login", false);
           }
-          Console.WriteLine("REPLAY LOGIN");
-        } else {
-          Console.WriteLine("WAITING FOR LOGIN");
         }
       } else {
-        Console.WriteLine("REPLAY ALL QUERIES => EVERYTHING OK");
         if (offlineManager.AutoRecover) {
           offlineManager.GetQueryReplayer().ReplayQueries();
         }

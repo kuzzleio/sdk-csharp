@@ -68,20 +68,17 @@ namespace KuzzleSdk {
           if (queue.Count == 0) {
             startTime = DateTime.Now.Ticks;
             queue.Add(new TimedQuery(query, 0));
-            Console.WriteLine("QUEUE");
           } else {
             TimedQuery previous = queue[queue.Count - 1];
             Int64 elapsedTime = ((DateTime.Now.Ticks - startTime) / 10000) - previous.Time;
             elapsedTime = Math.Min(elapsedTime, offlineManager.MaxRequestDelay);
             queue.Add(new TimedQuery(query, previous.Time + elapsedTime));
-            Console.WriteLine("QUEUE");
           }
           if (query["controller"] != null && query["action"] != null) {
             if (query["controller"].ToString() == "auth"
                 && (query["action"].ToString() == "login"
                     || query["action"].ToString() == "logout")) {
               Lock = true;
-              Console.WriteLine("QUEUE LOCKED");
             }
           }
           return true;
@@ -139,7 +136,6 @@ namespace KuzzleSdk {
         lock (queue) {
           Predicate<TimedQuery> timedQueryPredicate = timedQuery => predicate(timedQuery.Query);
           if (queue.RemoveAll(timedQueryPredicate) > 0) {
-            Console.WriteLine("REMOVE REQUEST");
             return true;
           }
         }
@@ -163,7 +159,6 @@ namespace KuzzleSdk {
       return Task.Run(async () => {
         if (offlineManager.QueueFilter == null || offlineManager.QueueFilter( timedQuery.Query )) {
           cancellationToken.ThrowIfCancellationRequested();
-          Console.WriteLine("REPLAY QUERY [" + (string)timedQuery.Query["requestId"] + "]: " + timedQuery.Time);
           await Task.Delay((Int32)timedQuery.Time, cancellationToken);
           cancellationToken.ThrowIfCancellationRequested();
           timedQuery.Query["jwt"] = kuzzle.AuthenticationToken;
