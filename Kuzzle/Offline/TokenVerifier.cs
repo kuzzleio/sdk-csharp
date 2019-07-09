@@ -34,14 +34,20 @@ namespace KuzzleSdk.Offline {
     /// </summary>
     public async Task ChangeUser(string username) {
       if (this.username != username) {
-      if (offlineManager.AutoRecover) {
-          offlineManager.GetQueryReplayer().RejectAllQueries(new KuzzleSdk.Exceptions.ConnectionLostException());
+        if (offlineManager.GetQueryReplayer().WaitLoginToReplay) {
+          if (offlineManager.AutoRecover) {
+            offlineManager.GetQueryReplayer().RejectAllQueries(new KuzzleSdk.Exceptions.ConnectionLostException());
+            offlineManager.GetQueryReplayer().Lock = false;
+            offlineManager.GetQueryReplayer().WaitLoginToReplay = false;
+          }
         }
         offlineManager.GetSubscriptionRecoverer().ClearAllSubscriptions();
       } else {
         if (offlineManager.GetQueryReplayer().WaitLoginToReplay) {
           if (offlineManager.AutoRecover) {
             offlineManager.GetQueryReplayer().ReplayQueries();
+            offlineManager.GetQueryReplayer().Lock = false;
+            offlineManager.GetQueryReplayer().WaitLoginToReplay = false;
           }
           offlineManager.GetSubscriptionRecoverer().RenewSubscriptions();
         }
@@ -67,12 +73,11 @@ namespace KuzzleSdk.Offline {
       } else {
         if (offlineManager.AutoRecover) {
           offlineManager.GetQueryReplayer().ReplayQueries();
+          offlineManager.GetQueryReplayer().Lock = false;
         }
         offlineManager.GetSubscriptionRecoverer().RenewSubscriptions();
       }
     }
-
-
 
   }
 }
