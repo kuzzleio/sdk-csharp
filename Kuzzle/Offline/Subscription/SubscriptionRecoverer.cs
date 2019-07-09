@@ -23,24 +23,36 @@ namespace KuzzleSdk.Offline.Subscription {
       subscriptions = new List<Subscription>();
     }
 
+    /// <summary>
+    /// Add a subscription.
+    /// </summary>
     public void Add(Subscription subscription) {
       lock (subscriptions) {
         subscriptions.Add(subscription);
       }
     }
 
+    /// <summary>
+    /// Remove every subscriptions that satisfy the predicate.
+    /// </summary>
     public void Remove(Predicate<Subscription> predicate) {
       lock (subscriptions) {
         subscriptions.RemoveAll(predicate);
       }
     }
 
+    /// <summary>
+    /// Clear every subscriptions saved.
+    /// </summary>
     public void ClearAllSubscriptions() {
       lock (subscriptions) {
         subscriptions.Clear();
       }
     }
 
+    /// <summary>
+    /// Renew one subscription.
+    /// </summary>
     private async Task RenewSubscription(Subscription subscription) {
 
       string roomId = await realtimeController.RecovererSubscribe(
@@ -53,6 +65,9 @@ namespace KuzzleSdk.Offline.Subscription {
       subscription.RoomId = roomId;
     }
 
+    /// <summary>
+    /// Renew every saved subscriptions.
+    /// </summary>
     public void RenewSubscriptions() {
       lock (subscriptions) {
         for (int i = 0; i < subscriptions.Count; i++) {

@@ -7,7 +7,7 @@ namespace KuzzleSdk.Offline {
   public interface ITokenVerifier {
     Task<bool> IsTokenValid();
     Task ChangeUser(string username);
-    Task CheckRefreshToken();
+    Task CheckTokenToReplay();
   }
 
   public class TokenVerifier : ITokenVerifier {
@@ -20,10 +20,18 @@ namespace KuzzleSdk.Offline {
       this.kuzzle = kuzzle;
     }
    
+    /// <summary>
+    /// Return true if the Token is valid
+    /// </summary>
     public async Task<bool> IsTokenValid() {
       return (bool)(await kuzzle.Auth.CheckTokenAsync(kuzzle.AuthenticationToken))["valid"];
     }
 
+    /// <summary>
+    /// This is used to verify if the user that has logged in
+    /// is the same that before, if not this will Reject every query in the Queue
+    /// and clear all subscriptions, otherwise this will replay the Queue if she is waiting.
+    /// </summary>
     public async Task ChangeUser(string username) {
       if (this.username != username) {
       if (offlineManager.AutoRecover) {
@@ -41,7 +49,11 @@ namespace KuzzleSdk.Offline {
       this.username = username;
     }
 
-    public async Task CheckRefreshToken() {
+    /// <summary>
+    /// This will check the token validity,
+    /// and chose what to do before replaying the Queue
+    /// </summary>
+    public async Task CheckTokenToReplay() {
       if (!(await IsTokenValid())) {
         if (offlineManager.GetQueryReplayer().Lock) {
           if (offlineManager.AutoRecover) {

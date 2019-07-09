@@ -43,6 +43,10 @@ namespace KuzzleSdk.API.Offline {
       set { maxQueueSize = value < 0 ? -1 : value; }
     }
 
+    /// <summary>
+    /// The minimum duration of a Token after refresh.
+    /// If set to -1 the SDK does not refresh the token automaticaly.
+    /// </summary>
     public int MinTokenDuration {
       get { return minTokenDuration; }
       set { minTokenDuration = value < 0 ? -1 : value; }
@@ -62,7 +66,8 @@ namespace KuzzleSdk.API.Offline {
     }
 
     /// <summary>
-    /// Queue requests when network is down, and automatically replay them when the SDK successfully reconnects.
+    /// Queue requests when network is down,
+    /// and automatically replay them when the SDK successfully reconnects.
     /// </summary>
     public bool AutoRecover {
       get { return autoRecover; }
@@ -78,18 +83,35 @@ namespace KuzzleSdk.API.Offline {
       tokenVerifier = new TokenVerifier(this, kuzzle);
     }
 
+    /// <summary>
+    /// Gets the network protocol.
+    /// </summary>
+    /// <returns>The network protocol.</returns>
     public AbstractProtocol GetNetworkProtocol() {
       return networkProtocol;
     }
 
+    /// <summary>
+    /// Gets the query replayer.
+    /// </summary>
+    /// <returns>The query replayer.</returns>
     public IQueryReplayer GetQueryReplayer() {
       return queryReplayer;
     }
 
+    /// <summary>
+    /// Gets the token verifier.
+    /// </summary>
+    /// <returns>The token verifier.</returns>
     public ITokenVerifier GetTokenVerifier() {
       return tokenVerifier;
     }
 
+
+    /// <summary>
+    /// Gets the subscription recoverer.
+    /// </summary>
+    /// <returns>The subscription recoverer.</returns>
     public ISubscriptionRecoverer GetSubscriptionRecoverer() {
       return subscriptionRecoverer;
     }
@@ -98,7 +120,7 @@ namespace KuzzleSdk.API.Offline {
       if (state == ProtocolState.Open && previousState == ProtocolState.Reconnecting) {
         Task.Run(async () => {
           queryReplayer.WaitLoginToReplay = true;
-          await tokenVerifier.CheckRefreshToken();
+          await tokenVerifier.CheckTokenToReplay();
         });
       }
       previousState = state;
