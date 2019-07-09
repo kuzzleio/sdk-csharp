@@ -12,20 +12,19 @@ namespace KuzzleSdk.API.Controllers {
     /// Asynchronously create a snapshot of Kuzzle's state.
     /// Depending on the configuration of Kuzzle.
     /// </summary>
-    public async Task<bool> DumpAsync() {
+    public async Task DumpAsync() {
 
-      Response response = await api.QueryAsync(new JObject {
+      await api.QueryAsync(new JObject {
         {"controller", "admin"},
         {"action", "dump"}
       });
 
-      return (bool)response.Result["acknowledge"];
     }
 
     /// <summary>
     /// Load fixtures into the storage layer.
     /// </summary>
-    public async Task<bool> LoadFixturesAsync(JObject indexName, bool waitForRefresh = false) {
+    public async Task LoadFixturesAsync(JObject indexName, bool waitForRefresh = false) {
 
       JObject query = new JObject {
         {"controller", "admin"},
@@ -38,15 +37,13 @@ namespace KuzzleSdk.API.Controllers {
 
       QueryUtils.HandleRefreshOption(query, waitForRefresh);
 
-      Response response = await api.QueryAsync(query);
-
-      return (bool)response.Result["acknowledge"];
+      await api.QueryAsync(query);
     }
 
     /// <summary>
     /// Apply mappings to the storage layer.
     /// </summary>
-    public async Task<bool> LoadMappingsAsync(JObject indexName, bool waitForRefresh = false) {
+    public async Task LoadMappingsAsync(JObject indexName, bool waitForRefresh = false) {
 
       JObject query = new JObject {
         {"controller", "admin"},
@@ -59,15 +56,13 @@ namespace KuzzleSdk.API.Controllers {
 
       QueryUtils.HandleRefreshOption(query, waitForRefresh);
 
-      Response response = await api.QueryAsync(query);
-
-      return (bool)response.Result["acknowledge"];
+      await api.QueryAsync(query);
     }
 
     /// <summary>
     /// Load roles, profiles and users into the storage layer.
     /// </summary>
-    public async Task<bool> LoadSecuritiesAsync(JObject body, bool waitForRefresh = false) {
+    public async Task LoadSecuritiesAsync(JObject body, bool waitForRefresh = false) {
 
       JObject query = new JObject {
         {"controller", "admin"},
@@ -77,37 +72,32 @@ namespace KuzzleSdk.API.Controllers {
 
       QueryUtils.HandleRefreshOption(query, waitForRefresh);
 
-      Response response = await api.QueryAsync(query);
-
-      return (bool)response.Result["acknowledge"];
+      await api.QueryAsync(query);
     }
 
     /// <summary>
     /// Asynchronously clears the cache database.
     /// </summary>
-    public async Task<bool> ResetCacheAsync(string database) {
+    public async Task ResetCacheAsync(string database) {
 
-      Response response = await api.QueryAsync(new JObject {
+      await api.QueryAsync(new JObject {
         {"controller", "admin"},
         {"action", "resetCache"},
         {"database", database}
       });
-
-      return (bool)response.Result["acknowledge"];
     }
 
     /// <summary>
     /// Asynchronously deletes all indexes created by users.
     /// Neither Kuzzle internal indexes nor Plugin indexes are deleted.
     /// </summary>
-    public async Task<bool> ResetDatabaseAsync() {
+    public async Task ResetDatabaseAsync() {
 
-      Response response = await api.QueryAsync(new JObject {
+      await api.QueryAsync(new JObject {
         {"controller", "admin"},
         {"action", "resetDatabase"},
       });
 
-      return (bool)response.Result["acknowledge"];
     }
 
     /// <summary>
@@ -119,14 +109,13 @@ namespace KuzzleSdk.API.Controllers {
     //
     //This action has no impact on Plugin and Document storages.
     /// </summary>
-    public async Task<bool> ResetKuzzleDataAsync() {
+    public async Task ResetKuzzleDataAsync() {
 
-      Response response = await api.QueryAsync(new JObject {
+      await api.QueryAsync(new JObject {
         {"controller", "admin"},
         {"action", "resetKuzzleData"},
       });
 
-      return (bool)response.Result["acknowledge"];
     }
 
     /// <summary>
@@ -134,14 +123,13 @@ namespace KuzzleSdk.API.Controllers {
     /// Then resets anonymous, default and admin profiles and roles
     /// to default values, specified in Kuzzle configuration files.
     /// </summary>
-    public async Task<bool> ResetSecurityAsync() {
+    public async Task ResetSecurityAsync() {
 
-      Response response = await api.QueryAsync(new JObject {
+      await api.QueryAsync(new JObject {
         {"controller", "admin"},
         {"action", "resetSecurity"},
       });
 
-      return (bool)response.Result["acknowledge"];
     }
 
     /// <summary>
@@ -149,14 +137,12 @@ namespace KuzzleSdk.API.Controllers {
     ///
     /// In a cluster environment, the shutdown action will be propagated across all nodes.
     /// </summary>
-    public async Task<bool> ShutdownAsync() {
+    public async Task ShutdownAsync() {
 
-      Response response = await api.QueryAsync(new JObject {
+      await api.QueryAsync(new JObject {
         {"controller", "admin"},
         {"action", "shutdown"},
       });
-
-      return (bool)response.Result["acknowledge"];
     }
 
   }

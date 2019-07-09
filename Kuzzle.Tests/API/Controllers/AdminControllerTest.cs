@@ -24,14 +24,13 @@ namespace Kuzzle.Tests.API.Controllers {
         }
       });
 
-      bool result = await _adminController.DumpAsync();
+      await _adminController.DumpAsync();
 
       _api.Verify(new JObject {
         {"controller", "admin"},
         {"action", "dump"}
       });
 
-      Assert.Equal(value, result);
     }
 
     [Theory]
@@ -46,7 +45,7 @@ namespace Kuzzle.Tests.API.Controllers {
         }
       });
 
-      bool result = await _adminController.LoadFixturesAsync(
+      await _adminController.LoadFixturesAsync(
         JObject.Parse(@"{foo: [{create: {_id: 'bar'}}, {field: 'value', field2: true}]}"),
         waitForRefresh);
 
@@ -66,8 +65,7 @@ namespace Kuzzle.Tests.API.Controllers {
       QueryUtils.HandleRefreshOption(verifyQuery, waitForRefresh);
 
       _api.Verify(verifyQuery);
-        
-      Assert.Equal(value, result);
+
     }
 
     [Theory]
@@ -82,7 +80,7 @@ namespace Kuzzle.Tests.API.Controllers {
         }
       });
 
-      bool result = await _adminController.LoadMappingsAsync(
+      await _adminController.LoadMappingsAsync(
         JObject.Parse(@"{foo: {properties: {field1: {}, field2: {}}}}"),
         waitForRefresh);
 
@@ -105,7 +103,6 @@ namespace Kuzzle.Tests.API.Controllers {
 
       _api.Verify(verifyQuery);
 
-      Assert.Equal(value, result);
     }
 
     [Theory]
@@ -120,7 +117,7 @@ namespace Kuzzle.Tests.API.Controllers {
         }
       });
 
-      bool result = await _adminController.LoadSecuritiesAsync(
+      await _adminController.LoadSecuritiesAsync(
         JObject.Parse(@"{roles: {foobar: {foo: 'bar', bar: 'foo'}}}"),
         waitForRefresh);
 
@@ -141,7 +138,6 @@ namespace Kuzzle.Tests.API.Controllers {
 
       _api.Verify(verifyQuery);
 
-      Assert.Equal(value, result);
     }
 
     [Theory]
@@ -153,7 +149,7 @@ namespace Kuzzle.Tests.API.Controllers {
         }
       });
 
-      bool result = await _adminController.ResetCacheAsync("foobar");
+      await _adminController.ResetCacheAsync("foobar");
 
       JObject verifyQuery = new JObject {
         {"controller", "admin"},
@@ -163,7 +159,6 @@ namespace Kuzzle.Tests.API.Controllers {
 
       _api.Verify(verifyQuery);
 
-      Assert.Equal(value, result);
     }
 
     [Theory]
@@ -175,7 +170,7 @@ namespace Kuzzle.Tests.API.Controllers {
         }
       });
 
-      bool result = await _adminController.ResetDatabaseAsync();
+      await _adminController.ResetDatabaseAsync();
 
       JObject verifyQuery = new JObject {
         {"controller", "admin"},
@@ -184,7 +179,6 @@ namespace Kuzzle.Tests.API.Controllers {
 
       _api.Verify(verifyQuery);
 
-      Assert.Equal(value, result);
     }
 
     [Theory]
@@ -196,7 +190,7 @@ namespace Kuzzle.Tests.API.Controllers {
         }
       });
 
-      bool result = await _adminController.ResetKuzzleDataAsync();
+      await _adminController.ResetKuzzleDataAsync();
 
       JObject verifyQuery = new JObject {
         {"controller", "admin"},
@@ -205,7 +199,6 @@ namespace Kuzzle.Tests.API.Controllers {
 
       _api.Verify(verifyQuery);
 
-      Assert.Equal(value, result);
     }
 
     [Theory]
@@ -217,7 +210,7 @@ namespace Kuzzle.Tests.API.Controllers {
         }
       });
 
-      bool result = await _adminController.ResetSecurityAsync();
+      await _adminController.ResetSecurityAsync();
 
       JObject verifyQuery = new JObject {
         {"controller", "admin"},
@@ -226,7 +219,6 @@ namespace Kuzzle.Tests.API.Controllers {
 
       _api.Verify(verifyQuery);
 
-      Assert.Equal(value, result);
     }
 
     [Theory]
@@ -238,7 +230,7 @@ namespace Kuzzle.Tests.API.Controllers {
         }
       });
 
-      bool result = await _adminController.ShutdownAsync();
+     await _adminController.ShutdownAsync();
 
       JObject verifyQuery = new JObject {
         {"controller", "admin"},
@@ -247,7 +239,6 @@ namespace Kuzzle.Tests.API.Controllers {
 
       _api.Verify(verifyQuery);
 
-      Assert.Equal(value, result);
     }
 
   }
