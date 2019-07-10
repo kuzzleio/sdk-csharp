@@ -2,7 +2,7 @@ jobs:
   include:
     - stage: "Tests"
       name: "Unit Tests"
-      if: type = pull_request OR (type = push && branch =~ /^master|[0-9]+-(dev|stable)$/) OR type = cron
+      if: type = pull_request OR type = push AND branch =~ /^master|[0-9]+-dev$/ OR type = cron
       language: csharp
       solution: sdk-csharp.sln
       sudo: required
@@ -18,7 +18,7 @@ jobs:
 
     - stage: "Tests"
       name: "Documentation"
-      if: type = pull_request OR (type = push && branch =~ /^master|[0-9]+-(dev|stable)$/) OR type = cron
+      if: type = pull_request OR type = push AND branch =~ /^master|[0-9]+-dev$/ OR type = cron
       stage: Tests
       language: node_js
       node_js: 8
