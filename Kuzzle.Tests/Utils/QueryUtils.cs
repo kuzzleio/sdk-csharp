@@ -10,9 +10,7 @@ namespace Kuzzle.Tests.Utils {
     }
 
     public static void HandleNotifyOption(JObject query, bool notify) {
-      if (notify) {
-        query.Add("notify", true);
-      }
+        query.Add("notify", notify);
     }
 
   }
