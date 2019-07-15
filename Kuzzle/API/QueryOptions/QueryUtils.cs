@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 
-namespace KuzzleSdk.Utils {
-  public class QueryUtils {
+namespace KuzzleSdk.API.QueryOptions {
+  public static class QueryUtils {
 
     public static void HandleRefreshOption(JObject query, bool waitForRefresh) {
       if (waitForRefresh) {

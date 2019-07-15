@@ -33,7 +33,6 @@
     <Compile Remove="API\Options\DocumentOptions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Utils\" />
     <Folder Include="API\QueryOptions\" />
   </ItemGroup>
   <ProjectExtensions>

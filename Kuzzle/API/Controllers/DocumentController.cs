@@ -2,7 +2,7 @@
 using KuzzleSdk.API.Options;
 using KuzzleSdk.API.DataObjects;
 using Newtonsoft.Json.Linq;
-using KuzzleSdk.Utils;
+using KuzzleSdk.API.QueryOptions;
 
 namespace KuzzleSdk.API.Controllers {
   /// <summary>

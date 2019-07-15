@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using KuzzleSdk.Utils;
+using KuzzleSdk.API.QueryOptions;
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.API.Controllers {
