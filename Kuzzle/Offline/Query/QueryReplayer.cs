@@ -75,13 +75,13 @@ namespace KuzzleSdk {
             elapsedTime = Math.Min(elapsedTime, offlineManager.MaxRequestDelay);
             queue.Add(new TimedQuery(query, previous.Time + elapsedTime));
           }
-          if (query["controller"] != null && query["action"] != null) {
-            if (query["controller"].ToString() == "auth"
-                && (query["action"].ToString() == "login"
-                    || query["action"].ToString() == "logout")) {
-              Lock = true;
+          if (query["controller"] != null
+              && query["action"] != null
+              && query["controller"].ToString() == "auth"
+              && (query["action"].ToString() == "login"
+              || query["action"].ToString() == "logout")) {
+                Lock = true;
             }
-          }
           return true;
         }
       }

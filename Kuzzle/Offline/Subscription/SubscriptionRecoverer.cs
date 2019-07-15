@@ -69,16 +69,16 @@ namespace KuzzleSdk.Offline.Subscription {
     /// <summary>
     /// Renew every saved subscriptions.
     /// </summary>
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     public void RenewSubscriptions() {
       lock (subscriptions) {
         for (int i = 0; i < subscriptions.Count; i++) {
           Subscription subscription = subscriptions[i];
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
           RenewSubscription(subscription);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
       }
     }
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
   }
 }
