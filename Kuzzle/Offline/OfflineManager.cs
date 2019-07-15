@@ -28,11 +28,11 @@ namespace KuzzleSdk.API.Offline {
     private int maxRequestDelay = 1000;
     private Func<JObject, bool> queueFilter = null;
     private bool autoRecover = true;
-    private Kuzzle kuzzle;
-    private readonly TokenVerifier tokenVerifier;
-    private readonly QueryReplayer queryReplayer;
-    private readonly SubscriptionRecoverer subscriptionRecoverer; 
-    private readonly AbstractProtocol networkProtocol;
+    private IKuzzle kuzzle;
+    protected internal ITokenVerifier tokenVerifier;
+    protected internal IQueryReplayer queryReplayer;
+    protected internal ISubscriptionRecoverer subscriptionRecoverer;
+    protected internal AbstractProtocol networkProtocol;
 
     /// <summary>
     /// The maximum amount of elements that the queue can contains.
@@ -74,12 +74,16 @@ namespace KuzzleSdk.API.Offline {
       set { autoRecover = value; }
     }
 
-    public OfflineManager(AbstractProtocol networkProtocol, Kuzzle kuzzle) {
+    public OfflineManager(AbstractProtocol networkProtocol, IKuzzle kuzzle) {
       this.networkProtocol = networkProtocol;
       networkProtocol.StateChanged += this.StateChangeListener;
       this.kuzzle = kuzzle;
+      InitComponents();
+    }
+
+    internal virtual void InitComponents() {
       queryReplayer = new QueryReplayer(this, kuzzle);
-      subscriptionRecoverer = new SubscriptionRecoverer(this, kuzzle.Realtime);
+      subscriptionRecoverer = new SubscriptionRecoverer(this, kuzzle.GetRealtime());
       tokenVerifier = new TokenVerifier(this, kuzzle);
     }
 

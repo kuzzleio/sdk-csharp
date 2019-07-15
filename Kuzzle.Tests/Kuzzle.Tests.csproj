@@ -28,5 +28,8 @@
     <Folder Include="API\" />
     <Folder Include="API\Controllers\" />
     <Folder Include="Protocol\" />
+    <Folder Include="Offline\" />
+    <Folder Include="Offline\Query\" />
+    <Folder Include="Offline\Subscription\" />
   </ItemGroup>
 </Project>

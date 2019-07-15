@@ -3,10 +3,15 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.API.Controllers {
+
+  public interface IAuthController {
+    Task<JObject> CheckTokenAsync(string token);
+    }
+
   /// <summary>
   /// Implements the "auth" Kuzzle API controller
   /// </summary>
-  public sealed class AuthController : BaseController {
+  public sealed class AuthController : BaseController, IAuthController {
     internal AuthController(IKuzzleApi api) : base(api) { }
 
     /// <summary>

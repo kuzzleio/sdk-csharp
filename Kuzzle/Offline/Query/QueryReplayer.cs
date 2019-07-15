@@ -19,7 +19,7 @@ namespace KuzzleSdk {
 
     void RejectAllQueries(Exception exception);
     void RejectQueries(Predicate<JObject> predicate, Exception exception);
-    bool Remove(Predicate<JObject> predicate);
+    int Remove(Predicate<JObject> predicate);
 
     CancellationTokenSource ReplayQueries(bool resetWaitLogin = true);
     CancellationTokenSource ReplayQueries(Predicate<JObject> predicate, bool resetWaitLogin = true);
@@ -30,7 +30,7 @@ namespace KuzzleSdk {
   public class QueryReplayer : IQueryReplayer {
 
     private Int64 startTime;
-    private Kuzzle kuzzle;
+    private IKuzzle kuzzle;
     private List<TimedQuery> queue;
     private IOfflineManager offlineManager;
     private CancellationTokenSource cancellationTokenSource;
@@ -49,11 +49,12 @@ namespace KuzzleSdk {
     /// <summary>
     /// Constructor of the QueryReplayer class.
     /// </summary>
-    public QueryReplayer(IOfflineManager offlineManager, Kuzzle kuzzle) {
+    public QueryReplayer(IOfflineManager offlineManager, IKuzzle kuzzle) {
       queue = new List<TimedQuery>();
       this.offlineManager = offlineManager;
       this.kuzzle = kuzzle;
       this.cancellationTokenSource = new CancellationTokenSource();
+      this.ReplayQuery = ReplayOneQuery;
     }
 
     /// <summary>
@@ -121,7 +122,7 @@ namespace KuzzleSdk {
         for (int i = 0; i < queue.Count; i++) {
           TimedQuery timedQuery = queue[i];
           if (predicate(timedQuery.Query)) {
-            kuzzle.requests[timedQuery.Query["requestId"]?.ToString()].SetException(exception);
+            kuzzle.GetRequestById(timedQuery.Query["requestId"]?.ToString())?.SetException(exception);
           }
         }
         queue.RemoveAll((obj) => predicate(obj.Query));
@@ -131,16 +132,15 @@ namespace KuzzleSdk {
     /// <summary>
     /// Remove every query that satisfy the predicate
     /// </summary>
-    public bool Remove(Predicate<JObject> predicate) {
+    /// <returns>How many items where removed.</returns>
+    public int Remove(Predicate<JObject> predicate) {
       if (queue.Count > 0) {
         lock (queue) {
           Predicate<TimedQuery> timedQueryPredicate = timedQuery => predicate(timedQuery.Query);
-          if (queue.RemoveAll(timedQueryPredicate) > 0) {
-            return true;
-          }
+          return queue.RemoveAll(timedQueryPredicate);
         }
       }
-      return false;
+      return 0;
     }
 
     /// <summary>
@@ -152,20 +152,27 @@ namespace KuzzleSdk {
       }
     }
 
+    internal delegate Task ReplayQueryFunc(TimedQuery timedQuery, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Method called to replay one query
+    /// </summary>
+    internal ReplayQueryFunc ReplayQuery;
+
     /// <summary>
     /// Replay one query.
     /// </summary>
-    private Task ReplayQuery(TimedQuery timedQuery, CancellationToken cancellationToken) {
-      return Task.Run(async () => {
-        if (offlineManager.QueueFilter == null || offlineManager.QueueFilter( timedQuery.Query )) {
-          cancellationToken.ThrowIfCancellationRequested();
-          await Task.Delay((Int32)timedQuery.Time, cancellationToken);
-          cancellationToken.ThrowIfCancellationRequested();
-          timedQuery.Query["jwt"] = kuzzle.AuthenticationToken;
-          offlineManager.GetNetworkProtocol().Send(timedQuery.Query);
-        }
-      }, cancellationToken);
-    }
+    internal Task ReplayOneQuery(TimedQuery timedQuery, CancellationToken cancellationToken) {
+        return Task.Run(async () => {
+          if (offlineManager.QueueFilter == null || offlineManager.QueueFilter(timedQuery.Query)) {
+            cancellationToken.ThrowIfCancellationRequested();
+            await Task.Delay((Int32)timedQuery.Time, cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            timedQuery.Query["jwt"] = kuzzle.AuthenticationToken;
+            offlineManager.GetNetworkProtocol().Send(timedQuery.Query);
+          }
+        }, cancellationToken);
+      }
 
     /// <summary>
     /// Replay the queries with the same elapsed time they were sent.
@@ -175,7 +182,7 @@ namespace KuzzleSdk {
     }
 
     /// <summary>
-    /// Replay the queries with the same elapsed time they were sentif they satisfy the predicate.
+    /// Replay the queries with the same elapsed time they were sent if they satisfy the predicate.
     /// </summary>
     public CancellationTokenSource ReplayQueries(Predicate<JObject> predicate, bool resetWaitLogin = true) {
       cancellationTokenSource = new CancellationTokenSource();

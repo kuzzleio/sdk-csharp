@@ -60,10 +60,19 @@ namespace KuzzleSdk {
     IOfflineManager GetOfflineManager();
   }
 
+  public interface IKuzzle {
+    string AuthenticationToken { get; set; }
+
+    IAuthController GetAuth();
+    IRealtimeController GetRealtime();
+
+    TaskCompletionSource<Response> GetRequestById(string requestId);
+    }
+
   /// <summary>
   /// Main entry point for this SDK.
   /// </summary>
-  public sealed class Kuzzle : IKuzzleApi {
+  public sealed class Kuzzle : IKuzzleApi, IKuzzle {
     private AbstractProtocol networkProtocol;
 
     internal readonly Dictionary<string, TaskCompletionSource<Response>>
@@ -177,7 +186,7 @@ namespace KuzzleSdk {
           requests.Remove(response.RequestId);
         }
 
-        offlineManager.GetQueryReplayer().Remove((obj) => obj["requestId"].ToString() == response.RequestId);
+        offlineManager?.GetQueryReplayer()?.Remove((obj) => obj["requestId"].ToString() == response.RequestId);
 
       } else {
         UnhandledResponse?.Invoke(this, response);
@@ -262,6 +271,10 @@ namespace KuzzleSdk {
       NetworkProtocol.Disconnect();
     }
 
+    public TaskCompletionSource<Response> GetRequestById(string requestId) {
+      return requests[requestId];
+    }
+
     /// <summary>
     /// Sends an API request to Kuzzle and returns the corresponding API
     /// response.
@@ -308,6 +321,14 @@ namespace KuzzleSdk {
 
     public IOfflineManager GetOfflineManager() {
       return offlineManager;
+    }
+
+    public IAuthController GetAuth() {
+      return Auth;
+    }
+
+    public IRealtimeController GetRealtime() {
+      return Realtime;
     }
   }
 }

@@ -5,12 +5,20 @@ using KuzzleSdk.API.Options;
 using KuzzleSdk.Offline.Subscription;
 using KuzzleSdk.Protocol;
 using Newtonsoft.Json.Linq;
+using static KuzzleSdk.API.Controllers.RealtimeController;
 
 namespace KuzzleSdk.API.Controllers {
+
+  public interface IRealtimeController {
+    Task<string> SubscribeAndAddToRecoverer(
+        string index, string collection, JObject filters,
+        NotificationHandler handler, SubscribeOptions options = null, bool addToRecoverer = true);
+    }
+
   /// <summary>
   /// Implements the "realtime" Kuzzle API controller
   /// </summary>
-  public sealed class RealtimeController : BaseController {
+  public sealed class RealtimeController : BaseController, IRealtimeController {
     /// <summary>
     /// Delegate to provide to the SubscribeAsync method
     /// </summary>
@@ -47,7 +55,7 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     private void ClearAllSubscriptions() {
-      api.GetOfflineManager().GetSubscriptionRecoverer().ClearAllSubscriptions();
+      api.GetOfflineManager().GetSubscriptionRecoverer().Clear();
       rooms.Clear();
       channels.Clear();
     }
@@ -143,7 +151,7 @@ namespace KuzzleSdk.API.Controllers {
     public async Task<string> SubscribeAsync(
         string index, string collection, JObject filters,
         NotificationHandler handler, SubscribeOptions options = null) {
-      string roomId = await RecovererSubscribe(index, collection, filters, handler, options);
+      string roomId = await SubscribeAndAddToRecoverer(index, collection, filters, handler, options);
       return roomId;
     }
 
@@ -167,7 +175,7 @@ namespace KuzzleSdk.API.Controllers {
     /// and add the Subscription to the SubscriptionRecoverer for Offline Mode
     /// </summary>
     /// <param name="addToRecoverer">If set to <c>true</c> add to recoverer.</param>
-    internal async Task<string> RecovererSubscribe(
+    public async Task<string> SubscribeAndAddToRecoverer(
         string index, string collection, JObject filters,
         NotificationHandler handler, SubscribeOptions options = null, bool addToRecoverer = true) {
       var request = new JObject {

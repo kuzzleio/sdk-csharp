@@ -8,19 +8,18 @@ namespace KuzzleSdk.Offline.Subscription {
 
   public interface ISubscriptionRecoverer {
     void Add(Subscription subscription);
-    void Remove(Predicate<Subscription> predicate);
-    void ClearAllSubscriptions();
+    int Remove(Predicate<Subscription> predicate);
+    void Clear();
     void RenewSubscriptions();
   }
 
   public class SubscriptionRecoverer : ISubscriptionRecoverer {
 
-    private RealtimeController realtimeController;
-    private List<Subscription> subscriptions;
+    private IRealtimeController realtimeController;
+    private List<Subscription> subscriptions = new List<Subscription>();
 
-    public SubscriptionRecoverer(IOfflineManager offlineManager, RealtimeController realtimeController) {
+    public SubscriptionRecoverer(IOfflineManager offlineManager, IRealtimeController realtimeController) {
       this.realtimeController = realtimeController;
-      subscriptions = new List<Subscription>();
     }
 
     /// <summary>
@@ -32,19 +31,21 @@ namespace KuzzleSdk.Offline.Subscription {
       }
     }
 
+    public int Count { get { return subscriptions.Count; } }
+
     /// <summary>
     /// Remove every subscriptions that satisfy the predicate.
     /// </summary>
-    public void Remove(Predicate<Subscription> predicate) {
+    public int Remove(Predicate<Subscription> predicate) {
       lock (subscriptions) {
-        subscriptions.RemoveAll(predicate);
+        return subscriptions.RemoveAll(predicate);
       }
     }
 
     /// <summary>
     /// Clear every subscriptions saved.
     /// </summary>
-    public void ClearAllSubscriptions() {
+    public void Clear() {
       lock (subscriptions) {
         subscriptions.Clear();
       }
@@ -55,7 +56,7 @@ namespace KuzzleSdk.Offline.Subscription {
     /// </summary>
     private async Task RenewSubscription(Subscription subscription) {
 
-      string roomId = await realtimeController.RecovererSubscribe(
+      string roomId = await realtimeController.SubscribeAndAddToRecoverer(
       subscription.Index,
       subscription.Collection,
       subscription.Filters,
