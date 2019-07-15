@@ -7,8 +7,12 @@ using KuzzleSdk.API.Controllers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 [assembly: InternalsVisibleTo("Kuzzle.Tests")]
+
+// Allow using Moq on internal objects/interfaces
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 namespace KuzzleSdk {
   /// <summary>
@@ -229,8 +233,8 @@ namespace KuzzleSdk {
     /// <summary>
     /// Establish a network connection
     /// </summary>
-    public async Task ConnectAsync() {
-      await NetworkProtocol.ConnectAsync();
+    public async Task ConnectAsync(CancellationToken cancellationToken) {
+      await NetworkProtocol.ConnectAsync(cancellationToken);
     }
 
     /// <summary>
@@ -247,7 +251,7 @@ namespace KuzzleSdk {
     /// <returns>API response</returns>
     /// <param name="query">Kuzzle API query</param>
     public Task<Response> QueryAsync(JObject query) {
-      if (query == null){
+      if (query == null) {
         throw new Exceptions.InternalException("You must provide a query", 400);
       }
 

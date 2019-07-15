@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -7,90 +8,76 @@ using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.Protocol {
   /// <summary>
-  /// WebSocket options.
+  /// Interface exposing the same properties as ClientWebSocket, to make
+  /// our WebSocket class testable via duck typing.
   /// </summary>
-  public struct WebSocketOptions {
-    private int? port;
-    private bool? ssl;
-    private int? connectTimeout;
+  internal interface IClientWebSocket {
+    WebSocketState State { get; set; }
 
-    /// <summary>
-    /// If true, connects using SSL.
-    /// </summary>
-    public bool Ssl {
-      get { return ssl ?? false; }
-      set { ssl = value; }
-    }
-
-    /// <summary>
-    /// Kuzzle server port.
-    /// </summary>
-    public int Port {
-      get { return port ?? 7512; }
-      set { port = value; }
-    }
-
-    /// <summary>
-    /// Timeout (in milliseconds) after which a connection attempt aborts.
-    /// </summary>
-    public int ConnectTimeout {
-      get { return connectTimeout ?? 30000; }
-      set { connectTimeout = value; }
-    }
+    Task ConnectAsync(Uri uri, CancellationToken cancellationToken);
+    Task SendAsync(
+      ArraySegment<byte> buffer,
+      WebSocketMessageType messageType,
+      bool endOfMessage,
+      CancellationToken cancellationToken);
+    Task<WebSocketReceiveResult> ReceiveAsync(
+      ArraySegment<byte> buffer,
+      CancellationToken cancellationToken);
+    void Abort();
   }
 
   /// <summary>
   /// WebSocket network protocol.
   /// </summary>
   public class WebSocket : AbstractProtocol {
-    private readonly string hostname;
-    private ClientWebSocket socket;
-    private WebSocketOptions options;
+    private const int receiveBufferSize = 64 * 1024;
+    private const int sendBufferSize = 8 * 1024;
+    internal dynamic socket;
+    private readonly Uri uri;
     private CancellationTokenSource receiveCancellationToken;
+    private CancellationTokenSource sendCancellationToken;
     private ArraySegment<byte> incomingBuffer =
-      System.Net.WebSockets.WebSocket.CreateClientBuffer(200 * 1024, 4096);
+      System.Net.WebSockets.WebSocket.CreateClientBuffer(
+        receiveBufferSize, sendBufferSize);
+    private readonly BlockingCollection<JObject> sendQueue =
+      new BlockingCollection<JObject>();
 
-    /// <summary>
-    /// Initializes a new instance of the 
-    /// <see cref="T:KuzzleSdk.Protocol.WebSocket"/> class.
-    /// </summary>
-    /// <param name="hostname">Kuzzle hostname (or IP address).</param>
-    public WebSocket(string hostname) : this(hostname, new WebSocketOptions()) {
-      State = ProtocolState.Closed;
+    internal virtual dynamic CreateClientSocket() {
+      var s = new ClientWebSocket();
+
+      s.Options.SetBuffer(receiveBufferSize, sendBufferSize);
+      return s;
     }
 
     /// <summary>
     /// Initializes a new instance of the 
     /// <see cref="T:KuzzleSdk.Protocol.WebSocket"/> class.
     /// </summary>
-    /// <param name="hostname">Kuzzle hostname (or IP address).</param>
-    /// <param name="options">Connection options.</param>
-    public WebSocket(string hostname, WebSocketOptions options) {
-      this.hostname = hostname;
-      this.options = options;
-      socket = new ClientWebSocket();
+    /// <param name="uri">URI pointing to a Kuzzle endpoint.</param>
+    public WebSocket(Uri uri) {
+      this.uri = uri ?? throw new ArgumentNullException(nameof(uri));
+      State = ProtocolState.Closed;
     }
 
     /// <summary>
     /// Connects to a Kuzzle server.
     /// </summary>
-    public override async Task ConnectAsync() {
-      if (socket?.State == WebSocketState.Connecting
-          || socket?.State == WebSocketState.Open) {
+    /// <param name="cancellationToken">Connection cancellation token</param>
+    public override async Task ConnectAsync(
+      CancellationToken cancellationToken
+    ) {
+      if (socket != null) {
         return;
       }
 
-      Uri uri = new Uri("ws" + (options.Ssl ? "s" : "") + "://"
-        + hostname + ":" + options.Port);
+      socket = CreateClientSocket();
 
-      CancellationTokenSource source =
-          new CancellationTokenSource(options.ConnectTimeout);
-
-      await socket.ConnectAsync(uri, source.Token);
+      await socket.ConnectAsync(uri, cancellationToken);
 
       State = ProtocolState.Open;
       DispatchStateChange(State);
 
+      Dequeue();
       Listen();
     }
 
@@ -98,7 +85,6 @@ namespace KuzzleSdk.Protocol {
     /// Disconnects this instance.
     /// </summary>
     public override void Disconnect() {
-      socket?.Abort();
       CloseState();
     }
 
@@ -106,52 +92,83 @@ namespace KuzzleSdk.Protocol {
     /// Sends a formatted API request to a Kuzzle server.
     /// </summary>
     public override void Send(JObject payload) {
-      var buffer = Encoding.UTF8.GetBytes(payload.ToString());
+      sendQueue.Add(payload);
+    }
 
-      if (State == ProtocolState.Closed) {
-        CloseState();
-      } else {
-        socket?.SendAsync(
-          new ArraySegment<byte>(buffer),
-          WebSocketMessageType.Text,
-          true,
-          CancellationToken.None).Wait();
-      }
+    private void Dequeue() {
+      sendCancellationToken = new CancellationTokenSource();
+
+      Task.Run(async () => {
+        while (socket.State == WebSocketState.Open) {
+          var payload = sendQueue.Take(sendCancellationToken.Token);
+          var buffer = Encoding.UTF8.GetBytes(payload.ToString());
+
+          try {
+            await socket.SendAsync(
+              new ArraySegment<byte>(buffer),
+              WebSocketMessageType.Text,
+              true,
+              sendCancellationToken.Token);
+          }
+          catch (Exception e) {
+            CloseState();
+            throw e;
+          }
+        }
+      }, CancellationToken.None);
     }
 
     private void Listen() {
       receiveCancellationToken = new CancellationTokenSource();
 
       Task.Run(async () => {
-        WebSocketReceiveResult data;
+        WebSocketReceiveResult wsResult;
+        StringBuilder messageBuilder = new StringBuilder(receiveBufferSize * 2);
 
         while (socket.State == WebSocketState.Open) {
           string message = "";
-
+          
           do {
-            data = await socket.ReceiveAsync(
-              incomingBuffer,
-              receiveCancellationToken.Token);
+            try {
+              wsResult = await socket.ReceiveAsync(
+                incomingBuffer,
+                receiveCancellationToken.Token);
+            }
+            catch (Exception e) {
+              CloseState();
+              throw e;
+            }
 
-            message += Encoding.UTF8.GetString(
-              incomingBuffer.Array, 0, data.Count);
-          } while (!data.EndOfMessage);
+            message = Encoding.UTF8.GetString(
+              incomingBuffer.Array, 0, wsResult.Count);
 
-          if (message.Length > 0) {
+            if (!wsResult.EndOfMessage || messageBuilder.Length > 0) {
+              messageBuilder.Append(message);
+            }
+          } while (!wsResult.EndOfMessage);
+
+          if (messageBuilder.Length > 0) {
+            message = messageBuilder.ToString();
+            messageBuilder.Clear();
+          }
+
+          if (!string.IsNullOrEmpty(message)) {
             DispatchResponse(message);
           }
         }
-
-        CloseState();
-      }, receiveCancellationToken.Token);
+      }, CancellationToken.None);
     }
 
     private void CloseState() {
       if (State != ProtocolState.Closed) {
+        socket.Abort();
+        socket = null;
         State = ProtocolState.Closed;
         DispatchStateChange(State);
         receiveCancellationToken?.Cancel();
         receiveCancellationToken = null;
+        sendCancellationToken?.Cancel();
+        sendCancellationToken = null;
       }
     }
   }
