@@ -28,5 +28,6 @@
     <Folder Include="API\" />
     <Folder Include="API\Controllers\" />
     <Folder Include="Utils\" />
+    <Folder Include="Protocol\" />
   </ItemGroup>
 </Project>
