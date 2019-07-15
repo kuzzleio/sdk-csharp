@@ -14,15 +14,10 @@ namespace Kuzzle.Tests.API.Controllers {
     }
 
 
-    [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public async void DumpAsyncTestSuccess(bool value) {
+    [Fact]
+    public async void DumpAsyncTestSuccess() {
 
-      _api.SetResult(new JObject {
-          {"result", new JObject {{"acknowledge", value}}
-        }
-      });
+      _api.SetResult(@"{result: {acknowledge: true}}");
 
       await _adminController.DumpAsync();
 
@@ -34,16 +29,11 @@ namespace Kuzzle.Tests.API.Controllers {
     }
 
     [Theory]
-    [InlineData(false, false)]
-    [InlineData(true, false)]
-    [InlineData(false, true)]
-    [InlineData(true, true)]
-    public async void LoadFixturesAsyncTestSuccess(bool value, bool waitForRefresh) {
+    [InlineData(false)]
+    [InlineData(true)]
+    public async void LoadFixturesAsyncTestSuccess(bool waitForRefresh) {
 
-      _api.SetResult(new JObject {
-          {"result", new JObject {{"acknowledge", value}}
-        }
-      });
+      _api.SetResult(@"{result: {acknowledge: true}}");
 
       await _adminController.LoadFixturesAsync(
         JObject.Parse(@"{foo: [{create: {_id: 'bar'}}, {field: 'value', field2: true}]}"),
@@ -69,16 +59,11 @@ namespace Kuzzle.Tests.API.Controllers {
     }
 
     [Theory]
-    [InlineData(false, false)]
-    [InlineData(true, false)]
-    [InlineData(false, true)]
-    [InlineData(true, true)]
-    public async void LoadMappingsAsyncTestSuccess(bool value, bool waitForRefresh) {
+    [InlineData(false)]
+    [InlineData(true)]
+    public async void LoadMappingsAsyncTestSuccess(bool waitForRefresh) {
 
-      _api.SetResult(new JObject {
-          {"result", new JObject {{"acknowledge", value}}
-        }
-      });
+      _api.SetResult(@"{result: {acknowledge: true}}");
 
       await _adminController.LoadMappingsAsync(
         JObject.Parse(@"{foo: {properties: {field1: {}, field2: {}}}}"),
@@ -106,16 +91,11 @@ namespace Kuzzle.Tests.API.Controllers {
     }
 
     [Theory]
-    [InlineData(false, false)]
-    [InlineData(true, false)]
-    [InlineData(false, true)]
-    [InlineData(true, true)]
-    public async void LoadSecuritiesAsyncTestSuccess(bool value, bool waitForRefresh) {
+    [InlineData(false)]
+    [InlineData(true)]
+    public async void LoadSecuritiesAsyncTestSuccess(bool waitForRefresh) {
 
-      _api.SetResult(new JObject {
-          {"result", new JObject {{"acknowledge", value}}
-        }
-      });
+      _api.SetResult(@"{result: {acknowledge: true}}");
 
       await _adminController.LoadSecuritiesAsync(
         JObject.Parse(@"{roles: {foobar: {foo: 'bar', bar: 'foo'}}}"),
@@ -140,14 +120,10 @@ namespace Kuzzle.Tests.API.Controllers {
 
     }
 
-    [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public async void ResetCacheAsyncTestSuccess(bool value) {
-      _api.SetResult(new JObject {
-          {"result", new JObject {{"acknowledge", value}}
-        }
-      });
+    [Fact]
+    public async void ResetCacheAsyncTestSuccess() {
+
+      _api.SetResult(@"{result: {acknowledge: true}}");
 
       await _adminController.ResetCacheAsync("foobar");
 
@@ -161,14 +137,10 @@ namespace Kuzzle.Tests.API.Controllers {
 
     }
 
-    [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public async void ResetDatabaseAsyncTestSuccess(bool value) {
-      _api.SetResult(new JObject {
-          {"result", new JObject {{"acknowledge", value}}
-        }
-      });
+    [Fact]
+    public async void ResetDatabaseAsyncTestSuccess() {
+
+      _api.SetResult(@"{result: {acknowledge: true}}");
 
       await _adminController.ResetDatabaseAsync();
 
@@ -181,14 +153,10 @@ namespace Kuzzle.Tests.API.Controllers {
 
     }
 
-    [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public async void ResetKuzzleDataAsyncTestSuccess(bool value) {
-      _api.SetResult(new JObject {
-          {"result", new JObject {{"acknowledge", value}}
-        }
-      });
+    [Fact]
+    public async void ResetKuzzleDataAsyncTestSuccess() {
+
+      _api.SetResult(@"{result: {acknowledge: true}}");
 
       await _adminController.ResetKuzzleDataAsync();
 
@@ -201,14 +169,10 @@ namespace Kuzzle.Tests.API.Controllers {
 
     }
 
-    [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public async void ResetSecurityAsyncTestSuccess(bool value) {
-      _api.SetResult(new JObject {
-          {"result", new JObject {{"acknowledge", value}}
-        }
-      });
+    [Fact]
+    public async void ResetSecurityAsyncTestSuccess() {
+
+      _api.SetResult(@"{result: {acknowledge: true}}");
 
       await _adminController.ResetSecurityAsync();
 
@@ -221,16 +185,12 @@ namespace Kuzzle.Tests.API.Controllers {
 
     }
 
-    [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public async void ShutdownAsyncTestSuccess(bool value) {
-      _api.SetResult(new JObject {
-          {"result", new JObject {{"acknowledge", value}}
-        }
-      });
+    [Fact]
+    public async void ShutdownAsyncTestSuccess() {
 
-     await _adminController.ShutdownAsync();
+      _api.SetResult(@"{result: {acknowledge: true}}");
+
+      await _adminController.ShutdownAsync();
 
       JObject verifyQuery = new JObject {
         {"controller", "admin"},
