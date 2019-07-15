@@ -140,13 +140,11 @@ namespace Kuzzle.Tests.API.Controllers {
         }
       ");
 
-      Assert.Equal(
-          new JObject {
-            { "failed", 0 },
-            { "successful", 5 },
-            { "total", 10 }
-          }, await _indexController.RefreshAsync("foo")
-      );
+      Assert.Equal(new JObject {
+        { "failed", 0 },
+        { "successful", 5 },
+        { "total", 10 }
+      }, await _indexController.RefreshAsync("foo"));
 
       _api.Verify(new JObject {
         { "controller", "index" },
