@@ -64,13 +64,13 @@ namespace Kuzzle.Tests.API.Controllers {
           {"collection", "bar"},
           {"controller", "bulk"},
           {"action", "mWrite"},
+          {"notify", notify},
           {"body", JObject.Parse(@"{documents: [
           {_id: '<documentId>', body: {}},
           {_id: '<otherDocumentId>', body:{}}]}")}
       };
 
       QueryUtils.HandleRefreshOption(verifyQuery, refresh);
-      QueryUtils.HandleNotifyOption(verifyQuery, notify);
 
       _api.Verify(verifyQuery);
 
@@ -108,11 +108,11 @@ namespace Kuzzle.Tests.API.Controllers {
             {"controller", "bulk"},
             {"action", "write"},
             {"_id", documentId},
+            {"notify", notify},
             {"body", documentInput}
         };
 
       QueryUtils.HandleRefreshOption(verifyQuery, refresh);
-      QueryUtils.HandleNotifyOption(verifyQuery, notify);
 
       _api.Verify(verifyQuery);
 

@@ -9,9 +9,5 @@ namespace KuzzleSdk.Utils {
       }
     }
 
-    public static void HandleNotifyOption(JObject query, bool notify) {
-        query.Add("notify", notify);
-    }
-
   }
 }

@@ -46,6 +46,7 @@ namespace KuzzleSdk.API.Controllers {
         {"collection", collection},
         {"controller", "bulk"},
         {"action", "mWrite"},
+        {"notify", notify},
         {"body", new JObject {
             {"documents", documents}
           }
@@ -53,7 +54,6 @@ namespace KuzzleSdk.API.Controllers {
       };
 
       QueryUtils.HandleRefreshOption(query, waitForRefesh);
-      QueryUtils.HandleNotifyOption(query, notify);
 
       Response response = await api.QueryAsync(query);
 
@@ -78,11 +78,11 @@ namespace KuzzleSdk.API.Controllers {
         {"controller", "bulk"},
         {"action", "write"},
         {"_id", documentId},
-        {"body", documentContent}
+        {"body", documentContent},
+        {"notify", notify}
       };
 
       QueryUtils.HandleRefreshOption(query, waitForRefresh);
-      QueryUtils.HandleNotifyOption(query, notify);
 
       Response response = await api.QueryAsync(query);
 
