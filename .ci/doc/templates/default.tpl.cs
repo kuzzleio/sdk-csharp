@@ -1,12 +1,13 @@
 #r "Kuzzle.dll"
 using System;
-using KuzzleSdk;
-using KuzzleSdk.API;
-using KuzzleSdk.Protocol;
+using System.Threading;
 using System.Threading.Tasks;
+using KuzzleSdk;
+using KuzzleSdk.Protocol;
 
-KuzzleSdk.Kuzzle kuzzle = new KuzzleSdk.Kuzzle(new WebSocket("kuzzle"));
+WebSocket socket = new WebSocket(new Uri("ws://kuzzle:7512"));
+KuzzleSdk.Kuzzle kuzzle = new KuzzleSdk.Kuzzle(socket);
 
-await kuzzle.ConnectAsync();
+kuzzle.ConnectAsync(CancellationToken.None).Wait();
 
 [snippet-code]
