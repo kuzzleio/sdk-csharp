@@ -126,6 +126,11 @@ namespace KuzzleSdk {
     public ServerController Server { get; private set; }
 
     /// <summary>
+    /// Exposes actions from the "admin" Kuzzle API controller
+    /// </summary>
+    public AdminController Admin { get; private set; }
+
+    /// <summary>
     /// Authentication token
     /// </summary>
     public string AuthenticationToken { get; set; }
@@ -215,6 +220,7 @@ namespace KuzzleSdk {
       Index = new IndexController(this);
       Realtime = new RealtimeController(this);
       Server = new ServerController(this);
+      Admin = new AdminController(this);
 
       // Initializes instance unique properties
       Version = typeof(Kuzzle)
