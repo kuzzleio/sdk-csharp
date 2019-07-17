@@ -1,7 +1,8 @@
-﻿using System;
-namespace KuzzleSdk.EventHandler.Events {
+﻿namespace KuzzleSdk.EventHandler.Events {
   public class UserChangedEvent {
-    public UserChangedEvent() {
+    public string Username { get; private set; }
+    public UserChangedEvent(string username) {
+      Username = username;
     }
   }
 }

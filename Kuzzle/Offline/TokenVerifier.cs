@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using KuzzleSdk.API.Controllers;
 using KuzzleSdk.API.Offline;
+using KuzzleSdk.EventHandler.Events;
 using KuzzleSdk.Offline.Subscription;
 using Newtonsoft.Json.Linq;
 
@@ -9,7 +10,7 @@ namespace KuzzleSdk.Offline {
 
   public interface ITokenVerifier {
     Task<bool> IsTokenValid();
-    Task ChangeUser(string username);
+    void OnUserChange(object sender, UserChangedEvent e);
     Task CheckTokenToReplay();
   }
 
@@ -57,9 +58,9 @@ namespace KuzzleSdk.Offline {
     /// is the same that before, if not this will Reject every query in the Queue
     /// and clear all subscriptions, otherwise this will replay the Queue if she is waiting.
     /// </summary>
-    public async Task ChangeUser(string username) {
+    public void OnUserChange(object sender, UserChangedEvent e) {
 
-      if (previousUsername != username) {
+      if (previousUsername != e.Username) {
 
         if (offlineManager.AutoRecover && queryReplayer.WaitLoginToReplay) {
             queryReplayer.RejectAllQueries(new KuzzleSdk.Exceptions.ConnectionLostException());
@@ -78,7 +79,7 @@ namespace KuzzleSdk.Offline {
 
         subscriptionRecoverer.RenewSubscriptions();
       }
-      previousUsername = username;
+      previousUsername = e.Username;
     }
 
     /// <summary>

@@ -4,6 +4,7 @@ using Kuzzle.Tests.API;
 using Kuzzle.Tests.Protocol;
 using KuzzleSdk;
 using KuzzleSdk.API.Offline;
+using KuzzleSdk.EventHandler.Events;
 using KuzzleSdk.Offline;
 using Moq;
 using Newtonsoft.Json.Linq;
@@ -47,12 +48,12 @@ namespace Kuzzle.Tests.Offline {
     [InlineData(true, false)]
     [InlineData(false, true)]
     [InlineData(true, true)]
-    public async Task SuccessDifferentUser(bool autoRecover, bool waitLoginToReplay) {
+    public void SuccessDifferentUser(bool autoRecover, bool waitLoginToReplay) {
 
       testableOfflineManager.AutoRecover = autoRecover;
       testableOfflineManager.mockedQueryReplayer.SetupProperty(obj => obj.WaitLoginToReplay, waitLoginToReplay);
 
-      await tokenVerifier.ChangeUser("foobar");
+      tokenVerifier.OnUserChange(this, new UserChangedEvent("foobar"));
 
       if (waitLoginToReplay && autoRecover) {
         testableOfflineManager.mockedQueryReplayer.Verify(obj => obj.RejectAllQueries(It.IsAny<Exception>()), Times.Once);
@@ -67,12 +68,12 @@ namespace Kuzzle.Tests.Offline {
     [InlineData(true, false)]
     [InlineData(false, true)]
     [InlineData(true, true)]
-    public async Task SuccessSameUser(bool autoRecover, bool waitLoginToReplay) {
+    public void SuccessSameUser(bool autoRecover, bool waitLoginToReplay) {
 
       testableOfflineManager.AutoRecover = autoRecover;
       testableOfflineManager.mockedQueryReplayer.SetupProperty(obj => obj.WaitLoginToReplay, waitLoginToReplay);
 
-      await tokenVerifier.ChangeUser("");
+      tokenVerifier.OnUserChange(this, new UserChangedEvent(""));
 
       if (waitLoginToReplay && autoRecover) {
         testableOfflineManager.mockedQueryReplayer.Verify(obj => obj.ReplayQueries(true), Times.Once);
