@@ -2,7 +2,6 @@
 using KuzzleSdk.API.Options;
 using KuzzleSdk.API.DataObjects;
 using Newtonsoft.Json.Linq;
-using KuzzleSdk.API.QueryOptions;
 
 namespace KuzzleSdk.API.Controllers {
   /// <summary>
@@ -50,10 +49,9 @@ namespace KuzzleSdk.API.Controllers {
         { "body", content },
         { "index", index },
         { "collection", collection },
-        { "_id", id }
+        { "_id", id },
+        {"waitForRefresh", waitForRefresh},
       };
-
-      QueryUtils.HandleRefreshOption(query, waitForRefresh);
 
       Response response = await api.QueryAsync(query);
 
@@ -76,10 +74,9 @@ namespace KuzzleSdk.API.Controllers {
         { "body", content },
         { "index", index },
         { "collection", collection },
-        { "_id", id }
+        { "_id", id },
+        {"waitForRefresh", waitForRefresh},
       };
-
-      QueryUtils.HandleRefreshOption(query, waitForRefresh);
 
       Response response = await api.QueryAsync(query);
 
@@ -100,10 +97,9 @@ namespace KuzzleSdk.API.Controllers {
         { "action", "delete" },
         { "index", index },
         { "collection", collection },
-        { "_id", id }
+        { "_id", id },
+        {"waitForRefresh", waitForRefresh},
       };
-
-      QueryUtils.HandleRefreshOption(query, waitForRefresh);
 
       Response response = await api.QueryAsync(query);
 
@@ -169,10 +165,9 @@ namespace KuzzleSdk.API.Controllers {
         { "action", "mCreate" },
         { "body", new JObject{ { "documents", documents } } },
         { "index", index },
-        { "collection", collection }
+        { "collection", collection },
+        {"waitForRefresh", waitForRefresh},
       };
-
-      QueryUtils.HandleRefreshOption(request, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 
@@ -195,10 +190,9 @@ namespace KuzzleSdk.API.Controllers {
         { "action", "mCreateOrReplace" },
         { "body", new JObject{ { "documents", documents } } },
         { "index", index },
-        { "collection", collection }
+        { "collection", collection },
+        {"waitForRefresh", waitForRefresh},
       };
-
-      QueryUtils.HandleRefreshOption(request, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 
@@ -221,10 +215,9 @@ namespace KuzzleSdk.API.Controllers {
         { "action", "mDelete" },
         { "body", new JObject{ { "ids", ids } } },
         { "index", index },
-        { "collection", collection }
+        { "collection", collection },
+        {"waitForRefresh", waitForRefresh},
       };
-
-      QueryUtils.HandleRefreshOption(request, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 
@@ -270,10 +263,9 @@ namespace KuzzleSdk.API.Controllers {
         { "action", "mReplace" },
         { "body", new JObject{ { "documents", documents } } },
         { "index", index },
-        { "collection", collection }
+        { "collection", collection },
+        {"waitForRefresh", waitForRefresh},
       };
-
-      QueryUtils.HandleRefreshOption(request, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 
@@ -298,10 +290,9 @@ namespace KuzzleSdk.API.Controllers {
         { "body", new JObject{ { "documents", documents } } },
         { "index", index },
         { "collection", collection },
-        { "retryOnConflict", retryOnConflict }
+        { "retryOnConflict", retryOnConflict },
+        {"waitForRefresh", waitForRefresh},
       };
-
-      QueryUtils.HandleRefreshOption(request, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 
@@ -324,10 +315,9 @@ namespace KuzzleSdk.API.Controllers {
         { "body", content },
         { "index", index },
         { "collection", collection },
-        { "_id", id }
+        { "_id", id },
+        {"waitForRefresh", waitForRefresh},
       };
-
-      QueryUtils.HandleRefreshOption(request, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 
@@ -375,10 +365,9 @@ namespace KuzzleSdk.API.Controllers {
         { "index", index },
         { "collection", collection },
         { "_id", id },
-        { "retryOnConflict", retryOnConflict }
+        { "retryOnConflict", retryOnConflict },
+        {"waitForRefresh", waitForRefresh},
       };
-
-      QueryUtils.HandleRefreshOption(request, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 

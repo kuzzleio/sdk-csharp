@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using KuzzleSdk.API.QueryOptions;
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.API.Controllers {
@@ -37,7 +36,7 @@ namespace KuzzleSdk.API.Controllers {
         string index,
         string collection,
         JArray documents,
-        bool waitForRefesh = false,
+        bool waitForRefresh = false,
         bool notify = false
       ) {
 
@@ -47,13 +46,12 @@ namespace KuzzleSdk.API.Controllers {
         {"controller", "bulk"},
         {"action", "mWrite"},
         {"notify", notify},
+        {"waitForRefresh", waitForRefresh},
         {"body", new JObject {
             {"documents", documents}
           }
         }
       };
-
-      QueryUtils.HandleRefreshOption(query, waitForRefesh);
 
       Response response = await api.QueryAsync(query);
 
@@ -79,10 +77,9 @@ namespace KuzzleSdk.API.Controllers {
         {"action", "write"},
         {"_id", documentId},
         {"body", documentContent},
-        {"notify", notify}
+        {"notify", notify},
+        {"waitForRefresh", waitForRefresh},
       };
-
-      QueryUtils.HandleRefreshOption(query, waitForRefresh);
 
       Response response = await api.QueryAsync(query);
 

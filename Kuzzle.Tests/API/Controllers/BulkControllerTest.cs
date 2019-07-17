@@ -1,5 +1,4 @@
-﻿using Kuzzle.Tests.Utils;
-using KuzzleSdk.API.Controllers;
+﻿using KuzzleSdk.API.Controllers;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -44,7 +43,7 @@ namespace Kuzzle.Tests.API.Controllers {
     [InlineData(true, false)]
     [InlineData(false, true)]
     [InlineData(true, true)]
-    public async void MWriteAsyncTestSuccess(bool notify, bool refresh) {
+    public async void MWriteAsyncTestSuccess(bool notify, bool waitForRefresh) {
       JObject expected = JObject.Parse(@"{hits: [
       {_id: '<documentId>', _source: {}, _version: 2, created: false},
       {_id: '<otherDocumentId>', _source: {}, _version: 1, created: true}],
@@ -57,7 +56,7 @@ namespace Kuzzle.Tests.API.Controllers {
 
       JObject result = await _bulkController.MWriteAsync("foo", "bar", JArray.Parse(@"[
           {_id: '<documentId>', body: {}},
-          {_id: '<otherDocumentId>', body:{}}]"), refresh, notify);
+          {_id: '<otherDocumentId>', body:{}}]"), waitForRefresh, notify);
 
       JObject verifyQuery = new JObject {
           {"index", "foo"},
@@ -65,12 +64,11 @@ namespace Kuzzle.Tests.API.Controllers {
           {"controller", "bulk"},
           {"action", "mWrite"},
           {"notify", notify},
+          {"waitForRefresh", waitForRefresh},
           {"body", JObject.Parse(@"{documents: [
           {_id: '<documentId>', body: {}},
           {_id: '<otherDocumentId>', body:{}}]}")}
       };
-
-      QueryUtils.HandleRefreshOption(verifyQuery, refresh);
 
       _api.Verify(verifyQuery);
 
@@ -82,7 +80,7 @@ namespace Kuzzle.Tests.API.Controllers {
     [InlineData("", "documentId", false, false)]
     [InlineData("Some input", "foobar", true, false)]
     [InlineData("Some input", "foobar", false, true)]
-    public async void WriteAsyncTestSuccess(string documentInput, string documentId, bool notify, bool refresh) {
+    public async void WriteAsyncTestSuccess(string documentInput, string documentId, bool notify, bool waitForRefresh) {
       JObject expected = JObject.Parse(
       @"{_id: '<documentId>',
       _version: 1,
@@ -99,7 +97,7 @@ namespace Kuzzle.Tests.API.Controllers {
         "bar",
         documentInput,
         documentId,
-        refresh,
+        waitForRefresh,
         notify);
 
       JObject verifyQuery = new JObject {
@@ -109,10 +107,9 @@ namespace Kuzzle.Tests.API.Controllers {
             {"action", "write"},
             {"_id", documentId},
             {"notify", notify},
+            {"waitForRefresh", waitForRefresh},
             {"body", documentInput}
         };
-
-      QueryUtils.HandleRefreshOption(verifyQuery, refresh);
 
       _api.Verify(verifyQuery);
 

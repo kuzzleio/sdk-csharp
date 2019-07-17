@@ -32,9 +32,6 @@
   <ItemGroup>
     <Compile Remove="API\Options\DocumentOptions.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="API\QueryOptions\" />
-  </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
       <Properties>

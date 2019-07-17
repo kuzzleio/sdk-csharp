@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Kuzzle.Tests.Utils;
 using KuzzleSdk.API.Controllers;
 using KuzzleSdk.API.DataObjects;
 using KuzzleSdk.API.Options;
@@ -80,10 +79,9 @@ namespace Kuzzle.Tests.API.Controllers {
         { "index", "foo" },
         { "collection", "bar" },
         { "body", content },
-        { "_id", id }
+        { "_id", id },
+        {"waitForRefresh", refresh},
       };
-
-      QueryUtils.HandleRefreshOption(expected, refresh);
 
       _api.Verify(expected);
 
@@ -112,10 +110,9 @@ namespace Kuzzle.Tests.API.Controllers {
         { "index", "foo" },
         { "collection", "bar" },
         { "body", content },
-        { "_id", "fooid" }
+        { "_id", "fooid" },
+        {"waitForRefresh", refresh},
       };
-
-      QueryUtils.HandleRefreshOption(expected, refresh);
 
       _api.Verify(expected);
 
@@ -136,10 +133,9 @@ namespace Kuzzle.Tests.API.Controllers {
         { "action", "delete" },
         { "index", "foo" },
         { "collection", "bar" },
-        { "_id", "fooid" }
+        { "_id", "fooid" },
+        {"waitForRefresh", refresh},
       };
-
-      QueryUtils.HandleRefreshOption(expected, refresh);
 
       _api.Verify(expected);
     }
@@ -207,12 +203,11 @@ namespace Kuzzle.Tests.API.Controllers {
         { "action", "mCreate" },
         { "index", "foo" },
         { "collection", "bar" },
+        {"waitForRefresh", refresh},
       };
 
       expected.Add("body", new JObject());
       ((JObject)expected["body"]).Add("documents", documents);
-
-      QueryUtils.HandleRefreshOption(expected, refresh);
 
       _api.Verify(expected);
 
@@ -241,12 +236,11 @@ namespace Kuzzle.Tests.API.Controllers {
         { "action", "mCreateOrReplace" },
         { "index", "foo" },
         { "collection", "bar" },
+        {"waitForRefresh", refresh},
       };
 
       expected.Add("body", new JObject());
       ((JObject)expected["body"]).Add("documents", documents);
-
-      QueryUtils.HandleRefreshOption(expected, refresh);
 
       _api.Verify(expected);
 
@@ -275,12 +269,11 @@ namespace Kuzzle.Tests.API.Controllers {
         { "action", "mDelete" },
         { "index", "foo" },
         { "collection", "bar" },
+        {"waitForRefresh", refresh},
       };
 
       expected.Add("body", new JObject());
       ((JObject)expected["body"]).Add("ids", ids);
-
-      QueryUtils.HandleRefreshOption(expected, refresh);
 
       _api.Verify(expected);
 
@@ -335,12 +328,11 @@ namespace Kuzzle.Tests.API.Controllers {
         { "action", "mReplace" },
         { "index", "foo" },
         { "collection", "bar" },
+        {"waitForRefresh", refresh},
       };
 
       expected.Add("body", new JObject());
       ((JObject)expected["body"]).Add("documents", documents);
-
-      QueryUtils.HandleRefreshOption(expected, refresh);
 
       _api.Verify(expected);
 
@@ -383,12 +375,11 @@ namespace Kuzzle.Tests.API.Controllers {
         { "action", "mUpdate" },
         { "index", "foo" },
         { "collection", "bar" },
+        {"waitForRefresh", refresh},
       };
 
       expected.Add("body", new JObject());
       ((JObject)expected["body"]).Add("documents", documents);
-
-      QueryUtils.HandleRefreshOption(expected, refresh);
 
       expected.Add("retryOnConflict", retries ?? 0);
 
@@ -421,10 +412,9 @@ namespace Kuzzle.Tests.API.Controllers {
         { "index", "foo" },
         { "collection", "bar" },
         { "body", content },
-        { "_id", "fooid" }
+        { "_id", "fooid" },
+        {"waitForRefresh", refresh},
       };
-
-      QueryUtils.HandleRefreshOption(expected, refresh);
 
       _api.Verify(expected);
 
@@ -516,10 +506,9 @@ namespace Kuzzle.Tests.API.Controllers {
         { "index", "foo" },
         { "collection", "bar" },
         { "_id", "id" },
-        { "body", changes }
+        { "body", changes },
+        {"waitForRefresh", refresh},
       };
-
-      QueryUtils.HandleRefreshOption(expected, refresh);
 
       expected.Add("retryOnConflict", retries ?? 0);
 
