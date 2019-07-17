@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using KuzzleSdk.API.Controllers;
 using KuzzleSdk.API.Offline;
 using KuzzleSdk.Offline.Subscription;
 using Newtonsoft.Json.Linq;
@@ -13,15 +14,22 @@ namespace KuzzleSdk.Offline {
   }
 
   public class TokenVerifier : ITokenVerifier {
-    private IOfflineManager offlineManager;
-    private IKuzzle kuzzle;
-    private string username = "";
-    private readonly IQueryReplayer queryReplayer;
+
     private readonly ISubscriptionRecoverer subscriptionRecoverer;
+    private readonly IOfflineManager offlineManager;
+    private readonly IAuthController authController;
+    private readonly IQueryReplayer queryReplayer;
+    private readonly IKuzzle kuzzle;
+
+    /// <summary>
+    /// The previous username logged in
+    /// </summary>
+    private string previousUsername = "";
 
     public TokenVerifier(IOfflineManager offlineManager, IKuzzle kuzzle) {
       this.offlineManager = offlineManager;
       this.kuzzle = kuzzle;
+      this.authController = kuzzle.GetAuth();
 
       queryReplayer = offlineManager.GetQueryReplayer();
       subscriptionRecoverer = offlineManager.GetSubscriptionRecoverer();
@@ -31,10 +39,15 @@ namespace KuzzleSdk.Offline {
     /// Return true if the Token is valid
     /// </summary>
     public async Task<bool> IsTokenValid() {
-      JObject response = await kuzzle.GetAuth().CheckTokenAsync(kuzzle.AuthenticationToken);
+      JObject response = await authController.CheckTokenAsync(kuzzle.AuthenticationToken);
 
-      if (response != null)
-        return (bool)response["valid"];
+      if (response != null) {
+        bool tokenValid = (bool)response["valid"];
+        if (tokenValid) {
+          await authController.RefreshTokenAsync(offlineManager.MinTokenDuration);
+        }
+        return tokenValid;
+      }
 
       return false;
     }
@@ -46,7 +59,7 @@ namespace KuzzleSdk.Offline {
     /// </summary>
     public async Task ChangeUser(string username) {
 
-      if (this.username != username) {
+      if (previousUsername != username) {
 
         if (offlineManager.AutoRecover && queryReplayer.WaitLoginToReplay) {
             queryReplayer.RejectAllQueries(new KuzzleSdk.Exceptions.ConnectionLostException());
@@ -65,7 +78,7 @@ namespace KuzzleSdk.Offline {
 
         subscriptionRecoverer.RenewSubscriptions();
       }
-      this.username = username;
+      previousUsername = username;
     }
 
     /// <summary>
@@ -88,7 +101,7 @@ namespace KuzzleSdk.Offline {
           queryReplayer.ReplayQueries();
           queryReplayer.Lock = false;
         }
-        offlineManager.GetSubscriptionRecoverer().RenewSubscriptions();
+        subscriptionRecoverer.RenewSubscriptions();
       }
     }
 

@@ -9,6 +9,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using KuzzleSdk.API.Offline;
+using KuzzleSdk.EventHandler;
 
 [assembly: InternalsVisibleTo("Kuzzle.Tests")]
 
@@ -22,6 +23,8 @@ namespace KuzzleSdk {
     /// </summary>
     /// <value>The authentication token.</value>
     string AuthenticationToken { get; set; }
+
+    IKuzzleEventHandler EventHandler { get; }
 
     /// <summary>
     /// Gets the instance identifier.
@@ -45,11 +48,13 @@ namespace KuzzleSdk {
     /// <summary>
     /// Dispatches a TokenExpired event.
     /// </summary>
+    [Obsolete("use IKuzzleApi.EventHandler.DispatchTokenExpired instead", false)]
     void DispatchTokenExpired();
 
     /// <summary>
     /// Occurs when an unhandled response is received.
     /// </summary>
+    [Obsolete("use IKuzzleApi.EventHandler.UnhandledResponse event instead", false)]
     event EventHandler<Response> UnhandledResponse;
 
     /// <summary>
@@ -92,16 +97,37 @@ namespace KuzzleSdk {
 
     // Emitter for all responses not directly linked to a user request
     // (i.e. all real-time notifications)
-    public event EventHandler<Response> UnhandledResponse;
+    [Obsolete(@"The UnhandledResponse event from Kuzzle is deprecated, " +
+              @"use UnhandledResponse event from Kuzzle.EventHandler instead", false)]
+    public event EventHandler<Response> UnhandledResponse {
+      add {
+        eventHandler.UnhandledResponse += value;
+      }
+
+      remove {
+        eventHandler.UnhandledResponse -= value;
+      }
+    }
 
     /// <summary>
     /// Token expiration event
     /// </summary>
-    public event Action TokenExpired;
+    [Obsolete(@"The TokenExpired event from Kuzzle is deprecated, " +
+              @"use TokenExpired event from Kuzzle.EventHandler instead", false)]
+    public event Action TokenExpired {
+      add {
+        eventHandler.TokenExpired += value;
+      }
 
+      remove {
+        eventHandler.TokenExpired -= value;
+      }
+    }
+
+    [Obsolete(@"DispatchTokenExpired from Kuzzle is deprecated, " +
+              @"use DispatchTokenExpired from Kuzzle.EventHandler instead", false)]
     public void DispatchTokenExpired() {
-      AuthenticationToken = null;
-      TokenExpired?.Invoke();
+      eventHandler.DispatchTokenExpired();
     }
 
     /// <summary>
@@ -162,6 +188,10 @@ namespace KuzzleSdk {
       }
     }
 
+    private IKuzzleEventHandler eventHandler;
+
+    public IKuzzleEventHandler EventHandler { get { return eventHandler; } }
+
     /// <summary>
     /// Handles the ResponseEvent event from the network protocol
     /// </summary>
@@ -173,7 +203,7 @@ namespace KuzzleSdk {
       if (requests.ContainsKey(response.Room)) {
         if (response.Error != null) {
           if (response.Error.Message == "Token expired") {
-            DispatchTokenExpired();
+            eventHandler.DispatchTokenExpired();
           }
 
           requests[response.RequestId].SetException(
@@ -189,7 +219,7 @@ namespace KuzzleSdk {
         offlineManager?.GetQueryReplayer()?.Remove((obj) => obj["requestId"].ToString() == response.RequestId);
 
       } else {
-        UnhandledResponse?.Invoke(this, response);
+        eventHandler.DispatchUnhandledResponse(response);
       }
     }
 
@@ -222,6 +252,8 @@ namespace KuzzleSdk {
       NetworkProtocol = networkProtocol;
       NetworkProtocol.ResponseEvent += ResponsesListener;
       NetworkProtocol.StateChanged += StateChangeListener;
+
+      eventHandler = new KuzzleEventHandler(this);
 
       // Initializes the controllers
       Auth = new AuthController(this);

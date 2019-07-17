@@ -34,7 +34,7 @@ namespace KuzzleSdk.API.Controllers {
 
     private void NotificationsListener(object sender, Response notification) {
       if (notification.Type == "TokenExpired") {
-        api.DispatchTokenExpired();
+        api.EventHandler.DispatchTokenExpired();
         return;
       }
 
@@ -100,7 +100,7 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     internal RealtimeController(IKuzzleApi api) : base(api) {
-      api.UnhandledResponse += NotificationsListener;
+      api.EventHandler.UnhandledResponse += NotificationsListener;
       api.NetworkProtocol.StateChanged += StateChangeListener;
       api.TokenExpired += TokenExpiredListener;
     }
@@ -111,7 +111,7 @@ namespace KuzzleSdk.API.Controllers {
     /// is reclaimed by garbage collection.
     /// </summary>
     ~RealtimeController() {
-      api.UnhandledResponse -= NotificationsListener;
+      api.EventHandler.UnhandledResponse -= NotificationsListener;
       api.NetworkProtocol.StateChanged -= StateChangeListener;
     }
 

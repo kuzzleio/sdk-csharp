@@ -129,16 +129,16 @@ namespace Kuzzle.Tests.API.Controllers
             });
 
             Response notif = Response.FromString("{room: 'a_channel'}");
-            _api.Mock.Raise(m => m.UnhandledResponse += null, this, notif);
+            _api.Mock.Raise(m => m.EventHandler.UnhandledResponse += null, this, notif);
             notificationHandlerMock.Verify(m => m.Invoke(notif), Times.Never);
         }
 
         [Fact]
         public void NotificationHandlerTokenExpiredTest()
         {
-            _api.Mock.Raise(m => m.UnhandledResponse += null, this, Response.FromString(@"{type: 'TokenExpired'}"));
+            _api.Mock.Raise(m => m.EventHandler.UnhandledResponse += null, this, Response.FromString(@"{type: 'TokenExpired'}"));
 
-            _api.Mock.Verify(m => m.DispatchTokenExpired(), Times.Once());
+            _api.Mock.Verify(m => m.EventHandler.DispatchTokenExpired(), Times.Once());
         }
 
         [Fact]
@@ -159,7 +159,7 @@ namespace Kuzzle.Tests.API.Controllers
 
             //Then we trigger a notification
             Response notif = Response.FromString("{room: 'a_channel'}");
-            _api.Mock.Raise(m => m.UnhandledResponse += null, this, notif);
+            _api.Mock.Raise(m => m.EventHandler.UnhandledResponse += null, this, notif);
 
             //Then we can check that the handler has been called
             notificationHandlerMock.Verify(m => m.Invoke(notif), Times.AtLeastOnce);

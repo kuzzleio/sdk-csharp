@@ -23,11 +23,11 @@ namespace Kuzzle.Tests {
     public void DispatchTokenExpiredTest() {
       _kuzzle.AuthenticationToken = "token";
       bool eventDispatched = false;
-      _kuzzle.TokenExpired += delegate() {
+      _kuzzle.EventHandler.TokenExpired += delegate() {
         eventDispatched = true;
       };
 
-      _kuzzle.DispatchTokenExpired();
+      _kuzzle.EventHandler.DispatchTokenExpired();
 
       Assert.Null(_kuzzle.AuthenticationToken);
       Assert.True(eventDispatched);
@@ -135,7 +135,7 @@ namespace Kuzzle.Tests {
     [Fact]
     public async void ResponseListenerTokenExpiredTest() {
       bool eventDispatched = false;
-      _kuzzle.TokenExpired += delegate() {
+      _kuzzle.EventHandler.TokenExpired += delegate() {
         eventDispatched = true;
       };
       TaskCompletionSource<Response> responseTask =
@@ -166,7 +166,7 @@ namespace Kuzzle.Tests {
     [Fact]
     public void ResponseListenerUnhandledTest() {
       bool eventDispatched = false;
-      _kuzzle.UnhandledResponse += delegate(object sender, Response response) {
+      _kuzzle.EventHandler.UnhandledResponse += delegate(object sender, Response response) {
         eventDispatched = true;
 
         Assert.Equal("i am the result", response.Result);
