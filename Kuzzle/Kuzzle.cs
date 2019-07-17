@@ -13,6 +13,9 @@ using KuzzleSdk.EventHandler;
 
 [assembly: InternalsVisibleTo("Kuzzle.Tests")]
 
+// Allow using Moq on internal objects/interfaces
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
+
 namespace KuzzleSdk {
   /// <summary>
   /// Kuzzle API interface.
@@ -144,6 +147,11 @@ namespace KuzzleSdk {
     /// Exposes actions from the "document" Kuzzle API controller
     /// </summary>
     public DocumentController Document { get; private set; }
+  
+    /// <summary>
+    /// Exposes actions from the "index" Kuzzle API controller
+    /// </summary>
+    public IndexController Index { get; private set; }
 
     /// <summary>
     /// Exposes actions from the "realtime" Kuzzle API controller
@@ -154,6 +162,11 @@ namespace KuzzleSdk {
     /// Exposes actions from the "server" Kuzzle API controller
     /// </summary>
     public ServerController Server { get; private set; }
+
+    /// <summary>
+    /// Exposes actions from the "admin" Kuzzle API controller
+    /// </summary>
+    public AdminController Admin { get; private set; }
 
     /// <summary>
     /// Authentication token
@@ -259,8 +272,10 @@ namespace KuzzleSdk {
       Auth = new AuthController(this);
       Collection = new CollectionController(this);
       Document = new DocumentController(this);
+      Index = new IndexController(this);
       Realtime = new RealtimeController(this);
       Server = new ServerController(this);
+      Admin = new AdminController(this);
 
       offlineManager = new OfflineManager(networkProtocol, this) {
         MinTokenDuration = minTokenDuration,
@@ -314,7 +329,7 @@ namespace KuzzleSdk {
     /// <returns>API response</returns>
     /// <param name="query">Kuzzle API query</param>
     public Task<Response> QueryAsync(JObject query) {
-      if (query == null){
+      if (query == null) {
         throw new Exceptions.InternalException("You must provide a query", 400);
       }
 

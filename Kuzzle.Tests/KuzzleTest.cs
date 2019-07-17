@@ -40,6 +40,7 @@ namespace Kuzzle.Tests {
       Assert.IsType<AuthController>(_kuzzle.Auth);
       Assert.IsType<CollectionController>(_kuzzle.Collection);
       Assert.IsType<DocumentController>(_kuzzle.Document);
+      Assert.IsType<IndexController>(_kuzzle.Index);
       Assert.IsType<RealtimeController>(_kuzzle.Realtime);
       Assert.IsType<ServerController>(_kuzzle.Server);
       Assert.NotEqual(_kuzzle.InstanceId, kuzzle2.InstanceId);
@@ -99,7 +100,7 @@ namespace Kuzzle.Tests {
 
       Assert.Single(_kuzzle.requests);
     }
-    private bool testSendArg (JObject request) {
+    private bool testSendArg(JObject request) {
       Assert.Equal("test", request["controller"]);
       Assert.Equal("testAction", request["action"]);
       Assert.Equal("jwt auth token", request["jwt"]);
@@ -185,7 +186,7 @@ namespace Kuzzle.Tests {
     }
 
     [Fact]
-    public async void StateChangeListenerTest () {
+    public async void StateChangeListenerTest() {
       TaskCompletionSource<Response> responseTask1 =
         new TaskCompletionSource<Response>();
       TaskCompletionSource<Response> responseTask2 =

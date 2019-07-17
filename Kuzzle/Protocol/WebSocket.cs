@@ -12,7 +12,7 @@ namespace KuzzleSdk.Protocol {
   /// our WebSocket class testable via duck typing.
   /// </summary>
   internal interface IClientWebSocket {
-    WebSocketState State { get; }
+    WebSocketState State { get; set; }
 
     Task ConnectAsync(Uri uri, CancellationToken cancellationToken);
     Task SendAsync(
@@ -42,13 +42,6 @@ namespace KuzzleSdk.Protocol {
         receiveBufferSize, sendBufferSize);
     private readonly BlockingCollection<JObject> sendQueue =
       new BlockingCollection<JObject>();
-
-    internal virtual dynamic CreateClientSocket() {
-      var s = new ClientWebSocket();
-
-      s.Options.SetBuffer(receiveBufferSize, sendBufferSize);
-      return s;
-    }
 
     private bool keepAlive = false;
     private bool autoReconnect = false;
@@ -87,6 +80,13 @@ namespace KuzzleSdk.Protocol {
       set { reconnectionRetries = value; }
     }
 
+    internal virtual dynamic CreateClientSocket() {
+      var s = new ClientWebSocket();
+
+      s.Options.SetBuffer(receiveBufferSize, sendBufferSize);
+      return s;
+    }
+
     /// <summary>
     /// Initializes a new instance of the 
     /// <see cref="T:KuzzleSdk.Protocol.WebSocket"/> class.
@@ -107,7 +107,7 @@ namespace KuzzleSdk.Protocol {
       if (socket != null) {
         return;
       }
-        
+
       socket = CreateClientSocket();
 
       await socket.ConnectAsync(uri, cancellationToken);

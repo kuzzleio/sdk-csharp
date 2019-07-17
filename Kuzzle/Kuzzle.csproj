@@ -37,6 +37,9 @@
     <Folder Include="Offline\Subscription\" />
     <Folder Include="EventHandler\" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Utils\" />
+  </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
       <Properties>
