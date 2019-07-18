@@ -34,6 +34,7 @@ namespace KuzzleSdk {
     private List<TimedQuery> queue;
     private IOfflineManager offlineManager;
     private CancellationTokenSource cancellationTokenSource;
+    private bool currentlyReplaying = false;
 
     /// <summary>
     /// Does the QueryReplayer accepts new queries.
@@ -137,7 +138,12 @@ namespace KuzzleSdk {
       if (queue.Count > 0) {
         lock (queue) {
           Predicate<TimedQuery> timedQueryPredicate = timedQuery => predicate(timedQuery.Query);
-          return queue.RemoveAll(timedQueryPredicate);
+          int itemsRemoved = queue.RemoveAll(timedQueryPredicate);
+          if (queue.Count == 0 && currentlyReplaying) {
+            currentlyReplaying = false;
+            kuzzle.GetEventHandler().DispatchQueueRecovered();
+          }
+          return itemsRemoved;
         }
       }
       return 0;
@@ -188,9 +194,12 @@ namespace KuzzleSdk {
       cancellationTokenSource = new CancellationTokenSource();
       if (resetWaitLogin) WaitLoginToReplay = false;
       lock (queue) {
-        for (int i = 0; i < queue.Count; i++) {
-          if (predicate(queue[i].Query)) {
-            ReplayQuery(queue[i], cancellationTokenSource.Token);
+        if (queue.Count > 0) {
+          currentlyReplaying = true;
+          for (int i = 0; i < queue.Count; i++) {
+            if (predicate(queue[i].Query)) {
+              ReplayQuery(queue[i], cancellationTokenSource.Token);
+            }
           }
         }
       }
