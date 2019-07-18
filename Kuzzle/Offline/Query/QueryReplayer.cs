@@ -49,7 +49,7 @@ namespace KuzzleSdk {
     /// <summary>
     /// Constructor of the QueryReplayer class.
     /// </summary>
-    public QueryReplayer(IOfflineManager offlineManager, IKuzzle kuzzle) {
+    internal QueryReplayer(IOfflineManager offlineManager, IKuzzle kuzzle) {
       queue = new List<TimedQuery>();
       this.offlineManager = offlineManager;
       this.kuzzle = kuzzle;

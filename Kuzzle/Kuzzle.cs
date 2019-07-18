@@ -64,13 +64,12 @@ namespace KuzzleSdk {
     /// Occurs when the authentication token has expired
     /// </summary>
     event Action TokenExpired;
-
-    IOfflineManager GetOfflineManager();
   }
 
-  public interface IKuzzle {
+  internal interface IKuzzle {
     string AuthenticationToken { get; set; }
 
+    IKuzzleEventHandler GetEventHandler();
     IAuthController GetAuth();
     IRealtimeController GetRealtime();
 
@@ -229,7 +228,7 @@ namespace KuzzleSdk {
           requests.Remove(response.RequestId);
         }
 
-        offlineManager?.GetQueryReplayer()?.Remove((obj) => obj["requestId"].ToString() == response.RequestId);
+        Offline?.GetQueryReplayer()?.Remove((obj) => obj["requestId"].ToString() == response.RequestId);
 
       } else {
         eventHandler.DispatchUnhandledResponse(response);
@@ -249,7 +248,7 @@ namespace KuzzleSdk {
       }
     }
 
-    private OfflineManager offlineManager;
+    public OfflineManager Offline { get; private set; }
 
     /// <summary>
     /// Initialize a new instance of the <see cref="T:Kuzzle.Kuzzle"/> class.
@@ -277,7 +276,7 @@ namespace KuzzleSdk {
       Server = new ServerController(this);
       Admin = new AdminController(this);
 
-      offlineManager = new OfflineManager(networkProtocol, this) {
+      Offline = new OfflineManager(networkProtocol, this) {
         MinTokenDuration = minTokenDuration,
         MaxQueueSize = maxQueueSize,
         MaxRequestDelay = maxRequestDelay,
@@ -318,7 +317,7 @@ namespace KuzzleSdk {
       NetworkProtocol.Disconnect();
     }
 
-    public TaskCompletionSource<Response> GetRequestById(string requestId) {
+    TaskCompletionSource<Response> IKuzzle.GetRequestById(string requestId) {
       return requests[requestId];
     }
 
@@ -356,7 +355,7 @@ namespace KuzzleSdk {
       if (NetworkProtocol.State == ProtocolState.Open) {
         NetworkProtocol.Send(query);
       } else if (NetworkProtocol.State == ProtocolState.Reconnecting) {
-        offlineManager.GetQueryReplayer().Enqueue(query);
+        Offline.GetQueryReplayer().Enqueue(query);
       }
 
       lock (requests) {
@@ -366,16 +365,16 @@ namespace KuzzleSdk {
       return requests[requestId].Task;
     }
 
-    public IOfflineManager GetOfflineManager() {
-      return offlineManager;
-    }
-
-    public IAuthController GetAuth() {
+    IAuthController IKuzzle.GetAuth() {
       return Auth;
     }
 
-    public IRealtimeController GetRealtime() {
+    IRealtimeController IKuzzle.GetRealtime() {
       return Realtime;
+    }
+
+    IKuzzleEventHandler IKuzzle.GetEventHandler() {
+      return eventHandler;
     }
   }
 }

@@ -36,6 +36,7 @@
   <ItemGroup>
     <Folder Include="Offline\Subscription\" />
     <Folder Include="EventHandler\" />
+    <Folder Include="EventHandler\Events\SubscriptionEvents\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Utils\" />

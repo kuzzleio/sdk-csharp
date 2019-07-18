@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using KuzzleSdk.API.Controllers;
 using KuzzleSdk.API.Offline;
+using KuzzleSdk.EventHandler.Events;
+using KuzzleSdk.EventHandler.Events.SubscriptionEvents;
 
 namespace KuzzleSdk.Offline.Subscription {
 
@@ -13,13 +15,33 @@ namespace KuzzleSdk.Offline.Subscription {
     void RenewSubscriptions();
   }
 
-  public class SubscriptionRecoverer : ISubscriptionRecoverer {
+  internal class SubscriptionRecoverer : ISubscriptionRecoverer {
 
     private IRealtimeController realtimeController;
     private List<Subscription> subscriptions = new List<Subscription>();
 
     public SubscriptionRecoverer(IOfflineManager offlineManager, IRealtimeController realtimeController) {
       this.realtimeController = realtimeController;
+      
+    }
+
+    private void OnSubscriptionEvent(object sender, SubscriptionEvent subscriptionEvent) {
+      switch (subscriptionEvent.Action) {
+        case SubscriptionAction.Add:
+          if (subscriptionEvent is SubscriptionAddEvent) {
+            Add(((SubscriptionAddEvent)subscriptionEvent).SubscriptionData);
+          }
+          break;
+        case SubscriptionAction.Remove:
+          if (subscriptionEvent is SubscriptionRemoveEvent) {
+            Remove(((SubscriptionRemoveEvent)subscriptionEvent).Predicate);
+          }
+          break;
+        case SubscriptionAction.Clear:
+          Clear();
+          break;
+        default: break;
+      }
     }
 
     /// <summary>

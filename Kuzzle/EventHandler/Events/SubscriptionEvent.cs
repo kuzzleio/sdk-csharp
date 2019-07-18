@@ -10,16 +10,11 @@ namespace KuzzleSdk.EventHandler.Events {
   public class SubscriptionEvent : EventArgs {
 
     public SubscriptionAction Action { get; private set; }
-    public Subscription Sub { get; private set; }
 
     public SubscriptionEvent(SubscriptionAction action) {
       Action = action;
     }
 
-    public SubscriptionEvent(SubscriptionAction action, Subscription subscription) {
-      Action = action;
-      Sub = subscription;
-    }
 
   }
 }

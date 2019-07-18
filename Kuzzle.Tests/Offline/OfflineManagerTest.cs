@@ -17,7 +17,7 @@ namespace Kuzzle.Tests.Offline {
     public Mock<ISubscriptionRecoverer> mockedSubscriptionRecoverer;
     public Mock<ITokenVerifier> mockedTokenVerifier;
 
-    public TestableOfflineManager(AbstractProtocol networkProtocol, KuzzleSdk.IKuzzle kuzzle) : base(networkProtocol, kuzzle) {
+    internal TestableOfflineManager(AbstractProtocol networkProtocol, KuzzleSdk.IKuzzle kuzzle) : base(networkProtocol, kuzzle) {
     }
 
     internal override void InitComponents() {

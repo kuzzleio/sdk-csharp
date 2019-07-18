@@ -38,7 +38,7 @@ namespace KuzzleSdk.EventHandler {
     }
 
     public void DispatchSubscription(SubscriptionEvent subscriptionData) {
-      EventHandler<SubscriptionEvent> subscriptionEvent = (EventHandler<SubscriptionEvent>)eventHandlerList[userLoggedInEventKey];
+      EventHandler<SubscriptionEvent> subscriptionEvent = (EventHandler<SubscriptionEvent>)eventHandlerList[subscriptionEventKey];
       subscriptionEvent?.Invoke(this, subscriptionData);
     }
 

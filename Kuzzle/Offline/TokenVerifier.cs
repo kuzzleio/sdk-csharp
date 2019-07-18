@@ -10,11 +10,11 @@ namespace KuzzleSdk.Offline {
 
   public interface ITokenVerifier {
     Task<bool> IsTokenValid();
-    void OnUserChange(object sender, UserChangedEvent e);
+    void OnUserLoggedIn(object sender, UserLoggedInEvent e);
     Task CheckTokenToReplay();
   }
 
-  public class TokenVerifier : ITokenVerifier {
+  internal class TokenVerifier : ITokenVerifier {
 
     private readonly ISubscriptionRecoverer subscriptionRecoverer;
     private readonly IOfflineManager offlineManager;
@@ -34,6 +34,7 @@ namespace KuzzleSdk.Offline {
 
       queryReplayer = offlineManager.GetQueryReplayer();
       subscriptionRecoverer = offlineManager.GetSubscriptionRecoverer();
+      kuzzle.GetEventHandler().UserLoggedIn += OnUserLoggedIn;
     }
    
     /// <summary>
@@ -58,12 +59,12 @@ namespace KuzzleSdk.Offline {
     /// is the same that before, if not this will Reject every query in the Queue
     /// and clear all subscriptions, otherwise this will replay the Queue if she is waiting.
     /// </summary>
-    public void OnUserChange(object sender, UserChangedEvent e) {
+    public void OnUserLoggedIn(object sender, UserLoggedInEvent e) {
 
       if (previousUsername != e.Username) {
 
         if (offlineManager.AutoRecover && queryReplayer.WaitLoginToReplay) {
-            queryReplayer.RejectAllQueries(new KuzzleSdk.Exceptions.ConnectionLostException());
+            queryReplayer.RejectAllQueries(new Exceptions.ConnectionLostException());
             queryReplayer.Lock = false;
             queryReplayer.WaitLoginToReplay = false;
         }
@@ -98,7 +99,7 @@ namespace KuzzleSdk.Offline {
 
         }
       } else {
-        if (offlineManager.AutoRecover) {
+       if (offlineManager.AutoRecover) {
           queryReplayer.ReplayQueries();
           queryReplayer.Lock = false;
         }

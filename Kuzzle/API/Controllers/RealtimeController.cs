@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using KuzzleSdk.API.Options;
+using KuzzleSdk.EventHandler.Events;
+using KuzzleSdk.EventHandler.Events.SubscriptionEvents;
 using KuzzleSdk.Offline.Subscription;
 using KuzzleSdk.Protocol;
 using Newtonsoft.Json.Linq;
@@ -9,7 +11,7 @@ using static KuzzleSdk.API.Controllers.RealtimeController;
 
 namespace KuzzleSdk.API.Controllers {
 
-  public interface IRealtimeController {
+  internal interface IRealtimeController {
     Task<string> SubscribeAndAddToRecoverer(
         string index, string collection, JObject filters,
         NotificationHandler handler, SubscribeOptions options = null, bool addToRecoverer = true);
@@ -55,7 +57,7 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     private void ClearAllSubscriptions() {
-      api.GetOfflineManager().GetSubscriptionRecoverer().Clear();
+      api.EventHandler.DispatchSubscription(new SubscriptionClearEvent());
       rooms.Clear();
       channels.Clear();
     }
@@ -91,7 +93,11 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     private void DelNotificationHandlers(string room) {
-      api.GetOfflineManager().GetSubscriptionRecoverer().Remove((obj) => obj.RoomId == room);
+
+      api.EventHandler.DispatchSubscription(
+        new SubscriptionRemoveEvent((obj) => obj.RoomId == room)
+      );
+
       foreach (string channel in rooms[room]) {
         channels.Remove(channel);
       }
@@ -151,7 +157,7 @@ namespace KuzzleSdk.API.Controllers {
     public async Task<string> SubscribeAsync(
         string index, string collection, JObject filters,
         NotificationHandler handler, SubscribeOptions options = null) {
-      string roomId = await SubscribeAndAddToRecoverer(index, collection, filters, handler, options);
+      string roomId = await SubscribeAndAddToSubscriptionRecoverer(index, collection, filters, handler, options);
       return roomId;
     }
 
@@ -168,14 +174,7 @@ namespace KuzzleSdk.API.Controllers {
       DelNotificationHandlers(roomId);
     }
 
-    /// <summary>
-    /// Subscribes by providing a set of filters: messages, document changes 
-    /// and, optionally, user events matching the provided filters will 
-    /// generate real-time notifications, sent to you in real-time by Kuzzle.
-    /// and add the Subscription to the SubscriptionRecoverer for Offline Mode
-    /// </summary>
-    /// <param name="addToRecoverer">If set to <c>true</c> add to recoverer.</param>
-    public async Task<string> SubscribeAndAddToRecoverer(
+    private async Task<string> SubscribeAndAddToSubscriptionRecoverer(
         string index, string collection, JObject filters,
         NotificationHandler handler, SubscribeOptions options = null, bool addToRecoverer = true) {
       var request = new JObject {
@@ -199,18 +198,33 @@ namespace KuzzleSdk.API.Controllers {
         options ?? new SubscribeOptions());
 
       if (addToRecoverer) {
-        api.GetOfflineManager().GetSubscriptionRecoverer().Add(new Subscription(
-          index,
-          collection,
-          filters,
-          handler,
-          (string)response.Result["roomId"],
-          (string)response.Result["channel"],
-          options
+        api.EventHandler.DispatchSubscription(new SubscriptionAddEvent(
+          new Subscription(
+            index,
+            collection,
+            filters,
+            handler,
+            (string)response.Result["roomId"],
+            (string)response.Result["channel"],
+            options
+          )
         ));
       }
 
       return (string)response.Result["roomId"];
+    }
+
+    /// <summary>
+    /// Subscribes by providing a set of filters: messages, document changes 
+    /// and, optionally, user events matching the provided filters will 
+    /// generate real-time notifications, sent to you in real-time by Kuzzle.
+    /// and add the Subscription to the SubscriptionRecoverer for Offline Mode
+    /// </summary>
+    /// <param name="addToRecoverer">If set to <c>true</c> add to recoverer.</param>
+    async Task<string> IRealtimeController.SubscribeAndAddToRecoverer(
+        string index, string collection, JObject filters,
+        NotificationHandler handler, SubscribeOptions options = null, bool addToRecoverer = true) {
+      return await SubscribeAndAddToSubscriptionRecoverer(index, collection, filters, handler, options, addToRecoverer);
     }
 
   }

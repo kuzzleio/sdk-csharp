@@ -3,36 +3,43 @@ using System.Threading.Tasks;
 using KuzzleSdk;
 using KuzzleSdk.API;
 using KuzzleSdk.API.Controllers;
+using KuzzleSdk.EventHandler;
 using Moq;
 
 namespace Kuzzle.Tests.API {
-  public class TestableKuzzle : IKuzzle {
+  internal class TestableKuzzle : IKuzzle {
 
-    public Mock<IRealtimeController> mockedRealtimeController;
-    public Mock<IAuthController> mockedAuthController;
-    public Mock<IKuzzle> mockedKuzzle;
+    internal Mock<IRealtimeController> mockedRealtimeController;
+    internal Mock<IAuthController> mockedAuthController;
+    internal Mock<IKuzzle> mockedKuzzle;
+    internal Mock<IKuzzleEventHandler> mockedKuzzleEventHandler;
 
     public TestableKuzzle() {
       mockedRealtimeController = new Mock<IRealtimeController>();
       mockedAuthController = new Mock<IAuthController>();
       mockedKuzzle = new Mock<IKuzzle>();
+      mockedKuzzleEventHandler = new Mock<IKuzzleEventHandler>();
     }
 
     public string AuthenticationToken { get; set; } = "";
+
+    public IKuzzleEventHandler GetEventHandler() {
+      return mockedKuzzleEventHandler.Object;
+    }
 
     public IKuzzle GetKuzzle() {
       return mockedKuzzle.Object;
     }
 
-    public IAuthController GetAuth() {
+    IAuthController IKuzzle.GetAuth() {
       return mockedAuthController.Object;
     }
 
-    public IRealtimeController GetRealtime() {
+    IRealtimeController IKuzzle.GetRealtime() {
       return mockedRealtimeController.Object;
     }
 
-    public TaskCompletionSource<Response> GetRequestById(string requestId) {
+    TaskCompletionSource<Response> IKuzzle.GetRequestById(string requestId) {
       return mockedKuzzle.Object.GetRequestById(requestId);
     }
   }

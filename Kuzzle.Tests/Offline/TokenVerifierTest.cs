@@ -2,8 +2,6 @@
 using System.Threading.Tasks;
 using Kuzzle.Tests.API;
 using Kuzzle.Tests.Protocol;
-using KuzzleSdk;
-using KuzzleSdk.API.Offline;
 using KuzzleSdk.EventHandler.Events;
 using KuzzleSdk.Offline;
 using Moq;
@@ -40,6 +38,16 @@ namespace Kuzzle.Tests.Offline {
         (obj) => obj.CheckTokenAsync(It.Is<string>(o => o.Equals("foobar")))
       );
 
+      if (isValid) {
+        kuzzle.mockedAuthController.Verify(
+          (obj) => obj.RefreshTokenAsync(It.IsAny<Int64>()), Times.Once
+        );
+      } else {
+        kuzzle.mockedAuthController.Verify(
+          (obj) => obj.RefreshTokenAsync(It.IsAny<Int64>()), Times.Never
+        );
+      }
+
       Assert.Equal(isValid, valid);
     }
 
@@ -53,7 +61,7 @@ namespace Kuzzle.Tests.Offline {
       testableOfflineManager.AutoRecover = autoRecover;
       testableOfflineManager.mockedQueryReplayer.SetupProperty(obj => obj.WaitLoginToReplay, waitLoginToReplay);
 
-      tokenVerifier.OnUserChange(this, new UserChangedEvent("foobar"));
+      tokenVerifier.OnUserLoggedIn(this, new UserLoggedInEvent("foobar"));
 
       if (waitLoginToReplay && autoRecover) {
         testableOfflineManager.mockedQueryReplayer.Verify(obj => obj.RejectAllQueries(It.IsAny<Exception>()), Times.Once);
@@ -73,7 +81,7 @@ namespace Kuzzle.Tests.Offline {
       testableOfflineManager.AutoRecover = autoRecover;
       testableOfflineManager.mockedQueryReplayer.SetupProperty(obj => obj.WaitLoginToReplay, waitLoginToReplay);
 
-      tokenVerifier.OnUserChange(this, new UserChangedEvent(""));
+      tokenVerifier.OnUserLoggedIn(this, new UserLoggedInEvent(""));
 
       if (waitLoginToReplay && autoRecover) {
         testableOfflineManager.mockedQueryReplayer.Verify(obj => obj.ReplayQueries(true), Times.Once);

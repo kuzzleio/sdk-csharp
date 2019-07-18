@@ -74,7 +74,7 @@ namespace KuzzleSdk.API.Offline {
       set { autoRecover = value; }
     }
 
-    public OfflineManager(AbstractProtocol networkProtocol, IKuzzle kuzzle) {
+    internal OfflineManager(AbstractProtocol networkProtocol, IKuzzle kuzzle) {
       this.networkProtocol = networkProtocol;
       networkProtocol.StateChanged += this.StateChangeListener;
       this.kuzzle = kuzzle;
