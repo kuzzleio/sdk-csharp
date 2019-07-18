@@ -22,8 +22,6 @@ namespace KuzzleSdk.Offline.Subscription {
 
     public SubscriptionRecoverer(IOfflineManager offlineManager, IKuzzle kuzzle) {
       this.realtimeController = kuzzle.GetRealtime();
-      if (kuzzle.GetEventHandler() == null)
-        throw new Exception("NULL");
       kuzzle.GetEventHandler().Subscription += OnSubscriptionEvent;
     }
 
@@ -34,11 +32,13 @@ namespace KuzzleSdk.Offline.Subscription {
             Add(((SubscriptionAddEvent)subscriptionEvent).SubscriptionData);
           }
           break;
+
         case SubscriptionAction.Remove:
           if (subscriptionEvent is SubscriptionRemoveEvent) {
             Remove(((SubscriptionRemoveEvent)subscriptionEvent).Predicate);
           }
           break;
+
         case SubscriptionAction.Clear:
           Clear();
           break;
@@ -81,12 +81,14 @@ namespace KuzzleSdk.Offline.Subscription {
     private async Task RenewSubscription(Subscription subscription) {
 
       string roomId = await realtimeController.SubscribeAndAddToRecoverer(
-      subscription.Index,
-      subscription.Collection,
-      subscription.Filters,
-      subscription.Handler,
-      subscription.Options,
-      false);
+        subscription.Index,
+        subscription.Collection,
+        subscription.Filters,
+        subscription.Handler,
+        subscription.Options,
+        false
+      );
+
       subscription.RoomId = roomId;
     }
 

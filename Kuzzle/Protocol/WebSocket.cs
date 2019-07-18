@@ -43,42 +43,25 @@ namespace KuzzleSdk.Protocol {
     private readonly BlockingCollection<JObject> sendQueue =
       new BlockingCollection<JObject>();
 
-    private bool keepAlive = false;
-    private bool autoReconnect = false;
-    private int reconnectionDelay = 1000;
-    private int reconnectionRetries = 20;
-
     /// <summary>
     /// Actively keep the connection alive
     /// </summary>
-    public bool KeepAlive {
-      get { return keepAlive; }
-      set { keepAlive = value; }
-    }
+    public bool KeepAlive { get; set; } = false;
 
     /// <summary>
     /// Try to reestablish connection on an unexpected network loss
     /// </summary>
-    public bool AutoReconnect {
-      get { return autoReconnect; }
-      set { autoReconnect = value; }
-    }
+    public bool AutoReconnect { get; set; } = false;
 
     /// <summary>
     /// The number of milliseconds between 2 automatic reconnections attempts
     /// </summary>
-    public int ReconnectionDelay {
-      get { return reconnectionDelay; }
-      set { reconnectionDelay = value; }
-    }
+    public int ReconnectionDelay { get; set; } = 1000;
 
     /// <summary>
     /// The maximum number of automatic reconnections attempts
     /// </summary>
-    public int ReconnectionRetries {
-      get { return reconnectionRetries; }
-      set { reconnectionRetries = value; }
-    }
+    public int ReconnectionRetries { get; set; } = 20;
 
     internal virtual dynamic CreateClientSocket() {
       var s = new ClientWebSocket();
@@ -147,7 +130,7 @@ namespace KuzzleSdk.Protocol {
             true,
             sendCancellationToken.Token);
           } catch (Exception e) {
-            CloseState(autoReconnect);
+            CloseState(AutoReconnect);
             throw e;
           }
         }
@@ -179,7 +162,7 @@ namespace KuzzleSdk.Protocol {
               }
 
             } catch (Exception e) {
-              CloseState(autoReconnect);
+              CloseState(AutoReconnect);
               throw e;
             }
 
@@ -203,9 +186,10 @@ namespace KuzzleSdk.Protocol {
       }
     }
 
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
     private async Task Reconnect() {
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+
       if (State == ProtocolState.Reconnecting) {
         return;
       }
@@ -220,9 +204,8 @@ namespace KuzzleSdk.Protocol {
 
       State = ProtocolState.Reconnecting;
       DispatchStateChange(State);
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
       Task.Run(async () => {
-        for (int i = 0; i < reconnectionRetries; i++) {
+        for (int i = 0; i < ReconnectionRetries; i++) {
           try {
             await ConnectAsync(reconnectCancellationToken.Token);
             return;
@@ -233,20 +216,20 @@ namespace KuzzleSdk.Protocol {
             receiveCancellationToken = null;
             sendCancellationToken?.Cancel();
             sendCancellationToken = null;
-            await Task.Delay(reconnectionDelay, reconnectCancellationToken.Token);
+            await Task.Delay(ReconnectionDelay, reconnectCancellationToken.Token);
           }
         }
         CloseState(false);
       }, reconnectCancellationToken.Token);
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     }
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     private void CloseState(bool tryReconnect) {
       if (State != ProtocolState.Closed) {
         if (tryReconnect) {
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
           Reconnect();
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         } else {
           socket.Abort();
           socket = null;
@@ -259,5 +242,6 @@ namespace KuzzleSdk.Protocol {
         }
       }
     }
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
   }
 }

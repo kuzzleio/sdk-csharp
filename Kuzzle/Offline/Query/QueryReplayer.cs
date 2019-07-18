@@ -67,6 +67,7 @@ namespace KuzzleSdk {
 
       lock (queue) {
         if ((queue.Count < offlineManager.MaxQueueSize) || offlineManager.MaxQueueSize < 0) {
+
           if (queue.Count == 0) {
             startTime = DateTime.Now.Ticks;
             queue.Add(new TimedQuery(query, 0));
@@ -76,6 +77,7 @@ namespace KuzzleSdk {
             elapsedTime = Math.Min(elapsedTime, offlineManager.MaxRequestDelay);
             queue.Add(new TimedQuery(query, previous.Time + elapsedTime));
           }
+
           if (query["controller"] != null
               && query["action"] != null
               && query["controller"].ToString() == "auth"
@@ -83,6 +85,7 @@ namespace KuzzleSdk {
               || query["action"].ToString() == "logout")) {
                 Lock = true;
             }
+
           return true;
         }
       }
@@ -135,8 +138,8 @@ namespace KuzzleSdk {
     /// </summary>
     /// <returns>How many items where removed.</returns>
     public int Remove(Predicate<JObject> predicate) {
-      if (queue.Count > 0) {
-        lock (queue) {
+      lock (queue) {
+        if (queue.Count > 0) {
           Predicate<TimedQuery> timedQueryPredicate = timedQuery => predicate(timedQuery.Query);
           int itemsRemoved = queue.RemoveAll(timedQueryPredicate);
           if (queue.Count == 0 && currentlyReplaying) {
@@ -192,15 +195,19 @@ namespace KuzzleSdk {
     /// </summary>
     public CancellationTokenSource ReplayQueries(Predicate<JObject> predicate, bool resetWaitLogin = true) {
       cancellationTokenSource = new CancellationTokenSource();
+
       if (resetWaitLogin) WaitLoginToReplay = false;
+
       lock (queue) {
         if (queue.Count > 0) {
           currentlyReplaying = true;
+      
           for (int i = 0; i < queue.Count; i++) {
             if (predicate(queue[i].Query)) {
               ReplayQuery(queue[i], cancellationTokenSource.Token);
             }
           }
+
         }
       }
       return cancellationTokenSource;

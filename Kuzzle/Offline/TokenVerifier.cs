@@ -43,7 +43,8 @@ namespace KuzzleSdk.Offline {
     public async Task<bool> IsTokenValid() {
       JObject response = await authController.CheckTokenAsync(kuzzle.AuthenticationToken);
 
-      if (response != null) {
+      if (response == null || response["valid"] == null) return false;
+
         bool tokenValid = (bool)response["valid"];
         if (tokenValid) {
           try {
@@ -53,8 +54,8 @@ namespace KuzzleSdk.Offline {
           }
           return true;
         }
-      }
-      return false;
+      
+      return tokenValid;
     }
 
     /// <summary>
