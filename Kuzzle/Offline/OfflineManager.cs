@@ -26,8 +26,6 @@ namespace KuzzleSdk.API.Offline {
     private int maxQueueSize = -1;
     private int minTokenDuration = 3600000;
     private int maxRequestDelay = 1000;
-    private Func<JObject, bool> queueFilter = null;
-    private bool autoRecover = true;
     private IKuzzle kuzzle;
     protected internal ITokenVerifier tokenVerifier;
     protected internal IQueryReplayer queryReplayer;
@@ -60,19 +58,13 @@ namespace KuzzleSdk.API.Offline {
       set { maxRequestDelay = value < 0 ? 0 : value; }
     }
 
-    public Func<JObject, bool> QueueFilter {
-      get { return queueFilter; }
-      set { queueFilter = value; }
-    }
+    public Func<JObject, bool> QueueFilter { get; set; }
 
     /// <summary>
     /// Queue requests when network is down,
     /// and automatically replay them when the SDK successfully reconnects.
     /// </summary>
-    public bool AutoRecover {
-      get { return autoRecover; }
-      set { autoRecover = value; }
-    }
+    public bool AutoRecover { get; set; } = true;
 
     internal OfflineManager(AbstractProtocol networkProtocol, IKuzzle kuzzle) {
       this.networkProtocol = networkProtocol;

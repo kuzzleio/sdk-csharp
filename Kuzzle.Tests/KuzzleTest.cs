@@ -20,20 +20,6 @@ namespace Kuzzle.Tests {
     }
 
     [Fact]
-    public void DispatchTokenExpiredTest() {
-      _kuzzle.AuthenticationToken = "token";
-      bool eventDispatched = false;
-      _kuzzle.EventHandler.TokenExpired += delegate() {
-        eventDispatched = true;
-      };
-
-      _kuzzle.EventHandler.DispatchTokenExpired();
-
-      Assert.Null(_kuzzle.AuthenticationToken);
-      Assert.True(eventDispatched);
-    }
-
-    [Fact]
     public void KuzzleConstructorTest() {
       KuzzleSdk.Kuzzle kuzzle2 = new KuzzleSdk.Kuzzle(_protocol.Object);
 

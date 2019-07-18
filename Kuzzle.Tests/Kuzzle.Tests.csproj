@@ -31,5 +31,6 @@
     <Folder Include="Offline\" />
     <Folder Include="Offline\Query\" />
     <Folder Include="Offline\Subscription\" />
+    <Folder Include="EventHandler\" />
   </ItemGroup>
 </Project>
