@@ -187,7 +187,6 @@ namespace KuzzleSdk {
     public CancellationTokenSource ReplayQueries(Predicate<JObject> predicate, bool resetWaitLogin = true) {
       cancellationTokenSource = new CancellationTokenSource();
       if (resetWaitLogin) WaitLoginToReplay = false;
-
       lock (queue) {
         for (int i = 0; i < queue.Count; i++) {
           if (predicate(queue[i].Query)) {

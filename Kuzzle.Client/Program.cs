@@ -11,6 +11,7 @@ namespace Kuzzle.Client {
       WebSocket socket = new WebSocket(new Uri("ws://localhost:7512"));
       socket.AutoReconnect = true;
       KuzzleSdk.Kuzzle kuzzle = new KuzzleSdk.Kuzzle(socket);
+      kuzzle.Offline.AutoRecover = true;
 
       kuzzle.ConnectAsync(CancellationToken.None).Wait();
 

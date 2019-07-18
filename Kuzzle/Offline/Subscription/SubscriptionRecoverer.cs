@@ -20,9 +20,11 @@ namespace KuzzleSdk.Offline.Subscription {
     private IRealtimeController realtimeController;
     private List<Subscription> subscriptions = new List<Subscription>();
 
-    public SubscriptionRecoverer(IOfflineManager offlineManager, IRealtimeController realtimeController) {
-      this.realtimeController = realtimeController;
-      
+    public SubscriptionRecoverer(IOfflineManager offlineManager, IKuzzle kuzzle) {
+      this.realtimeController = kuzzle.GetRealtime();
+      if (kuzzle.GetEventHandler() == null)
+        throw new Exception("NULL");
+      kuzzle.GetEventHandler().Subscription += OnSubscriptionEvent;
     }
 
     private void OnSubscriptionEvent(object sender, SubscriptionEvent subscriptionEvent) {

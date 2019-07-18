@@ -46,11 +46,14 @@ namespace KuzzleSdk.Offline {
       if (response != null) {
         bool tokenValid = (bool)response["valid"];
         if (tokenValid) {
-          await authController.RefreshTokenAsync(offlineManager.MinTokenDuration);
-        }
-        return tokenValid;
-      }
+          try {
+            await authController.RefreshTokenAsync(offlineManager.MinTokenDuration);
+          } catch (Exception e) {
 
+          }
+          return true;
+        }
+      }
       return false;
     }
 
@@ -88,23 +91,23 @@ namespace KuzzleSdk.Offline {
     /// and chose what to do before replaying the Queue
     /// </summary>
     public async Task CheckTokenToReplay() {
-      if (!(await IsTokenValid())) {
-        if (queryReplayer.Lock && offlineManager.AutoRecover) {
-
-            queryReplayer.ReplayQueries((obj) =>
-            obj["controller"] != null
-            && obj["action"] != null
-            && obj["controller"].ToString() == "auth"
-            && obj["action"].ToString() == "login", false);
-
-        }
-      } else {
-       if (offlineManager.AutoRecover) {
+      if (await IsTokenValid()) {
+        if (offlineManager.AutoRecover) {
           queryReplayer.ReplayQueries();
           queryReplayer.Lock = false;
         }
         subscriptionRecoverer.RenewSubscriptions();
+        return;
       }
+
+      if (queryReplayer.Lock && offlineManager.AutoRecover) {
+          queryReplayer.ReplayQueries((obj) =>
+          obj["controller"] != null
+          && obj["action"] != null
+          && obj["controller"].ToString() == "auth"
+          && obj["action"].ToString() == "login", false);
+      }
+
     }
 
   }

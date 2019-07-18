@@ -83,7 +83,7 @@ namespace KuzzleSdk.API.Offline {
 
     internal virtual void InitComponents() {
       queryReplayer = new QueryReplayer(this, kuzzle);
-      subscriptionRecoverer = new SubscriptionRecoverer(this, kuzzle.GetRealtime());
+      subscriptionRecoverer = new SubscriptionRecoverer(this, kuzzle);
       tokenVerifier = new TokenVerifier(this, kuzzle);
     }
 

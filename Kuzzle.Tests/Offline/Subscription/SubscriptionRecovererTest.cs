@@ -18,7 +18,7 @@ namespace Kuzzle.Tests.Offline.Subscription {
     public SubscriptionRecovererTest() {
       mockedNetworkProtocol = new Mock<AbstractProtocol>();
       testableOfflineManager = new TestableOfflineManager(mockedNetworkProtocol.Object, kuzzle);
-      subscriptionRecoverer = new SubscriptionRecoverer(testableOfflineManager, kuzzle.GetKuzzle().GetRealtime());
+      subscriptionRecoverer = new SubscriptionRecoverer(testableOfflineManager, kuzzle);
     }
 
     [Fact]
