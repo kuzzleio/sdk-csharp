@@ -15,7 +15,7 @@ namespace KuzzleSdk.Offline.Subscription {
     void RenewSubscriptions();
   }
 
-  internal class SubscriptionRecoverer : ISubscriptionRecoverer {
+  internal sealed class SubscriptionRecoverer : ISubscriptionRecoverer {
 
     private IRealtimeController realtimeController;
     private List<Subscription> subscriptions = new List<Subscription>();

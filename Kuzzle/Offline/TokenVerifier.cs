@@ -14,7 +14,7 @@ namespace KuzzleSdk.Offline {
     Task CheckTokenToReplay();
   }
 
-  internal class TokenVerifier : ITokenVerifier {
+  internal sealed class TokenVerifier : ITokenVerifier {
 
     private readonly ISubscriptionRecoverer subscriptionRecoverer;
     private readonly IOfflineManager offlineManager;

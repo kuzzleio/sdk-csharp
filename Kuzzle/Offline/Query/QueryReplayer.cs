@@ -27,7 +27,7 @@ namespace KuzzleSdk {
     void CancelReplay();
   }
 
-  public class QueryReplayer : IQueryReplayer {
+  internal sealed class QueryReplayer : IQueryReplayer {
 
     private Int64 startTime;
     private IKuzzle kuzzle;
