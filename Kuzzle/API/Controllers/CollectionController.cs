@@ -6,7 +6,7 @@ namespace KuzzleSdk.API.Controllers {
   /// Implements the "collection" Kuzzle API controller
   /// </summary>
   public class CollectionController : BaseController {
-    internal CollectionController(Kuzzle k) : base(k) { }
+    internal CollectionController(IKuzzleApi api) : base(api) { }
 
     /// <summary>
     /// Creates a new collection in Kuzzle via the persistence engine, in the 
@@ -16,7 +16,7 @@ namespace KuzzleSdk.API.Controllers {
         string index,
         string collection,
         JObject mappings = null) {
-      await kuzzle.QueryAsync(new JObject {
+      await api.QueryAsync(new JObject {
         { "controller", "collection" },
         { "action", "create" },
         { "body", mappings },
@@ -31,7 +31,7 @@ namespace KuzzleSdk.API.Controllers {
     public async Task DeleteSpecificationsAsync(
         string index,
         string collection) {
-      await kuzzle.QueryAsync(new JObject {
+      await api.QueryAsync(new JObject {
         { "controller", "collection" },
         { "action", "deleteSpecifications" },
         { "index", index },
@@ -45,7 +45,7 @@ namespace KuzzleSdk.API.Controllers {
     public async Task<bool> ExistsAsync(
         string index,
         string collection) {
-      Response response = await kuzzle.QueryAsync(new JObject {
+      Response response = await api.QueryAsync(new JObject {
         { "controller", "collection" },
         { "action", "exists" },
         { "index", index },
@@ -61,14 +61,14 @@ namespace KuzzleSdk.API.Controllers {
     public async Task<JObject> GetMappingAsync(
         string index,
         string collection) {
-      Response response = await kuzzle.QueryAsync(new JObject {
+      Response response = await api.QueryAsync(new JObject {
         { "controller", "collection" },
         { "action", "getMapping" },
         { "index", index },
         { "collection", collection }
       });
 
-      return (JObject)response.Result;
+      return (JObject)response.Result[index]["mappings"][collection];
     }
 
     /// <summary>
@@ -78,14 +78,14 @@ namespace KuzzleSdk.API.Controllers {
     public async Task<JObject> GetSpecificationsAsync(
         string index,
         string collection) {
-      Response response = await kuzzle.QueryAsync(new JObject {
+      Response response = await api.QueryAsync(new JObject {
         { "controller", "collection" },
         { "action", "getSpecifications" },
         { "index", index },
         { "collection", collection }
       });
 
-      return (JObject)response.Result;
+      return (JObject)response.Result["validation"];
     }
 
     /// <summary>
@@ -93,19 +93,19 @@ namespace KuzzleSdk.API.Controllers {
     /// The returned list is sorted in alphanumerical order.
     /// </summary>
     public async Task<JObject> ListAsync(
-        string index,
-        Options.ListOptions options = null) {
+      string index, int? from = null, int? size = null, string type = null
+    ) {
       var request = new JObject {
         { "controller", "collection" },
         { "action", "list" },
         { "index", index }
       };
 
-      if (options != null) {
-        request.Merge(JObject.FromObject(options));
-      }
+      if (from != null) request.Add("from", from);
+      if (size != null) request.Add("size", size);
+      if (type != null) request.Add("type", type);
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
       return (JObject)response.Result;
     }
@@ -126,9 +126,9 @@ namespace KuzzleSdk.API.Controllers {
         request.Merge(JObject.FromObject(options));
       }
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
-      return new DataObjects.SearchResults(kuzzle, request, options, response);
+      return new DataObjects.SearchResults(api, request, options, response);
     }
 
     /// <summary>
@@ -138,7 +138,7 @@ namespace KuzzleSdk.API.Controllers {
     public async Task TruncateAsync(
         string index,
         string collection) {
-      await kuzzle.QueryAsync(new JObject {
+      await api.QueryAsync(new JObject {
         { "controller", "collection" },
         { "action", "truncate" },
         { "index", index },
@@ -153,7 +153,7 @@ namespace KuzzleSdk.API.Controllers {
         string index,
         string collection,
         JObject mappings) {
-      await kuzzle.QueryAsync(new JObject {
+      await api.QueryAsync(new JObject {
         { "controller", "collection" },
         { "action", "updateMapping" },
         { "index", index },
@@ -169,7 +169,7 @@ namespace KuzzleSdk.API.Controllers {
         string index,
         string collection,
         JObject specifications) {
-      Response response = await kuzzle.QueryAsync(new JObject {
+      Response response = await api.QueryAsync(new JObject {
         { "controller", "collection" },
         { "action", "updateSpecifications" },
         { "index", index },
@@ -177,21 +177,17 @@ namespace KuzzleSdk.API.Controllers {
         { "body", specifications }
       });
 
-      return (JObject)response.Result;
+      return (JObject)response.Result[index][collection];
     }
 
     /// <summary>
     /// Validates the provided specifications.
     /// </summary>
     public async Task<bool> ValidateSpecificationsAsync(
-        string index,
-        string collection,
         JObject specifications) {
-      Response response = await kuzzle.QueryAsync(new JObject {
+      Response response = await api.QueryAsync(new JObject {
         { "controller", "collection" },
         { "action", "validateSpecifications" },
-        { "index", index },
-        { "collection", collection },
         { "body", specifications }
       });
 

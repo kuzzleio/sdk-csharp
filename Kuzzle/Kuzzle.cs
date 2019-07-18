@@ -6,15 +6,67 @@ using KuzzleSdk.API;
 using KuzzleSdk.API.Controllers;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
+
+[assembly: InternalsVisibleTo("Kuzzle.Tests")]
+
+// Allow using Moq on internal objects/interfaces
+[assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 namespace KuzzleSdk {
   /// <summary>
+  /// Kuzzle API interface.
+  /// </summary>
+  public interface IKuzzleApi {
+    /// <summary>
+    /// Gets or sets the authentication token.
+    /// </summary>
+    /// <value>The authentication token.</value>
+    string AuthenticationToken { get; set; }
+
+    /// <summary>
+    /// Gets the instance identifier.
+    /// </summary>
+    /// <value>The instance identifier.</value>
+    string InstanceId { get; }
+
+    /// <summary>
+    /// Gets the network protocol.
+    /// </summary>
+    /// <value>The network protocol.</value>
+    AbstractProtocol NetworkProtocol { get; }
+
+    /// <summary>
+    /// Sends a query to Kuzzle's API
+    /// </summary>
+    /// <returns>The query response.</returns>
+    /// <param name="query">Kuzzle API query</param>
+    Task<Response> QueryAsync(JObject query);
+
+    /// <summary>
+    /// Dispatches a TokenExpired event.
+    /// </summary>
+    void DispatchTokenExpired();
+
+    /// <summary>
+    /// Occurs when an unhandled response is received.
+    /// </summary>
+    event EventHandler<Response> UnhandledResponse;
+
+    /// <summary>
+    /// Occurs when the authentication token has expired
+    /// </summary>
+    event Action TokenExpired;
+  }
+
+  /// <summary>
   /// Main entry point for this SDK.
   /// </summary>
-  public sealed class Kuzzle {
+  public sealed class Kuzzle : IKuzzleApi {
     private AbstractProtocol networkProtocol;
 
-    private readonly Dictionary<string, TaskCompletionSource<Response>>
+    internal readonly Dictionary<string, TaskCompletionSource<Response>>
         requests = new Dictionary<string, TaskCompletionSource<Response>>();
 
     // General informations
@@ -27,19 +79,19 @@ namespace KuzzleSdk {
     /// <summary>
     /// Instance unique identifier.
     /// </summary>
-    public readonly string InstanceId;
+    public string InstanceId { get; }
 
     // Emitter for all responses not directly linked to a user request
     // (i.e. all real-time notifications)
-    internal event EventHandler<Response> UnhandledResponse;
+    public event EventHandler<Response> UnhandledResponse;
 
     /// <summary>
     /// Token expiration event
     /// </summary>
     public event Action TokenExpired;
 
-    internal void TokenHasExpired() {
-      Jwt = null;
+    public void DispatchTokenExpired() {
+      AuthenticationToken = null;
       TokenExpired?.Invoke();
     }
 
@@ -57,6 +109,11 @@ namespace KuzzleSdk {
     /// Exposes actions from the "document" Kuzzle API controller
     /// </summary>
     public DocumentController Document { get; private set; }
+  
+    /// <summary>
+    /// Exposes actions from the "index" Kuzzle API controller
+    /// </summary>
+    public IndexController Index { get; private set; }
 
     /// <summary>
     /// Exposes actions from the "realtime" Kuzzle API controller
@@ -69,9 +126,24 @@ namespace KuzzleSdk {
     public ServerController Server { get; private set; }
 
     /// <summary>
+    /// Exposes actions from the "admin" Kuzzle API controller
+    /// </summary>
+    public AdminController Admin { get; private set; }
+
+    /// <summary>
     /// Authentication token
     /// </summary>
-    public string Jwt { get; set; }
+    public string AuthenticationToken { get; set; }
+
+    /// <summary>
+    /// Authentication token (deprecated, use AuthenticationToken instead)
+    /// </summary>
+    [Obsolete(
+      "The Jwt property is deprecated, use AuthencationToken instead", false)]
+    string Jwt {
+      get { return AuthenticationToken; }
+      set { AuthenticationToken = value; }
+    }
 
     /// <summary>
     /// Network Protocol
@@ -86,7 +158,7 @@ namespace KuzzleSdk {
           NetworkProtocol.StateChanged -= StateChangeListener;
         }
 
-        Jwt = null;
+        AuthenticationToken = null;
         networkProtocol = value;
       }
     }
@@ -96,13 +168,13 @@ namespace KuzzleSdk {
     /// </summary>
     /// <param name="sender">Network Protocol instance</param>
     /// <param name="payload">raw API Response</param>
-    private void ResponsesListener(object sender, string payload) {
+    internal void ResponsesListener(object sender, string payload) {
       Response response = Response.FromString(payload);
 
       if (requests.ContainsKey(response.Room)) {
         if (response.Error != null) {
           if (response.Error.Message == "Token expired") {
-            TokenHasExpired();
+            DispatchTokenExpired();
           }
 
           requests[response.RequestId].SetException(
@@ -119,7 +191,7 @@ namespace KuzzleSdk {
       }
     }
 
-    private void StateChangeListener(object sender, ProtocolState state) {
+    internal void StateChangeListener(object sender, ProtocolState state) {
       // If not connected anymore: close tasks and clean up the requests buffer
       if (state == ProtocolState.Closed) {
         lock (requests) {
@@ -145,8 +217,10 @@ namespace KuzzleSdk {
       Auth = new AuthController(this);
       Collection = new CollectionController(this);
       Document = new DocumentController(this);
+      Index = new IndexController(this);
       Realtime = new RealtimeController(this);
       Server = new ServerController(this);
+      Admin = new AdminController(this);
 
       // Initializes instance unique properties
       Version = typeof(Kuzzle)
@@ -159,7 +233,7 @@ namespace KuzzleSdk {
     }
 
     /// <summary>
-    /// Releases unmanaged resources and performs other cleanup operations 
+    /// Releases unmanaged resources and performs other cleanup operations
     /// before the <see cref="T:KuzzleSdk.Kuzzle"/>
     /// is reclaimed by garbage collection.
     /// </summary>
@@ -171,8 +245,8 @@ namespace KuzzleSdk {
     /// <summary>
     /// Establish a network connection
     /// </summary>
-    public async Task ConnectAsync() {
-      await NetworkProtocol.ConnectAsync();
+    public async Task ConnectAsync(CancellationToken cancellationToken) {
+      await NetworkProtocol.ConnectAsync(cancellationToken);
     }
 
     /// <summary>
@@ -189,20 +263,25 @@ namespace KuzzleSdk {
     /// <returns>API response</returns>
     /// <param name="query">Kuzzle API query</param>
     public Task<Response> QueryAsync(JObject query) {
+      if (query == null) {
+        throw new Exceptions.InternalException("You must provide a query", 400);
+      }
+
       if (NetworkProtocol.State != ProtocolState.Open) {
         throw new Exceptions.NotConnectedException();
       }
 
-      if (Jwt != null) {
-        query["jwt"] = Jwt;
+      if (AuthenticationToken != null) {
+        query["jwt"] = AuthenticationToken;
       }
 
       string requestId = Guid.NewGuid().ToString();
       query["requestId"] = requestId;
 
-      // Injecting SDK version + instance ID
       if (query["volatile"] == null) {
         query["volatile"] = new JObject();
+      } else if (!(query["volatile"] is JObject)) {
+        throw new Exceptions.InternalException("Volatile data must be a JObject", 400);
       }
 
       query["volatile"]["sdkVersion"] = Version;

@@ -10,7 +10,7 @@ namespace KuzzleSdk.API.DataObjects {
     /// <summary>
     /// Kuzzle instance 
     /// </summary>
-    protected readonly Kuzzle kuzzle;
+    protected readonly IKuzzleApi api;
 
     /// <summary>
     /// Search options
@@ -53,9 +53,9 @@ namespace KuzzleSdk.API.DataObjects {
     public string ScrollId { get; private set; }
 
     internal SearchResults(
-        Kuzzle kuzzle, JObject request, SearchOptions options,
+        IKuzzleApi api, JObject request, SearchOptions options,
         Response response, int previouslyFetched = 0) {
-      this.kuzzle = kuzzle;
+      this.api = api;
       this.options = new SearchOptions(options);
       this.request = (JObject)request.DeepClone();
 
@@ -133,9 +133,9 @@ namespace KuzzleSdk.API.DataObjects {
 
       nextRequest.Merge(JObject.FromObject(options));
 
-      Response response = await kuzzle.QueryAsync(nextRequest);
+      Response response = await api.QueryAsync(nextRequest);
 
-      return new SearchResults(kuzzle, nextRequest, options, response, Fetched);
+      return new SearchResults(api, nextRequest, options, response, Fetched);
     }
   }
 }

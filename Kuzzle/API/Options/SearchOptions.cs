@@ -7,19 +7,34 @@ namespace KuzzleSdk.API.Options {
     /// <summary>
     /// Pagination start index
     /// </summary>
-    [JsonProperty(PropertyName = "from")]
+    [
+      JsonProperty(
+        PropertyName = "from",
+        NullValueHandling = NullValueHandling.Ignore
+      )
+    ]
     public int? From { get; set; }
 
     /// <summary>
     /// Number of hits per result page.
     /// </summary>
-    [JsonProperty(PropertyName = "size")]
+    [
+      JsonProperty(
+        PropertyName = "size",
+        NullValueHandling = NullValueHandling.Ignore
+      )
+    ]
     public int? Size { get; set; }
 
     /// <summary>
     /// Scroll duration (setting this value creates a new scroll cursor)
     /// </summary>
-    [JsonProperty(PropertyName = "scroll")]
+    [
+      JsonProperty(
+        PropertyName = "scroll",
+        NullValueHandling = NullValueHandling.Ignore
+      )
+    ]
     public string Scroll { get; set; }
 
     /// <summary>
@@ -29,7 +44,10 @@ namespace KuzzleSdk.API.Options {
       if (src != null) {
         From = src.From;
         Size = src.Size;
-        Scroll = string.Copy(src.Scroll);
+
+        if (src.Scroll != null) {
+          Scroll = string.Copy(src.Scroll);
+        }
       }
     }
 

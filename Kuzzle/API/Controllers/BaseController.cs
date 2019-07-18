@@ -6,10 +6,10 @@
     /// <summary>
     /// Kuzzle instance.
     /// </summary>
-    protected readonly Kuzzle kuzzle;
+    protected readonly IKuzzleApi api;
 
-    internal BaseController(Kuzzle k) {
-      kuzzle = k;
+    internal BaseController(IKuzzleApi k) {
+      api = k;
     }
   }
 }

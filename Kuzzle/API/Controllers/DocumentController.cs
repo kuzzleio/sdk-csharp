@@ -8,24 +8,13 @@ namespace KuzzleSdk.API.Controllers {
   /// Implements the "document" Kuzzle API controller
   /// </summary>
   public sealed class DocumentController : BaseController {
-    /// <summary>
-    /// Sets document options inside the provided JSON object
-    /// /!\ MUTATES THE PROVIDED OBJECT /!\
-    /// Should only be used on object created internally.
-    /// </summary>
-    private void ApplyOptions(JObject obj, DocumentOptions opts) {
-      if (opts != null) {
-        if (opts.WaitForRefresh) {
-          obj["refresh"] = "wait_for";
-        }
-
-        if (opts.RetryOnConflict != null) {
-          obj["retryOnConflict"] = opts.RetryOnConflict;
-        }
+    private void HandleRefreshOption(JObject query, bool waitForRefresh) {
+      if (waitForRefresh) {
+        query.Add("refresh", "wait_for");
       }
     }
 
-    internal DocumentController(Kuzzle k) : base(k) { }
+    internal DocumentController(IKuzzleApi api) : base(api) { }
 
     /// <summary>
     /// Counts documents in a collection.
@@ -33,10 +22,11 @@ namespace KuzzleSdk.API.Controllers {
     /// the total number of documents in the collection.
     /// </summary>
     public async Task<int> CountAsync(
-        string index,
-        string collection,
-        JObject query = null) {
-      Response response = await kuzzle.QueryAsync(new JObject {
+      string index,
+      string collection,
+      JObject query = null
+    ) {
+      Response response = await api.QueryAsync(new JObject {
         { "controller", "document" },
         { "action", "count" },
         { "body", query },
@@ -51,11 +41,13 @@ namespace KuzzleSdk.API.Controllers {
     /// Creates a new document in the persistent data storage.
     /// </summary>
     public async Task<JObject> CreateAsync(
-        string index,
-        string collection,
-        JObject content,
-        string id = null,
-        DocumentOptions options = null) {
+      string index,
+      string collection,
+      JObject content,
+      string id = null,
+      bool waitForRefresh = false
+    ) {
+
       var query = new JObject {
         { "controller", "document" },
         { "action", "create" },
@@ -65,9 +57,9 @@ namespace KuzzleSdk.API.Controllers {
         { "_id", id }
       };
 
-      ApplyOptions(query, options);
+      HandleRefreshOption(query, waitForRefresh);
 
-      Response response = await kuzzle.QueryAsync(query);
+      Response response = await api.QueryAsync(query);
 
       return (JObject)response.Result;
     }
@@ -76,11 +68,12 @@ namespace KuzzleSdk.API.Controllers {
     /// Creates a new document, or replaces its content if it already exists.
     /// </summary>
     public async Task<JObject> CreateOrReplaceAsync(
-        string index,
-        string collection,
-        string id,
-        JObject content,
-        DocumentOptions options = null) {
+      string index,
+      string collection,
+      string id,
+      JObject content,
+      bool waitForRefresh = false
+    ) {
       var query = new JObject {
         { "controller", "document" },
         { "action", "createOrReplace" },
@@ -90,9 +83,9 @@ namespace KuzzleSdk.API.Controllers {
         { "_id", id }
       };
 
-      ApplyOptions(query, options);
+      HandleRefreshOption(query, waitForRefresh);
 
-      Response response = await kuzzle.QueryAsync(query);
+      Response response = await api.QueryAsync(query);
 
       return (JObject)response.Result;
     }
@@ -101,10 +94,11 @@ namespace KuzzleSdk.API.Controllers {
     /// Deletes a document.
     /// </summary>
     public async Task<string> DeleteAsync(
-        string index,
-        string collection,
-        string id,
-        DocumentOptions options = null) {
+      string index,
+      string collection,
+      string id,
+      bool waitForRefresh = false
+    ) {
       var query = new JObject {
         { "controller", "document" },
         { "action", "delete" },
@@ -113,9 +107,9 @@ namespace KuzzleSdk.API.Controllers {
         { "_id", id }
       };
 
-      ApplyOptions(query, options);
+      HandleRefreshOption(query, waitForRefresh);
 
-      Response response = await kuzzle.QueryAsync(query);
+      Response response = await api.QueryAsync(query);
 
       return (string)response.Result["_id"];
     }
@@ -125,10 +119,10 @@ namespace KuzzleSdk.API.Controllers {
     /// An empty or null query will match all documents in the collection.
     /// </summary>
     public async Task<JArray> DeleteByQueryAsync(
-        string index,
-        string collection,
-        JObject query,
-        DocumentOptions options = null) {
+      string index,
+      string collection,
+      JObject query
+    ) {
       var request = new JObject {
         { "controller", "document" },
         { "action", "deleteByQuery" },
@@ -137,9 +131,7 @@ namespace KuzzleSdk.API.Controllers {
         { "collection", collection }
       };
 
-      ApplyOptions(query, options);
-
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
       return (JArray)response.Result["hits"];
     }
@@ -148,9 +140,10 @@ namespace KuzzleSdk.API.Controllers {
     /// Gets a document.
     /// </summary>
     public async Task<JObject> GetAsync(
-        string index,
-        string collection,
-        string id) {
+      string index,
+      string collection,
+      string id
+    ) {
       var query = new JObject {
         { "controller", "document" },
         { "action", "get" },
@@ -159,7 +152,7 @@ namespace KuzzleSdk.API.Controllers {
         { "_id", id }
       };
 
-      Response response = await kuzzle.QueryAsync(query);
+      Response response = await api.QueryAsync(query);
 
       return (JObject)response.Result;
     }
@@ -170,10 +163,11 @@ namespace KuzzleSdk.API.Controllers {
     /// creations fail.
     /// </summary>
     public async Task<JArray> MCreateAsync(
-        string index,
-        string collection,
-        JArray documents,
-        DocumentOptions options = null) {
+      string index,
+      string collection,
+      JArray documents,
+      bool waitForRefresh = false
+    ) {
       var request = new JObject {
         { "controller", "document" },
         { "action", "mCreate" },
@@ -182,9 +176,9 @@ namespace KuzzleSdk.API.Controllers {
         { "collection", collection }
       };
 
-      ApplyOptions(request, options);
+      HandleRefreshOption(request, waitForRefresh);
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
       return (JArray)response.Result["hits"];
     }
@@ -195,10 +189,11 @@ namespace KuzzleSdk.API.Controllers {
     /// creations/replacements fail.
     /// </summary>
     public async Task<JArray> MCreateOrReplaceAsync(
-        string index,
-        string collection,
-        JArray documents,
-        DocumentOptions options = null) {
+      string index,
+      string collection,
+      JArray documents,
+      bool waitForRefresh = false
+    ) {
       var request = new JObject {
         { "controller", "document" },
         { "action", "mCreateOrReplace" },
@@ -207,9 +202,9 @@ namespace KuzzleSdk.API.Controllers {
         { "collection", collection }
       };
 
-      ApplyOptions(request, options);
+      HandleRefreshOption(request, waitForRefresh);
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
       return (JArray)response.Result["hits"];
     }
@@ -220,10 +215,11 @@ namespace KuzzleSdk.API.Controllers {
     /// deletions fail.
     /// </summary>
     public async Task<JArray> MDeleteAsync(
-        string index,
-        string collection,
-        JArray ids,
-        DocumentOptions options = null) {
+      string index,
+      string collection,
+      JArray ids,
+      bool waitForRefresh = false
+    ) {
       var request = new JObject {
         { "controller", "document" },
         { "action", "mDelete" },
@@ -232,11 +228,11 @@ namespace KuzzleSdk.API.Controllers {
         { "collection", collection }
       };
 
-      ApplyOptions(request, options);
+      HandleRefreshOption(request, waitForRefresh);
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
-      return (JArray)response.Result["hits"];
+      return (JArray)response.Result;
     }
 
     /// <summary>
@@ -245,9 +241,10 @@ namespace KuzzleSdk.API.Controllers {
     /// be retrieved.
     /// </summary>
     public async Task<JArray> MGetAsync(
-        string index,
-        string collection,
-        JArray ids) {
+      string index,
+      string collection,
+      JArray ids
+    ) {
       var request = new JObject {
         { "controller", "document" },
         { "action", "mGet" },
@@ -256,7 +253,7 @@ namespace KuzzleSdk.API.Controllers {
         { "collection", collection }
       };
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
       return (JArray)response.Result["hits"];
     }
@@ -267,10 +264,11 @@ namespace KuzzleSdk.API.Controllers {
     /// be replaced.
     /// </summary>
     public async Task<JArray> MReplaceAsync(
-        string index,
-        string collection,
-        JArray documents,
-        DocumentOptions options = null) {
+      string index,
+      string collection,
+      JArray documents,
+      bool waitForRefresh = false
+    ) {
       var request = new JObject {
         { "controller", "document" },
         { "action", "mReplace" },
@@ -279,9 +277,9 @@ namespace KuzzleSdk.API.Controllers {
         { "collection", collection }
       };
 
-      ApplyOptions(request, options);
+      HandleRefreshOption(request, waitForRefresh);
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
       return (JArray)response.Result["hits"];
     }
@@ -292,21 +290,24 @@ namespace KuzzleSdk.API.Controllers {
     /// be replaced.
     /// </summary>
     public async Task<JArray> MUpdateAsync(
-        string index,
-        string collection,
-        JArray documents,
-        DocumentOptions options = null) {
+      string index,
+      string collection,
+      JArray documents,
+      bool waitForRefresh = false,
+      int retryOnConflict = 0
+    ) {
       var request = new JObject {
         { "controller", "document" },
         { "action", "mUpdate" },
         { "body", new JObject{ { "documents", documents } } },
         { "index", index },
-        { "collection", collection }
+        { "collection", collection },
+        { "retryOnConflict", retryOnConflict }
       };
 
-      ApplyOptions(request, options);
+      HandleRefreshOption(request, waitForRefresh);
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
       return (JArray)response.Result["hits"];
     }
@@ -315,11 +316,12 @@ namespace KuzzleSdk.API.Controllers {
     /// Replaces the content of an existing document.
     /// </summary>
     public async Task<JObject> ReplaceAsync(
-        string index,
-        string collection,
-        string id,
-        JObject content,
-        DocumentOptions options = null) {
+      string index,
+      string collection,
+      string id,
+      JObject content,
+      bool waitForRefresh = false
+    ) {
       var request = new JObject {
         { "controller", "document" },
         { "action", "replace" },
@@ -329,9 +331,9 @@ namespace KuzzleSdk.API.Controllers {
         { "_id", id }
       };
 
-      ApplyOptions(request, options);
+      HandleRefreshOption(request, waitForRefresh);
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
       return (JObject)response.Result;
     }
@@ -340,10 +342,9 @@ namespace KuzzleSdk.API.Controllers {
     /// Searches documents.
     /// </summary>
     public async Task<SearchResults> SearchAsync(
-        string index,
-        string collection,
-        JObject query,
-        SearchOptions options = null) {
+      string index, string collection, JObject query,
+      SearchOptions options = null
+    ) {
       var request = new JObject {
         { "controller", "document" },
         { "action", "search" },
@@ -356,33 +357,34 @@ namespace KuzzleSdk.API.Controllers {
         request.Merge(JObject.FromObject(options));
       }
 
-      System.Console.WriteLine(request);
-
-      Response response = await kuzzle.QueryAsync(request);
-      return new SearchResults(kuzzle, request, options, response);
+      Response response = await api.QueryAsync(request);
+      return new SearchResults(api, request, options, response);
     }
 
     /// <summary>
     /// Updates a document content.
     /// </summary>
     public async Task<JObject> UpdateAsync(
-        string index,
-        string collection,
-        string id,
-        JObject changes,
-        DocumentOptions options = null) {
+      string index,
+      string collection,
+      string id,
+      JObject changes,
+      bool waitForRefresh = false,
+      int retryOnConflict = 0
+    ) {
       var request = new JObject {
         { "controller", "document" },
         { "action", "update" },
         { "body", changes },
         { "index", index },
         { "collection", collection },
-        { "_id", id }
+        { "_id", id },
+        { "retryOnConflict", retryOnConflict }
       };
 
-      ApplyOptions(request, options);
+      HandleRefreshOption(request, waitForRefresh);
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
       return (JObject)response.Result;
     }
@@ -393,10 +395,11 @@ namespace KuzzleSdk.API.Controllers {
     /// the provided index and collection.
     /// This request does not store the document.
     /// </summary>
-    public async Task<JObject> ValidateAsync(
-        string index,
-        string collection,
-        JObject content) {
+    public async Task<bool> ValidateAsync(
+      string index,
+      string collection,
+      JObject content
+    ) {
       var request = new JObject {
         { "controller", "document" },
         { "action", "validate" },
@@ -405,9 +408,9 @@ namespace KuzzleSdk.API.Controllers {
         { "collection", collection }
       };
 
-      Response response = await kuzzle.QueryAsync(request);
+      Response response = await api.QueryAsync(request);
 
-      return (JObject)response.Result;
+      return (bool)response.Result["valid"];
     }
   }
 }
