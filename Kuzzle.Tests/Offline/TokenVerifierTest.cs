@@ -111,20 +111,22 @@ namespace Kuzzle.Tests.Offline {
 
       await tokenVerifier.CheckTokenToReplay();
 
+      if (!autoRecover) {
+        testableOfflineManager.mockedQueryReplayer.Verify(obj => obj.ReplayQueries(true), Times.Never);
+        testableOfflineManager.mockedSubscriptionRecoverer.Verify(obj => obj.RenewSubscriptions(), Times.Never);
+        return;
+      }
+
       if (!tokenValid) {
-        if (autoRecover && locked) {
+        if (locked) {
           testableOfflineManager.mockedQueryReplayer.Verify(obj => obj.ReplayQueries(It.IsAny<Predicate<JObject>>(), false), Times.Once);
           return;
         }
         testableOfflineManager.mockedQueryReplayer.Verify(obj => obj.ReplayQueries(true), Times.Never);
       } else {
-        if (autoRecover) {
           testableOfflineManager.mockedQueryReplayer.Verify(obj => obj.ReplayQueries(true), Times.Once);
           Assert.False(testableOfflineManager.GetQueryReplayer().Lock);
-        } else {
-          testableOfflineManager.mockedQueryReplayer.Verify(obj => obj.ReplayQueries(true), Times.Never);
-        }
-        testableOfflineManager.mockedSubscriptionRecoverer.Verify(obj => obj.RenewSubscriptions(), Times.Once);
+          testableOfflineManager.mockedSubscriptionRecoverer.Verify(obj => obj.RenewSubscriptions(), Times.Once);
       }
     }
   }

@@ -22,10 +22,7 @@ namespace KuzzleSdk.EventHandler {
     private static readonly object tokenExpiredEventKey = new object();       // Public
 
     /// <summary>
-    /// Occurs when subscription has to be :
-    /// - Added
-    /// - Removed
-    /// - Cleared
+    /// Occurs when we have to [add, remove, clear] subscriptions :
     /// </summary>
     public event EventHandler<SubscriptionEvent> Subscription {
       add {
@@ -38,7 +35,9 @@ namespace KuzzleSdk.EventHandler {
     }
 
     public void DispatchSubscription(SubscriptionEvent subscriptionData) {
-      EventHandler<SubscriptionEvent> subscriptionEvent = (EventHandler<SubscriptionEvent>)eventHandlerList[subscriptionEventKey];
+      EventHandler<SubscriptionEvent> subscriptionEvent =
+      (EventHandler<SubscriptionEvent>)eventHandlerList[subscriptionEventKey];
+
       subscriptionEvent?.Invoke(this, subscriptionData);
     }
 
@@ -56,7 +55,9 @@ namespace KuzzleSdk.EventHandler {
     }
 
     public void DispatchUserLoggedIn(string username) {
-      EventHandler<UserLoggedInEvent> userLoggedIn = (EventHandler<UserLoggedInEvent>)eventHandlerList[userLoggedInEventKey];
+      EventHandler<UserLoggedInEvent> userLoggedIn =
+      (EventHandler<UserLoggedInEvent>)eventHandlerList[userLoggedInEventKey];
+
       userLoggedIn?.Invoke(this, new UserLoggedInEvent(username));
     }
 
@@ -110,7 +111,9 @@ namespace KuzzleSdk.EventHandler {
     }
 
     public void DispatchUnhandledResponse(Response response) {
-      EventHandler<Response> unhandledResponse = (EventHandler<Response>)eventHandlerList[unhandledResponseEventKey];
+      EventHandler<Response> unhandledResponse =
+      (EventHandler<Response>)eventHandlerList[unhandledResponseEventKey];
+
       unhandledResponse?.Invoke(this, response);
     }
 

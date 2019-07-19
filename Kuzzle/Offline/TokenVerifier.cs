@@ -46,7 +46,7 @@ namespace KuzzleSdk.Offline {
       if (response == null || response["valid"] == null) return false;
 
         bool tokenValid = (bool)response["valid"];
-        if (tokenValid) {
+        if (tokenValid && offlineManager.MinTokenDuration > -1) {
           try {
             await authController.RefreshTokenAsync(offlineManager.MinTokenDuration);
           } catch (Exception e) {
@@ -68,7 +68,7 @@ namespace KuzzleSdk.Offline {
       if (previousUsername != e.Username) {
 
         if (offlineManager.AutoRecover && queryReplayer.WaitLoginToReplay) {
-            queryReplayer.RejectAllQueries(new Exceptions.ConnectionLostException());
+            queryReplayer.RejectAllQueries(new Exception("Unauthorized"));
             queryReplayer.Lock = false;
             queryReplayer.WaitLoginToReplay = false;
         }
@@ -76,7 +76,7 @@ namespace KuzzleSdk.Offline {
         subscriptionRecoverer.Clear();
       } else {
 
-        if (queryReplayer.WaitLoginToReplay && offlineManager.AutoRecover) {
+        if (offlineManager.AutoRecover && queryReplayer.WaitLoginToReplay) {
             queryReplayer.ReplayQueries();
             queryReplayer.Lock = false;
             queryReplayer.WaitLoginToReplay = false;
@@ -92,16 +92,16 @@ namespace KuzzleSdk.Offline {
     /// and chose what to do before replaying the Queue
     /// </summary>
     public async Task CheckTokenToReplay() {
+      if (!offlineManager.AutoRecover) return;
+
       if (await IsTokenValid()) {
-        if (offlineManager.AutoRecover) {
           queryReplayer.ReplayQueries();
           queryReplayer.Lock = false;
-        }
-        subscriptionRecoverer.RenewSubscriptions();
-        return;
+          subscriptionRecoverer.RenewSubscriptions();
+          return;
       }
 
-      if (queryReplayer.Lock && offlineManager.AutoRecover) {
+      if (queryReplayer.Lock) {
           queryReplayer.ReplayQueries((obj) =>
           obj["controller"] != null
           && obj["action"] != null

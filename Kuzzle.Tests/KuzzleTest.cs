@@ -8,6 +8,8 @@ using System;
 using System.Threading.Tasks;
 using Moq;
 using System.Threading;
+using KuzzleSdk.API.Offline;
+using KuzzleSdk.EventHandler;
 
 namespace Kuzzle.Tests {
   public class KuzzleTest {
@@ -29,6 +31,8 @@ namespace Kuzzle.Tests {
       Assert.IsType<IndexController>(_kuzzle.Index);
       Assert.IsType<RealtimeController>(_kuzzle.Realtime);
       Assert.IsType<ServerController>(_kuzzle.Server);
+      Assert.IsType<OfflineManager>(_kuzzle.Offline);
+      Assert.IsType<KuzzleEventHandler>(_kuzzle.EventHandler);
       Assert.NotEqual(_kuzzle.InstanceId, kuzzle2.InstanceId);
     }
 

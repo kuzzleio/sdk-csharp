@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using KuzzleSdk.API.Controllers;
 using KuzzleSdk.API.Offline;
-using KuzzleSdk.Protocol;
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk {
@@ -172,7 +170,14 @@ namespace KuzzleSdk {
     /// Replay one query.
     /// </summary>
     internal Task ReplayOneQuery(TimedQuery timedQuery, CancellationToken cancellationToken) {
-        return Task.Run(async () => {
+      if (offlineManager.MaxRequestDelay == 0) {
+        if (offlineManager.QueueFilter == null || offlineManager.QueueFilter(timedQuery.Query)) {
+          offlineManager.GetNetworkProtocol().Send(timedQuery.Query);
+        }
+        return null;
+      }
+
+      return Task.Run(async () => {
           if (offlineManager.QueueFilter == null || offlineManager.QueueFilter(timedQuery.Query)) {
             cancellationToken.ThrowIfCancellationRequested();
             await Task.Delay((Int32)timedQuery.Time, cancellationToken);
