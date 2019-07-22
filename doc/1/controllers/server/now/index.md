@@ -11,7 +11,7 @@ Returns the current server timestamp, in Epoch-millis format.
 
 ## Signature
 
-```cs
+```csharp
 async Task<Int64> NowAsync()
 ```
 

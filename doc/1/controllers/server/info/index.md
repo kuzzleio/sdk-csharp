@@ -11,7 +11,7 @@ Returns information about Kuzzle: available API (base + extended), plugins, exte
 
 ## Signature
 
-```cs
+```csharp
 async Task<JObject> InfoAsync()
 ```
 

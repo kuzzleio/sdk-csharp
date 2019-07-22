@@ -15,7 +15,7 @@ This route should only be accessible to administrators, as it might return sensi
 
 ## Signature
 
-```cs
+```csharp
 async Task<JObject> GetConfigAsync()
 ```
 
