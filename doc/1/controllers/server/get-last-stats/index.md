@@ -19,7 +19,7 @@ These statistics include:
 
 ## Signature
 
-```cs
+```csharp
 async Task<JObject> GetLastStatsAsync()
 ```
 

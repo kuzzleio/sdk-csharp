@@ -11,7 +11,7 @@ Checks that an administrator account exists.
 
 ## Signature
 
-```cs
+```csharp
 async Task<bool> AdminExistsAsync()
 ```
 
