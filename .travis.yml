@@ -26,6 +26,17 @@ jobs:
       script:
         - docker-compose -f .ci/doc/docker-compose.yml run doc-tests node index
 
+    - stage: Tests
+      name: Dead link check
+      if: type = pull_request OR type = push AND branch =~ /^master|[0-9]+-(dev|stable)$/ OR type = cron
+
+      before_script:
+        - npm run doc-prepare
+        - npm run --prefix doc/framework clone-repos
+        - gem install typhoeus
+      script:
+        - HYDRA_MAX_CONCURRENCY=20 npm run --prefix doc/framework dead-links
+
     - stage: "Deployments"
       name: "NuGet"
       if: tag IS present AND branch = master
