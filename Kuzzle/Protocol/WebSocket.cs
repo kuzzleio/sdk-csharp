@@ -32,7 +32,7 @@ namespace KuzzleSdk.Protocol {
   public class WebSocket : AbstractProtocol {
     private const int receiveBufferSize = 64 * 1024;
     private const int sendBufferSize = 8 * 1024;
-    internal dynamic socket;
+    internal IClientWebSocket socket;
     private readonly Uri uri;
     private CancellationTokenSource receiveCancellationToken;
     private CancellationTokenSource sendCancellationToken;
@@ -42,8 +42,8 @@ namespace KuzzleSdk.Protocol {
     private readonly BlockingCollection<JObject> sendQueue =
       new BlockingCollection<JObject>();
 
-    internal virtual dynamic CreateClientSocket() {
-      var s = new ClientWebSocket();
+    internal virtual IClientWebSocket CreateClientSocket() {
+      dynamic s = new ClientWebSocket();
 
       s.Options.SetBuffer(receiveBufferSize, sendBufferSize);
       return s;
@@ -109,8 +109,7 @@ namespace KuzzleSdk.Protocol {
               WebSocketMessageType.Text,
               true,
               sendCancellationToken.Token);
-          }
-          catch (Exception e) {
+          } catch (Exception e) {
             CloseState();
             throw e;
           }
@@ -127,14 +126,13 @@ namespace KuzzleSdk.Protocol {
 
         while (socket.State == WebSocketState.Open) {
           string message = "";
-          
+
           do {
             try {
               wsResult = await socket.ReceiveAsync(
                 incomingBuffer,
                 receiveCancellationToken.Token);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
               CloseState();
               throw e;
             }

@@ -18,7 +18,7 @@ namespace Kuzzle.Tests.Protocol {
       };
     }
 
-    internal override dynamic CreateClientSocket() {
+    internal override IClientWebSocket CreateClientSocket() {
       MockSocket = new Mock<IClientWebSocket>();
 
       MockSocket
