@@ -5,3 +5,5 @@ hooks:
   after:
 template: withJObject
 expected: ^(Last Kuzzle stats:) {("connections":{.*}),("ongoingRequests":{.*}),("completedRequests":{.*}),("failedRequests":{.*}),("timestamp":[0-9]{13})}$
+sdk: csharp
+version: 0
