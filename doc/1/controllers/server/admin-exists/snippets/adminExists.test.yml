@@ -5,3 +5,5 @@ hooks:
   after:
 template: default
 expected: ^(Admin exists\?) (True|False)$
+sdk: csharp
+version: 0
