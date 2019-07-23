@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: getConfig
+title: GetConfigAsync
 description: Returns the current Kuzzle configuration.
 ---
 
-# getConfig
+# GetConfigAsync
 
 Returns the current Kuzzle configuration.
 

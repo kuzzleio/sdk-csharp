@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: now
+title: NowAsync
 description: Returns the current server timestamp, in Epoch-millis
 ---
 
-# now
+# NowAsync
 
 Returns the current server timestamp, in Epoch-millis format.
 

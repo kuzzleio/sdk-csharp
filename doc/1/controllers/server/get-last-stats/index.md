@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: getLastStats
+title: GetLastStatsAsync
 description: Returns the most recent statistics snapshot.
 ---
 
-# getLastStats
+# GetLastStatsAsync
 
 Returns the most recent statistics snapshot.
 By default, snapshots are made every 10 seconds and they are stored for 1 hour.

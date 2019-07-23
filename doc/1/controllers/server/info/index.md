@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: info
+title: InfoAsync
 description: Returns information about Kuzzle server.
 ---
 
-# info
+# InfoAsync
 
 Returns information about Kuzzle: available API (base + extended), plugins, external services (Redis, Elasticsearch, ...), servers, etc.
 
