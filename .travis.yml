@@ -6,30 +6,30 @@ env:
 
 jobs:
   include:
-    # - stage: Tests
-    #   name: Unit Tests
-    #   if: type = pull_request OR type = push AND branch =~ /^master|[0-9]+-dev$/ OR type = cron
-    #   language: csharp
-    #   solution: sdk-csharp.sln
-    #   sudo: required
-    #   dist: xenial
-    #   dotnet: 2.2
-    #   mono: latest
-    #   install:
-    #     - dotnet restore
+    - stage: Tests
+      name: Unit Tests
+      if: type = pull_request OR type = push AND branch =~ /^master|[0-9]+-dev$/ OR type = cron
+      language: csharp
+      solution: sdk-csharp.sln
+      sudo: required
+      dist: xenial
+      dotnet: 2.2
+      mono: latest
+      install:
+        - dotnet restore
 
-    #   script:
-    #     - dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=$TRAVIS_BUILD_DIR/lcov.info
-    #     - curl -s https://codecov.io/bash > codecov && bash codecov
+      script:
+        - dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=$TRAVIS_BUILD_DIR/lcov.info
+        - curl -s https://codecov.io/bash > codecov && bash codecov
 
-    # - stage: Tests
-    #   name: Documentation Snippets
-    #   if: type = pull_request OR type = push AND branch =~ /^master|[0-9]+-dev$/ OR type = cron
-    #   language: node_js
-    #   node_js: 10
+    - stage: Tests
+      name: Documentation Snippets
+      if: type = pull_request OR type = push AND branch =~ /^master|[0-9]+-dev$/ OR type = cron
+      language: node_js
+      node_js: 10
 
-    #   script:
-    #     - docker-compose -f .ci/doc/docker-compose.yml run doc-tests node index
+      script:
+        - docker-compose -f .ci/doc/docker-compose.yml run doc-tests node index
 
     - stage: Tests
       name: Dead link check
@@ -44,28 +44,28 @@ jobs:
         - gem install typhoeus
         - HYDRA_MAX_CONCURRENCY=20 npm run --prefix doc/framework dead-links
 
-    # - stage: Deployments
-    #   name: NuGet
-    #   if: tag IS present AND branch = master
-    #   language: csharp
-    #   solution: sdk-csharp.sln
-    #   sudo: required
-    #   dist: xenial
-    #   dotnet: 2.2
-    #   mono: latest
-    #   install:
-    #     - dotnet restore
+    - stage: Deployments
+      name: NuGet
+      if: tag IS present AND branch = master
+      language: csharp
+      solution: sdk-csharp.sln
+      sudo: required
+      dist: xenial
+      dotnet: 2.2
+      mono: latest
+      install:
+        - dotnet restore
 
-    #   script:
-    #     # incompatibilities with msbuild, so building with .net core instead
-    #     - dotnet build $TRAVIS_BUILD_DIR/Kuzzle/Kuzzle.csproj -c Release
-    #     - dotnet build $TRAVIS_BUILD_DIR/Kuzzle.Tests/Kuzzle.Tests.csproj
+      script:
+        # incompatibilities with msbuild, so building with .net core instead
+        - dotnet build $TRAVIS_BUILD_DIR/Kuzzle/Kuzzle.csproj -c Release
+        - dotnet build $TRAVIS_BUILD_DIR/Kuzzle.Tests/Kuzzle.Tests.csproj
 
-      # deploy:
-      #   skip_cleanup: true
-      #   email: support@kuzzle.io
-      #   provider: script
-      #   script: bash deploy.sh
+      deploy:
+        skip_cleanup: true
+        email: support@kuzzle.io
+        provider: script
+        script: bash deploy.sh
 
     - stage: Deployment Doc Dev
       name: Deploy next-docs.kuzzle.io
@@ -102,37 +102,37 @@ jobs:
       after_deploy:
         - npm run doc-cloudfront
 
-    # - stage: Deployment Doc Prod
-    #   name: Deploy docs.kuzzle.io
-    #   if: branch = master
-    #   language: node_js
-    #   node_js: 10
-    #   env:
-    #     - NODE_ENV=production
-    #     - S3_BUCKET=docs.kuzzle.io
-    #     - CLOUDFRONT_DISTRIBUTION_ID=E3D6RP0POLCJMM
-    #     - AWS_DEFAULT_REGION=us-west-2
+    - stage: Deployment Doc Prod
+      name: Deploy docs.kuzzle.io
+      if: branch = master
+      language: node_js
+      node_js: 10
+      env:
+        - NODE_ENV=production
+        - S3_BUCKET=docs.kuzzle.io
+        - CLOUDFRONT_DISTRIBUTION_ID=E3D6RP0POLCJMM
+        - AWS_DEFAULT_REGION=us-west-2
 
-    #   addons:
-    #     apt:
-    #       packages:
-    #         - python
-    #         - python-pip
+      addons:
+        apt:
+          packages:
+            - python
+            - python-pip
 
-    #   install:
-    #     - pip install awscli --upgrade --user
+      install:
+        - pip install awscli --upgrade --user
 
-    #   script:
-    #     - npm run doc-prepare
-    #     - npm run doc-build
+      script:
+        - npm run doc-prepare
+        - npm run doc-build
 
-    #   deploy:
-    #     provider: script
-    #     script:
-    #       - npm run doc-upload
-    #     skip_cleanup: true
-    #     on:
-    #       branch: master
+      deploy:
+        provider: script
+        script:
+          - npm run doc-upload
+        skip_cleanup: true
+        on:
+          branch: master
 
-    #   after_deploy:
-    #     - npm run doc-cloudfront
+      after_deploy:
+        - npm run doc-cloudfront
