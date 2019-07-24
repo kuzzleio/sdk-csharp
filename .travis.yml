@@ -67,7 +67,7 @@ jobs:
         provider: script
         script: bash deploy.sh
 
-    - stage: Deployment Doc Dev
+    - stage: Deployments
       name: Deploy next-docs.kuzzle.io
       if: branch = 0-dev
       language: node_js
@@ -102,7 +102,7 @@ jobs:
       after_deploy:
         - npm run doc-cloudfront
 
-    - stage: Deployment Doc Prod
+    - stage: Deployments
       name: Deploy docs.kuzzle.io
       if: branch = master
       language: node_js
