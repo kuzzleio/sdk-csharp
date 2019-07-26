@@ -3,7 +3,7 @@ description: Returns the most recent statistics snapshot.
 hooks:
   before:
   after:
-template: withJObject
+template: default
 expected: ^(Last Kuzzle stats:) {("connections":{.*}),("ongoingRequests":{.*}),("completedRequests":{.*}),("failedRequests":{.*}),("timestamp":[0-9]{13})}$
 sdk: csharp
 version: 0

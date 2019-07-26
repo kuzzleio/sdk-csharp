@@ -3,7 +3,7 @@ description: Returns statistics snapshots within a provided timestamp range.
 hooks:
   before:
   after:
-template: withJObject
+template: default
 expected: ^(Kuzzle stats:) {"hits":\[({"connections":{.*},"ongoingRequests":{.*},"completedRequests":{}.*},"failedRequests":{.*},"timestamp":[0-9]{13}}(,)*)*\],"total":[0-9]+}$
 sdk: csharp
 version: 0
