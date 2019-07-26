@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using KuzzleSdk.Protocol;
 using Moq;
+using Newtonsoft.Json.Linq;
 using Xunit;
 
 namespace Kuzzle.Tests.Protocol {
@@ -10,7 +14,6 @@ namespace Kuzzle.Tests.Protocol {
     internal Mock<IClientWebSocket> MockSocket;
     public int StateChangesCount = 0;
     public ProtocolState LastStateDispatched = ProtocolState.Closed;
-
     public TestableWebSocket(Uri uri) : base(uri) {
       StateChanged += (sender, e) => {
         StateChangesCount++;
@@ -26,7 +29,9 @@ namespace Kuzzle.Tests.Protocol {
           It.IsAny<Uri>(), It.IsAny<CancellationToken>()))
         .Returns(Task.CompletedTask);
 
-      MockSocket.Object.State = System.Net.WebSockets.WebSocketState.Open;
+      MockSocket
+        .SetupGet(s => s.State)
+        .Returns(System.Net.WebSockets.WebSocketState.Open);
 
       return MockSocket.Object;
     }
@@ -39,6 +44,34 @@ namespace Kuzzle.Tests.Protocol {
     public WebSocketTest() {
       uri = new Uri(@"ws://foo:1234");
       _ws = new TestableWebSocket(uri);
+    }
+
+    /// <summary>
+    /// Tries to verify a mock within a timeut
+    /// </summary>
+    /// <param name="mock">Mock</param>
+    /// <param name="timeout">TimeSpan</param>
+    private void TryVerify(Mock mock, TimeSpan? timeout = null) {
+      TimeSpan _timeout = timeout ?? TimeSpan.FromMilliseconds(1000);
+      Exception error = null;
+
+      var task = Task.Run(() => {
+        while (true) {
+          Thread.Sleep(50);
+
+          try {
+            mock.Verify();
+            break;
+          } catch (Exception e) {
+            error = e;
+            continue;
+          }
+        }
+      });
+
+      if (!task.Wait(_timeout)) {
+        throw new Exception($"Test timed out. Last error: {error.Message}");
+      }
     }
 
     [Fact]
@@ -103,6 +136,27 @@ namespace Kuzzle.Tests.Protocol {
 
       Assert.Equal(ProtocolState.Closed, _ws.State);
       Assert.Equal(0, _ws.StateChangesCount);
+    }
+
+    [Fact]
+    public async void SendTest() {
+      var payload = new JObject { { "foo", "bar" } };
+
+      await _ws.ConnectAsync(CancellationToken.None);
+      _ws.MockSocket
+        .Setup(s => s.SendAsync(
+          It.IsAny<ArraySegment<byte>>(),
+          System.Net.WebSockets.WebSocketMessageType.Text,
+          true,
+          It.IsNotIn<CancellationToken>(new List<CancellationToken> {
+            CancellationToken.None
+          })))
+        .Returns(Task.CompletedTask)
+        .Verifiable();
+
+      _ws.Send(payload);
+
+      TryVerify(_ws.MockSocket);
     }
   }
 }

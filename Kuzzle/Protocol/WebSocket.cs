@@ -39,7 +39,7 @@ namespace KuzzleSdk.Protocol {
     private ArraySegment<byte> incomingBuffer =
       System.Net.WebSockets.WebSocket.CreateClientBuffer(
         receiveBufferSize, sendBufferSize);
-    private readonly BlockingCollection<JObject> sendQueue =
+    protected readonly BlockingCollection<JObject> sendQueue =
       new BlockingCollection<JObject>();
 
     internal virtual IClientWebSocket CreateClientSocket() {
