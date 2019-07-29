@@ -1,0 +1,34 @@
+---
+code: true
+type: page
+title: credentialsExist
+description: Check that the current user has credentials for the specified strategy
+---
+
+# credentialsExist
+
+Check that the current user has credentials for the specified strategy.
+
+## Signature
+
+```csharp
+public async Task<bool> CredentialsExistAsync(string strategy);
+```
+
+## Arguments
+
+| Arguments  | Type              | Description     |
+|------------|-------------------|-----------------|
+| `strategy` | <pre>string</pre> | Strategy to use |
+
+## Return
+
+A boolean indicating if credentials exists for the strategy.
+
+## Exceptions
+
+Throws a `KuzzleException` if there is an error. See how to [handle error](/sdk/csharp/1/essentials/error-handling).
+
+## Usage
+
+<<< ./snippets/credentials-exist.cs
