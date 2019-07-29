@@ -25,7 +25,7 @@ namespace KuzzleSdk.Offline {
     /// <summary>
     /// The previous username logged in
     /// </summary>
-    private string previousUsername = "";
+    private string previousKUID = "";
 
     public TokenVerifier(IOfflineManager offlineManager, IKuzzle kuzzle) {
       this.offlineManager = offlineManager;
@@ -65,7 +65,7 @@ namespace KuzzleSdk.Offline {
     /// </summary>
     public void OnUserLoggedIn(object sender, UserLoggedInEvent e) {
 
-      if (previousUsername != e.Username) {
+      if (previousKUID != e.Kuid) {
 
         if (offlineManager.AutoRecover && queryReplayer.WaitLoginToReplay) {
             queryReplayer.RejectAllQueries(new Exception("Unauthorized"));
@@ -84,7 +84,7 @@ namespace KuzzleSdk.Offline {
 
         subscriptionRecoverer.RenewSubscriptions();
       }
-      previousUsername = e.Username;
+      previousKUID = e.Kuid;
     }
 
     /// <summary>

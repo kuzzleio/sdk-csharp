@@ -150,8 +150,8 @@ namespace KuzzleSdk.API.Controllers {
 
       api.AuthenticationToken = (string)response.Result["jwt"];
 
-      if (credentials["username"] != null)
-        api.EventHandler.DispatchUserLoggedIn(credentials["username"].ToString());
+      if (response.Result["_id"] != null)
+        api.EventHandler.DispatchUserLoggedIn(response.Result["_id"].ToString());
 
       return (JObject)response.Result;
     }

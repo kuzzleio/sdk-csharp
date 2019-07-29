@@ -47,7 +47,7 @@ namespace Kuzzle.Tests.EventHandler {
       string name = "";
       _kuzzle.EventHandler.UserLoggedIn += delegate (object sender, UserLoggedInEvent e) {
         eventDispatched = true;
-        name = e.Username;
+        name = e.Kuid;
       };
 
       _kuzzle.EventHandler.DispatchUserLoggedIn("foobar");
