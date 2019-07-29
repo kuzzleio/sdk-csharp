@@ -76,11 +76,11 @@ namespace Kuzzle.Tests.API.Controllers {
     }
   
     [Theory]
-    [InlineData("Some input", "foobar", false, false)]
-    [InlineData("", "documentId", false, false)]
-    [InlineData("Some input", "foobar", true, false)]
-    [InlineData("Some input", "foobar", false, true)]
-    public async void WriteAsyncTestSuccess(string documentInput, string documentId, bool notify, bool waitForRefresh) {
+    [InlineData("foobar", false, false)]
+    [InlineData("documentId", false, false)]
+    [InlineData("foobar", true, false)]
+    [InlineData("foobar", false, true)]
+    public async void WriteAsyncTestSuccess(string documentId, bool notify, bool waitForRefresh) {
       JObject expected = JObject.Parse(
       @"{_id: '<documentId>',
       _version: 1,
@@ -95,7 +95,7 @@ namespace Kuzzle.Tests.API.Controllers {
       JObject result = await _bulkController.WriteAsync(
         "foo",
         "bar",
-        documentInput,
+        JObject.Parse("{foo: 'bar'}"),
         documentId,
         waitForRefresh,
         notify);
@@ -108,7 +108,7 @@ namespace Kuzzle.Tests.API.Controllers {
             {"_id", documentId},
             {"notify", notify},
             {"waitForRefresh", waitForRefresh},
-            {"body", documentInput}
+            {"body", JObject.Parse("{foo: 'bar'}")}
         };
 
       _api.Verify(verifyQuery);
