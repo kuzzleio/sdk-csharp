@@ -1,0 +1,9 @@
+name: offline-manager#Getters
+description: Getters for Offline
+hooks:
+  before: 
+  after: 
+template: blank
+expected: Success
+sdk: csharp
+version: 1
