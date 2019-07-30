@@ -6,6 +6,7 @@ using KuzzleSdk;
 using KuzzleSdk.Protocol;
 using static KuzzleSdk.API.Controllers.RealtimeController;
 using Newtonsoft.Json.Linq;
+using KuzzleSdk.API.Options;
 
 WebSocket socket = new WebSocket(new Uri("ws://kuzzle:7512"));
 KuzzleSdk.Kuzzle kuzzle = new KuzzleSdk.Kuzzle(socket);
