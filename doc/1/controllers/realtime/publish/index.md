@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: publish
+title: PublishAsync
 description: Publish a real-time message
 ---
 
-# publish
+# PublishAsync
 
 Sends a real-time message to Kuzzle. The message will be dispatched to all clients with subscriptions matching the index, the collection and the message content.
 

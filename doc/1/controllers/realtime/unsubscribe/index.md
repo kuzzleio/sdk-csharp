@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: unsubscribe
+title: UnsubscribeAsync
 description: Removes a subscription
 ---
 
-# unsubscribe
+# UnsubscribeAsync
 
 Removes a subscription.
 

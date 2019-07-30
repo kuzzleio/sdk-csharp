@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: subscribe
+title: SubscribeAsync
 description: Subscribe to real-time notifications
 ---
 
-# subscribe
+# SubscribeAsync
 
 Subscribes by providing a set of filters: messages, document changes and, optionally, user events matching the provided filters will generate [real-time notifications](/core/1/api/essentials/notifications/), sent to you in real-time by Kuzzle.
 
@@ -30,7 +30,7 @@ public async Task<string> SubscribeAsync(
 ### listener
 
 Listener function that will be called each time a new notifications is received.
-The listener will receive a [const kuzzleio::notification_result\*](/sdk/csharp/1/essentials/realtime-notifications) as only argument.
+The listener will receive a [Response](/sdk/csharp/1/essentials/realtime-notifications) as only argument.
 
 ### options
 

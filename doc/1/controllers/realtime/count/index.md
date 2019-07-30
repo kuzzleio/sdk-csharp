@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: count
+title: CountAsync
 description: Count subscribers for a subscription room
 ---
 
-# count
+# CountAsync
 
 Count the number of subscribers for a subscription room
 
