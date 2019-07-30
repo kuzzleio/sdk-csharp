@@ -19,7 +19,7 @@ public async Task UnsubscribeAsync(string roomId);
 
 | Arguments | Type                          | Description          |
 |-----------|-------------------------------|----------------------|
-| `room_id` | <pre>const std::string&</pre> | Subscription room ID |
+| `room_id` | <pre>string&</pre> | Subscription room ID |
 
 ## Exceptions
 
