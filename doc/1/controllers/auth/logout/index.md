@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: logout
+title: LogoutAsync
 description: Revokes the user's token & unsubscribe them from registered rooms.
 ---
 
-# logout
+# LogoutAsync
 
 Revokes the user's token & unsubscribe them from registered rooms.
 

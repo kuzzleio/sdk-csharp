@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: getMyRights
+title: GetMyRightsAsync
 description: Returns the rights for the user linked to the `JSON Web Token`.
 ---
 
-# getMyRights
+# GetMyRightsAsync
 
 Returns the rights for the currently logged in user within the SDK instance.
 

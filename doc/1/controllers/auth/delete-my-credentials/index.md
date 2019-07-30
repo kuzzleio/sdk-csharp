@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: deleteMyCredentials
+title: DeleteMyCredentialsAsync
 description: Delete the current user's credentials for the specified strategy
 ---
 
-# deleteMyCredentials
+# DeleteMyCredentialsAsync
 
 Delete the current user's credentials for the specified strategy. If the credentials that generated the current JWT are removed, the user will remain logged in until he logs out or his session expires, after that they will no longer be able to log in with the deleted credentials.
 

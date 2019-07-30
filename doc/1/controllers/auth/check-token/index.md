@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: checkToken
+title: CheckTokenAsync
 description: Checks a JWT Token's validity.
 ---
 
-# checkToken
+# CheckTokenAsync
 
 Checks a JWT Token's validity.
 

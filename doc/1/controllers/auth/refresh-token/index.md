@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: refreshToken
+title: RefreshTokenAsync
 description: Refreshes an authentication token.
 ---
 
-# checkToken
+# RefreshTokenAsync
 
 Refreshes an authentication token.
 

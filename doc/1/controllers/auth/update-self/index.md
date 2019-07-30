@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: updateSelf
+title: UpdateSelfAsync
 description: Updates the current user object in Kuzzle.
 ---
 
-# updateSelf
+# UpdateSelfAsync
 
 Updates the current user object in Kuzzle.
 

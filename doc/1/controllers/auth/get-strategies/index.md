@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: getStrategies
+title: GetStrategiesAsync
 description: Get all authentication strategies registered in Kuzzle.
 ---
 
-# getStrategies
+# GetStrategiesAsync
 
 Get all authentication strategies registered in Kuzzle.
 

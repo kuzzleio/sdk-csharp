@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: credentialsExist
+title: CredentialsExistAsync
 description: Check that the current user has credentials for the specified strategy
 ---
 
-# credentialsExist
+# CredentialsExistAsync
 
 Check that the current user has credentials for the specified strategy.
 

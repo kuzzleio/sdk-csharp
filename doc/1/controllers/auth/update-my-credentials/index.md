@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: updateMyCredentials
+title: UpdateMyCredentialsAsync
 description: Update the current user's credentials for the specified strategy.
 ---
 
-# updateMyCredentials
+# UpdateMyCredentialsAsync
 
 Update the current user's credentials for the specified strategy. The credentials to send will depend on the authentication plugin and the authentication strategy.
 

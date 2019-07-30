@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: getMyCredentials
+title: GetMyCredentialsAsync
 description: Returns the current user's credential information for the specified strategy.
 ---
 
-# getMyCredentials
+# GetMyCredentialsAsync
 
 Returns the current user's credential information for the specified strategy. The data returned will depend on the specified strategy. The result can be an empty string.
 

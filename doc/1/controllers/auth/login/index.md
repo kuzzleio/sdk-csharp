@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: login
+title: LoginAsync
 description: Authenticate a user
 ---
 
-# login
+# LoginAsync
 
 Authenticates a user.
 
