@@ -20,8 +20,14 @@ fi
 
 case $1 in
   prepare)
-    echo "Clone documentation framework"
-    git clone --depth 10 --single-branch --branch master https://github.com/kuzzleio/documentation.git framework/
+    if [ -d "framework" ]
+    then
+      echo "Pulling latest framework version"
+      bash -c "cd framework && git reset --hard HEAD~ && git pull"
+    else
+      echo "Clone documentation framework"
+      git clone --depth 10 --single-branch --branch master https://github.com/kuzzleio/documentation.git framework/
+    fi
 
     echo "Link local doc for dead links checking"
     rm framework/src$DOC_PATH
@@ -38,6 +44,12 @@ case $1 in
   build)
     ./framework/node_modules/.bin/vuepress build $DOC_VERSION/ $ARGS
   ;;
+
+  build-netlify)
+    export SITE_BASE="/"
+    ./framework/node_modules/.bin/vuepress build $DOC_VERSION/ $ARGS
+  ;;
+
 
   upload)
     aws s3 sync $DOC_VERSION/.vuepress/dist s3://$S3_BUCKET$SITE_BASE --delete
