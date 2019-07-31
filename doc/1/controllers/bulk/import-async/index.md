@@ -19,8 +19,7 @@ If some documents actions fail, the client will receive a PartialError error.
 public async Task<JObject> ImportAsync(
     string index,
     string collection,
-    JArray bulkData
-)
+    JArray bulkData);
 ```
 
 ## Arguments

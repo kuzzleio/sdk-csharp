@@ -18,8 +18,7 @@ public async Task<JObject> WriteAsync(
     JObject content,
     string documentId = null,
     bool waitForRefresh = false,
-    bool notify = false
-);
+    bool notify = false);
 ```
 
 ## Arguments
