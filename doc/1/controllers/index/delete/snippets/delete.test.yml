@@ -6,6 +6,3 @@ hooks:
   after:
 template: default
 expected: index deleted
-
-sdk: csharp
-version: 0

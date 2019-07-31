@@ -6,6 +6,3 @@ hooks:
   after:
 template: default
 expected: autorefresh is false
-
-sdk: csharp
-version: 0

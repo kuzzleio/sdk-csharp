@@ -6,6 +6,3 @@ hooks:
   after:
 template: default
 expected: Successfully deleted 2 indexes
-
-sdk: csharp
-version: 0

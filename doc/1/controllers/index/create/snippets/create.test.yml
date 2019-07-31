@@ -6,6 +6,3 @@ hooks:
   after:
 template: default
 expected: index created
-
-sdk: csharp
-version: 0
