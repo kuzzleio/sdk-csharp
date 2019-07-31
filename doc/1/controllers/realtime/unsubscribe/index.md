@@ -9,13 +9,11 @@ description: Removes a subscription
 
 Removes a subscription.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task UnsubscribeAsync(string roomId);
 ```
-
-## Arguments
 
 | Arguments | Type                          | Description          |
 |-----------|-------------------------------|----------------------|

@@ -9,15 +9,13 @@ description: Subscribe to real-time notifications
 
 Subscribes by providing a set of filters: messages, document changes and, optionally, user events matching the provided filters will generate [real-time notifications](/core/1/api/essentials/notifications/), sent to you in real-time by Kuzzle.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<string> SubscribeAsync(
         string index, string collection, JObject filters,
         NotificationHandler handler, SubscribeOptions options = null);
 ```
-
-## Arguments
 
 | Arguments    | Type                                    | Description                                                                                                     |
 |--------------|-----------------------------------------|-----------------------------------------------------------------------------------------------------------------|

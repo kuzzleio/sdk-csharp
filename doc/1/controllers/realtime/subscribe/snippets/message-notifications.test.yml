@@ -7,5 +7,3 @@ template: realtime
 expected:
  - Message notification received
  - "\"metAt\": \"Insane\""
-sdk: csharp
-version: 1

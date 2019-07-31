@@ -13,13 +13,11 @@ The index and collection are indicative and serve only to distinguish the rooms.
 
 **Note:** real-time messages are not persisted in the database.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task PublishAsync(string index, string collection, JObject message);
 ```
-
-## Arguments
 
 | Arguments    | Type               | Description                         |
 |--------------|--------------------|-------------------------------------|

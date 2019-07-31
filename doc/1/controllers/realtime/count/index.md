@@ -9,13 +9,11 @@ description: Count subscribers for a subscription room
 
 Count the number of subscribers for a subscription room
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<int> CountAsync(string roomId);
 ```
-
-## Arguments
 
 | Arguments | Type              | Description          |
 |-----------|-------------------|----------------------|

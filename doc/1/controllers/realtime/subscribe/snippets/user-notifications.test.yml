@@ -7,5 +7,3 @@ hooks:
   after:
 template: realtime
 expected: "\"username\": \"nina vkote\""
-sdk: csharp
-version: 1

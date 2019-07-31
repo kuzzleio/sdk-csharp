@@ -5,5 +5,3 @@ hooks:
   after:
 template: default
 expected: Successfully unsubscribed
-sdk: csharp
-version: 1
