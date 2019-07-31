@@ -9,29 +9,28 @@ desription: Create or replace multiple documents directly into the storage engin
 
 This is a low level route intended to bypass Kuzzle actions on document creation, notably:
 
-check document validity,
-add kuzzle metadata,
-trigger realtime notifications (unless asked otherwise)
+- check document validity
+- add kuzzle metadata
+- trigger realtime notifications (unless asked otherwise)
 
 ## Signature
 
 ```csharp
-async Task<JObject> MWriteAsync(
+public async Task<JObject> MWriteAsync(
     string index,
     string collection,
     JArray documents,
     bool waitForRefresh = false,
-    bool notify = false
-)
+    bool notify = false);
 ```
 
 ## Arguments
 
-| Arguments    | Type              | Description                                                                                                                    |
-| ------------ | ----------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `index`      | <pre>string</pre> | Index name                                                                                                                     |
-| `collection` | <pre>string</pre> | Collection name                                                                                                                |
-| `documents`  | <pre>JArray</pre> | An array of object. Each object describes a document to create or replace, by exposing the following properties: `_id`, `body` |
+| Arguments    | Type              | Description                                                                                                                      |
+|--------------|-------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| `index`      | <pre>string</pre> | Index name                                                                                                                       |
+| `collection` | <pre>string</pre> | Collection name                                                                                                                  |
+| `documents`  | <pre>JArray</pre> | An array of JObject. Each JObject describes a document to create or replace, by exposing the following properties: `_id`, `body` |
 
 ### Options
 

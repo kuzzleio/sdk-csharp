@@ -16,7 +16,7 @@ If some documents actions fail, the client will receive a PartialError error.
 ## Signature
 
 ```csharp
-async Task<JObject> ImportAsync(
+public async Task<JObject> ImportAsync(
     string index,
     string collection,
     JArray bulkData
@@ -33,7 +33,7 @@ async Task<JObject> ImportAsync(
 
 ## Return
 
-An object containing information about the import status for each document.
+A JObject containing information about the import status for each document.
 
 | Property | Type              | Description                                                                                |
 | -------- | ----------------- | ------------------------------------------------------------------------------------------ |

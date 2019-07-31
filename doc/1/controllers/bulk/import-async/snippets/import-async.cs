@@ -1,6 +1,4 @@
 try {
-    //await kuzzle.Auth.LoginAsync("local", JObject.Parse("{username:'foo',password:'bar'}"));
-
     JArray bulkData = JArray.Parse(@"
     [{ create: { _id: '1', _index: 'nyc-open-data', _type: 'yellow-taxi' } },
     { a: 'document', with: 'any', number: 'of fields' },

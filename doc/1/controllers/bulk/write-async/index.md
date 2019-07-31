@@ -12,23 +12,23 @@ Create or replace a document directly into the storage engine.
 ## Signature
 
 ```csharp
-async Task<JObject> WriteAsync(
+public async Task<JObject> WriteAsync(
     string index,
     string collection,
-    JObject documentContent,
+    JObject content,
     string documentId = null,
     bool waitForRefresh = false,
     bool notify = false
-)
+);
 ```
 
 ## Arguments
 
-| Arguments         | Type               | Description                 |
-| ----------------- | ------------------ | --------------------------- |
-| `index`           | <pre>string</pre>  | Index name                  |
-| `collection`      | <pre>string</pre>  | Collection name             |
-| `documentContent` | <pre>JObject</pre> | Document content to create. |
+| Arguments    | Type               | Description                 |
+|--------------|--------------------|-----------------------------|
+| `index`      | <pre>string</pre>  | Index name                  |
+| `collection` | <pre>string</pre>  | Collection name             |
+| `content`    | <pre>JObject</pre> | Document content to create. |
 
 ### Options
 
@@ -40,7 +40,7 @@ async Task<JObject> WriteAsync(
 
 ## Return
 
-A `hits` array, containing the list of created documents, in the same order than the one provided in the query.
+Return a JObject with the following properties:
 
 | Property   | Type               | Description                                     |
 | ---------- | ------------------ | ----------------------------------------------- |

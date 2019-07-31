@@ -64,7 +64,7 @@ namespace KuzzleSdk.API.Controllers {
     public async Task<JObject> WriteAsync(
         string index,
         string collection,
-        JObject documentContent,
+        JObject content,
         string documentId = null,
         bool waitForRefresh = false,
         bool notify = false
@@ -76,7 +76,7 @@ namespace KuzzleSdk.API.Controllers {
         {"controller", "bulk"},
         {"action", "write"},
         {"_id", documentId},
-        {"body", documentContent},
+        {"body", content},
         {"notify", notify},
         {"waitForRefresh", waitForRefresh},
       };
