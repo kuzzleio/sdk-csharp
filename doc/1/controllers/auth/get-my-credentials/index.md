@@ -9,13 +9,11 @@ description: Returns the current user's credential information for the specified
 
 Returns the current user's credential information for the specified strategy. The data returned will depend on the specified strategy. The result can be an empty string.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JObject> GetMyCredentialsAsync(string strategy);
 ```
-
-## Arguments
 
 | Arguments  | Type              | Description     |
 |------------|-------------------|-----------------|

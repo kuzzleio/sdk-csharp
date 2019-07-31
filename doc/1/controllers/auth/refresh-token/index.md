@@ -13,14 +13,11 @@ Refreshes an authentication token.
 - the provided authentication token is revoked
 - a new authentication token is generated and returned
 
-
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JObject> RefreshTokenAsync(string expiresIn = null);
 ```
-
-## Arguments
 
 **Optional:**
 

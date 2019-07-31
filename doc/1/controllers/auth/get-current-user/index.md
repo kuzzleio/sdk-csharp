@@ -9,7 +9,7 @@ description: Returns the profile object for the user linked to the `JSON Web Tok
 
 Returns informations about the user currently loggued with the SDK instance.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JObject> GetCurrentUserAsync();

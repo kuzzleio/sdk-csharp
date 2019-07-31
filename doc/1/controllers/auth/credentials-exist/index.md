@@ -9,13 +9,11 @@ description: Check that the current user has credentials for the specified strat
 
 Check that the current user has credentials for the specified strategy.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<bool> CredentialsExistAsync(string strategy);
 ```
-
-## Arguments
 
 | Arguments  | Type              | Description     |
 |------------|-------------------|-----------------|

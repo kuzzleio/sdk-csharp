@@ -7,5 +7,3 @@ template: default
 expected:
   - ^{"_id":".*","_source":{"profileIds":\[.*\],"_kuzzle_info":{.*}},"_meta":{.*},"strategies":\[(".*"(,)*)\]}$
   - Successfully got current user
-sdk: csharp
-version: 1

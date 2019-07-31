@@ -9,15 +9,13 @@ description: Create the current user's credentials for the specified strategy.
 
 Create the current user's credentials for the specified strategy.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JObject> CreateMyCredentialsAsync(
       string strategy,
       JObject credentials);
 ```
-
-## Arguments
 
 | Arguments     | Type               | Description                          |
 |---------------|--------------------|--------------------------------------|

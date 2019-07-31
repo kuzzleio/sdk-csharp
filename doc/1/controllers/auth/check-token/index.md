@@ -9,13 +9,11 @@ description: Checks a JWT Token's validity.
 
 Checks a JWT Token's validity.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JObject> CheckTokenAsync(string token);
 ```
-
-## Arguments
 
 | Arguments | Type              | Description |
 | --------- | ----------------- | ----------- |

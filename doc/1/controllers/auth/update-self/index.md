@@ -9,13 +9,11 @@ description: Updates the current user object in Kuzzle.
 
 Updates the current user object in Kuzzle.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JObject> UpdateSelfAsync(JObject content);
 ```
-
-## Arguments
 
 | Arguments | Type               | Description                           |
 |-----------|--------------------|---------------------------------------|

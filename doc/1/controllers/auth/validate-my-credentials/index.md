@@ -9,15 +9,13 @@ description: Validate the current user's credentials for the specified strategy.
 
 Validate the current user's credentials for the specified strategy. The `result` field is `true` if the provided credentials are valid; otherwise an error is triggered. This route does not actually create or modify the user credentials. The credentials to send will depend on the authentication plugin and authentication strategy.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<bool> ValidateMyCredentialsAsync(
       string strategy,
       JObject credentials);
 ```
-
-## Arguments
 
 | Arguments     | Type               | Description                          |
 |---------------|--------------------|--------------------------------------|

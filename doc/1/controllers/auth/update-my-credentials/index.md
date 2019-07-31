@@ -9,15 +9,13 @@ description: Update the current user's credentials for the specified strategy.
 
 Update the current user's credentials for the specified strategy. The credentials to send will depend on the authentication plugin and the authentication strategy.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JObject> UpdateMyCredentialsAsync(
       string strategy,
       JObject credentials);
 ```
-
-## Arguments
 
 | Arguments     | Type               | Description                          |
 |---------------|--------------------|--------------------------------------|

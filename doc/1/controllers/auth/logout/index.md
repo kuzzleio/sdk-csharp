@@ -9,7 +9,7 @@ description: Revokes the user's token & unsubscribe them from registered rooms.
 
 Revokes the user's token & unsubscribe them from registered rooms.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task LogoutAsync();

@@ -9,7 +9,7 @@ description: Get all authentication strategies registered in Kuzzle.
 
 Get all authentication strategies registered in Kuzzle.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JArray> GetStrategiesAsync();

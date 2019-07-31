@@ -9,11 +9,12 @@ description: Returns the rights for the user linked to the `JSON Web Token`.
 
 Returns the rights for the currently logged in user within the SDK instance.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JArray> GetMyRightsAsync();
 ```
+
 ## Return
 
 A JArray object.
