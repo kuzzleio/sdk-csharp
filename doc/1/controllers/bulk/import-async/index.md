@@ -13,7 +13,7 @@ This route is faster than the document:m* routes family (e.g. document:mCreate),
 
 If some documents actions fail, the client will receive a PartialError error.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JObject> ImportAsync(
@@ -21,8 +21,6 @@ public async Task<JObject> ImportAsync(
     string collection,
     JArray bulkData);
 ```
-
-## Arguments
 
 | Arguments    | Type              | Description                                                  |
 | ------------ | ----------------- | ------------------------------------------------------------ |

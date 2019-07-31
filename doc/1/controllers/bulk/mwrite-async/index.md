@@ -13,7 +13,7 @@ This is a low level route intended to bypass Kuzzle actions on document creation
 - add kuzzle metadata
 - trigger realtime notifications (unless asked otherwise)
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JObject> MWriteAsync(
@@ -24,8 +24,6 @@ public async Task<JObject> MWriteAsync(
     bool notify = false);
 ```
 
-## Arguments
-
 | Arguments    | Type              | Description                                                                                                                      |
 |--------------|-------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | `index`      | <pre>string</pre> | Index name                                                                                                                       |
@@ -34,10 +32,10 @@ public async Task<JObject> MWriteAsync(
 
 ### Options
 
-| Property         | Type            | Description                                                                              |
-| ---------------- | --------------- | ---------------------------------------------------------------------------------------- |
-| `waitForRefresh` | <pre>bool</pre> | If set to true, Kuzzle will not respond until the created/replaced documents are indexed |
-| `notify`         | <pre>bool</pre> | If set to true, Kuzzle will trigger realtime notifications                               |
+| Property         | Type                         | Description                                                                              |
+|------------------|------------------------------|------------------------------------------------------------------------------------------|
+| `waitForRefresh` | <pre>bool</pre><br>(`false`) | If set to true, Kuzzle will not respond until the created/replaced documents are indexed |
+| `notify`         | <pre>bool</pre><br>(`false`) | If set to true, Kuzzle will trigger realtime notifications                               |
 
 ## Return
 

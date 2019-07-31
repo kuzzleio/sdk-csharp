@@ -9,7 +9,7 @@ desription: Create or replace a document directly into the storage engine.
 
 Create or replace a document directly into the storage engine.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JObject> WriteAsync(
@@ -21,8 +21,6 @@ public async Task<JObject> WriteAsync(
     bool notify = false);
 ```
 
-## Arguments
-
 | Arguments    | Type               | Description                 |
 |--------------|--------------------|-----------------------------|
 | `index`      | <pre>string</pre>  | Index name                  |
@@ -31,11 +29,11 @@ public async Task<JObject> WriteAsync(
 
 ### Options
 
-| Property         | Type              | Description                                                                              |
-| ---------------- | ----------------- | ---------------------------------------------------------------------------------------- |
-| `documentId`     | <pre>string</pre> | set the document unique ID to the provided value, instead of auto-generating a random ID |
-| `waitForRefresh` | <pre>bool</pre>   | If set to true, Kuzzle will not respond until the created/replaced documents are indexed |
-| `notify`         | <pre>bool</pre>   | If set to true, Kuzzle will trigger realtime notifications                               |
+| Property         | Type                          | Description                                                                              |
+|------------------|-------------------------------|------------------------------------------------------------------------------------------|
+| `documentId`     | <pre>string</pre><br>(`null`) | set the document unique ID to the provided value, instead of auto-generating a random ID |
+| `waitForRefresh` | <pre>bool</pre><br>(`false`)  | If set to true, Kuzzle will not respond until the created/replaced documents are indexed |
+| `notify`         | <pre>bool</pre><br>(`false`)  | If set to true, Kuzzle will trigger realtime notifications                               |
 
 ## Return
 
