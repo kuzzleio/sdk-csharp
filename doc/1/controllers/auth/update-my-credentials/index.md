@@ -14,8 +14,7 @@ Update the current user's credentials for the specified strategy. The credential
 ```csharp
 public async Task<JObject> UpdateMyCredentialsAsync(
       string strategy,
-      JObject credentials
-    );
+      JObject credentials);
 ```
 
 ## Arguments

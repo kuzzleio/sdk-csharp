@@ -30,7 +30,7 @@ public async Task<JObject> RefreshTokenAsync(string expiresIn = null);
 
 ## Return
 
-A JObject which has the following properties:
+A JObject with the following properties:
 
 | Property    | Type              | Description                                                                              |
 |-------------|-------------------|------------------------------------------------------------------------------------------|

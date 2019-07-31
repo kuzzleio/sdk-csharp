@@ -14,8 +14,7 @@ Create the current user's credentials for the specified strategy.
 ```csharp
 public async Task<JObject> CreateMyCredentialsAsync(
       string strategy,
-      JObject credentials
-    );
+      JObject credentials);
 ```
 
 ## Arguments

@@ -14,8 +14,7 @@ Validate the current user's credentials for the specified strategy. The `result`
 ```csharp
 public async Task<bool> ValidateMyCredentialsAsync(
       string strategy,
-      JObject credentials
-    );
+      JObject credentials);
 ```
 
 ## Arguments

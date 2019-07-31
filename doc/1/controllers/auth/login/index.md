@@ -17,8 +17,7 @@ If this action is successful, all further requests emitted by this SDK instance 
 public async Task<JObject> LoginAsync(
       string strategy,
       JObject credentials,
-      string expiresIn = null
-    )
+      string expiresIn = null);
 ```
 
 <br/>
