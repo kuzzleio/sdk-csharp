@@ -9,13 +9,11 @@ description: Deletes an index
 
 Deletes an entire index from Kuzzle.
 
-## Signature
+## Arguments
 
 ```cs
 Task DeleteAsync(string index);
 ```
-
-## Arguments
 
 | Arguments | Type                       | Description       | Required |
 | --------- | -------------------------- | ----------------- | -------- |

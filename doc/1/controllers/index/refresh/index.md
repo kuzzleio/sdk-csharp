@@ -17,13 +17,11 @@ From the [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticse
 
 :::
 
-## Signature
+## Arguments
 
 ```cs
 Task RefreshAsync(string index);
 ```
-
-## Arguments
 
 | Arguments | Type                       | Description       | Required |
 | --------- | -------------------------- | ----------------- | -------- |

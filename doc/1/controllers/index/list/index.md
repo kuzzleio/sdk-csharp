@@ -9,7 +9,7 @@ description: List the indexes
 
 Get the complete list of indexes handled by Kuzzle.
 
-## Signature
+## Arguments
 
 ```cs
 Task<JArray> ListAsync();

@@ -9,13 +9,11 @@ description: Deletes multiple indexes
 
 Deletes multiple indexes at once.
 
-## Signature
+## Arguments
 
 ```cs
 Task<JArray> MDeleteAsync(JArray indexes);
 ```
-
-## Arguments
 
 | Arguments | Type                 | Description           | Required |
 | --------- | -------------------- | --------------------- | -------- |

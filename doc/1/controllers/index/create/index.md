@@ -2,20 +2,18 @@
 code: true
 type: page
 title: create
-description: Create an index
+description: Creates an index
 ---
 
 # create
 
-Create a new index in Kuzzle
+Creates a new index in Kuzzle
 
-## Signature
+## Arguments
 
 ```cs
 Task CreateAsync(string index);
 ```
-
-## Arguments
 
 | Arguments | Type                       | Description       | Required |
 | --------- | -------------------------- | ----------------- | -------- |

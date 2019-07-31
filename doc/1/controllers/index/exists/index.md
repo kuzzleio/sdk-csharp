@@ -9,13 +9,11 @@ description: Check for index existence
 
 Checks if the given index exists in Kuzzle.
 
-## Signature
+## Arguments
 
 ```cs
 Task<bool> ExistsAsync(string index);
 ```
-
-## Arguments
 
 | Arguments | Type                       | Description       | Required |
 | --------- | -------------------------- | ----------------- | -------- |
