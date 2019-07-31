@@ -17,7 +17,7 @@ public async Task<JObject> CreateMyCredentialsAsync(
       JObject credentials);
 ```
 
-| Arguments     | Type               | Description                          |
+| Argument      | Type               | Description                          |
 |---------------|--------------------|--------------------------------------|
 | `strategy`    | <pre>string</pre>  | Strategy to use                      |
 | `credentials` | <pre>JObject</pre> | JObject representing the credentials |

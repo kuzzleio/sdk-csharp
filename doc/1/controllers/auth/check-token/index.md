@@ -15,9 +15,9 @@ Checks a JWT Token's validity.
 public async Task<JObject> CheckTokenAsync(string token);
 ```
 
-| Arguments | Type              | Description |
-| --------- | ----------------- | ----------- |
-| `token`   | <pre>string</pre> | JWT token   |
+| Argument | Type              | Description |
+|----------|-------------------|-------------|
+| `token`  | <pre>string</pre> | JWT token   |
 
 ## Return
 

@@ -15,7 +15,7 @@ Delete the current user's credentials for the specified strategy. If the credent
 public async Task DeleteMyCredentialsAsync(string strategy);
 ```
 
-| Arguments  | Type              | Description     |
+| Argument   | Type              | Description     |
 |------------|-------------------|-----------------|
 | `strategy` | <pre>string</pre> | Strategy to use |
 

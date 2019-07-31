@@ -22,7 +22,7 @@ public async Task<JObject> LoginAsync(
 
 <br/>
 
-| Arguments     | Type               | Description                          |
+| Argument      | Type               | Description                          |
 |---------------|--------------------|--------------------------------------|
 | `strategy`    | <pre>string</pre>  | Strategy to use                      |
 | `credentials` | <pre>JObject</pre> | JObject representing the credentials |

@@ -15,7 +15,7 @@ Updates the current user object in Kuzzle.
 public async Task<JObject> UpdateSelfAsync(JObject content);
 ```
 
-| Arguments | Type               | Description                           |
+| Argument  | Type               | Description                           |
 |-----------|--------------------|---------------------------------------|
 | `content` | <pre>JObject</pre> | JObject representing the user content |
 

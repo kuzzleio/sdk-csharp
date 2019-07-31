@@ -15,7 +15,7 @@ Returns the current user's credential information for the specified strategy. Th
 public async Task<JObject> GetMyCredentialsAsync(string strategy);
 ```
 
-| Arguments  | Type              | Description     |
+| Argument   | Type              | Description     |
 |------------|-------------------|-----------------|
 | `strategy` | <pre>string</pre> | Strategy to use |
 

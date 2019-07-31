@@ -21,7 +21,7 @@ public async Task<JObject> RefreshTokenAsync(string expiresIn = null);
 
 **Optional:**
 
-| Arguments   | Type              | Description                                                                 |
+| Argument    | Type              | Description                                                                 |
 |-------------|-------------------|-----------------------------------------------------------------------------|
 | `expiresIn` | <pre>string</pre> | Set the expiration duration (default: depends on Kuzzle configuration file) |
 

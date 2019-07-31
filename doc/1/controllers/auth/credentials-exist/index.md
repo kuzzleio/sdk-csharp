@@ -15,7 +15,7 @@ Check that the current user has credentials for the specified strategy.
 public async Task<bool> CredentialsExistAsync(string strategy);
 ```
 
-| Arguments  | Type              | Description     |
+| Argument   | Type              | Description     |
 |------------|-------------------|-----------------|
 | `strategy` | <pre>string</pre> | Strategy to use |
 
