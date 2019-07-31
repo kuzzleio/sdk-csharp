@@ -15,7 +15,7 @@ Removes a subscription.
 public async Task UnsubscribeAsync(string roomId);
 ```
 
-| Arguments | Type               | Description          |
+| Argument  | Type               | Description          |
 |-----------|--------------------|----------------------|
 | `room_id` | <pre>string&</pre> | Subscription room ID |
 

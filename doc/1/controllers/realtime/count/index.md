@@ -15,7 +15,7 @@ Count the number of subscribers for a subscription room
 public async Task<int> CountAsync(string roomId);
 ```
 
-| Arguments | Type              | Description          |
+| Argument  | Type              | Description          |
 |-----------|-------------------|----------------------|
 | `room_id` | <pre>string</pre> | Subscription room ID |
 

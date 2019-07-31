@@ -19,7 +19,7 @@ The index and collection are indicative and serve only to distinguish the rooms.
 public async Task PublishAsync(string index, string collection, JObject message);
 ```
 
-| Arguments    | Type               | Description                         |
+| Argument     | Type               | Description                         |
 |--------------|--------------------|-------------------------------------|
 | `index`      | <pre>string</pre>  | Index name                          |
 | `collection` | <pre>string</pre>  | Collection name                     |
