@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: delete
+title: DeleteAsync
 description: Deletes an index
 ---
 
-# Delete
+# DeleteAsync
 
 Deletes an entire index from Kuzzle.
 
@@ -15,9 +15,9 @@ Deletes an entire index from Kuzzle.
 Task DeleteAsync(string index);
 ```
 
-| Arguments | Type                       | Description       | Required |
-| --------- | -------------------------- | ----------------- | -------- |
-| `index`   | string                     | Index name        | yes      |
+| Arguments | Type                       | Description       |
+| --------- | -------------------------- | ----------------- |
+| `index`   | string                     | Index name        |
 
 ## Usage
 

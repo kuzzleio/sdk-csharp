@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: exists
+title: ExistsAsync
 description: Check for index existence
 ---
 
-# Exists
+# ExistsAsync
 
 Checks if the given index exists in Kuzzle.
 
@@ -15,9 +15,9 @@ Checks if the given index exists in Kuzzle.
 Task<bool> ExistsAsync(string index);
 ```
 
-| Arguments | Type                       | Description       | Required |
-| --------- | -------------------------- | ----------------- | -------- |
-| `index`   | string                     | Index name        | yes      |
+| Arguments | Type                       | Description       |
+| --------- | -------------------------- | ----------------- |
+| `index`   | string                     | Index name        |
 
 ## Return
 

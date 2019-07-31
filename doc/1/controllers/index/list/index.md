@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: list
+title: ListAsync
 description: List the indexes
 ---
 
-# List
+# ListAsync
 
 Get the complete list of indexes handled by Kuzzle.
 

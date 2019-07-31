@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: setAutoRefresh
+title: SetAutoRefreshAsync
 description: Set the autorefresh flag
 ---
 
-# setAutoRefresh(index, autorefresh, [options])
+# SetAutoRefreshAsync
 
 The setAutoRefresh action allows to set the autorefresh flag for the index.
 
@@ -25,10 +25,10 @@ we recommend that you avoid using it in production or at least carefully monitor
 Task SetAutoRefreshAsync(string index , boolean autoRefresh);
 ```
 
-| Arguments     | Type                       | Description       | Required |
-| ------------- | -------------------------- | ----------------- | -------- |
-| `index`       | string                     | Index name        | yes      |
-| `autoRefresh` | bool                       | autoRefresh flag  | yes      |
+| Arguments     | Type                       | Description       |
+| ------------- | -------------------------- | ----------------- |
+| `index`       | string                     | Index name        |
+| `autoRefresh` | bool                       | autoRefresh flag  |
 
 ## Usage
 

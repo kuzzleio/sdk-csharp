@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: mDelete
+title: MDeleteAsync
 description: Deletes multiple indexes
 ---
 
-# mDelete
+# MDeleteAsync
 
 Deletes multiple indexes at once.
 
@@ -15,9 +15,9 @@ Deletes multiple indexes at once.
 Task<JArray> MDeleteAsync(JArray indexes);
 ```
 
-| Arguments | Type                 | Description           | Required |
-| --------- | -------------------- | --------------------- | -------- |
-| `indexes` | JArray               | List of indexes names | yes      |
+| Arguments | Type                 | Description           |
+| --------- | -------------------- | --------------------- |
+| `indexes` | JArray               | List of indexes names |
 
 ## Return
 

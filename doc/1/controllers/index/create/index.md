@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: create
+title: CreateAsync
 description: Creates an index
 ---
 
-# create
+# CreateAsync
 
 Creates a new index in Kuzzle
 
@@ -15,9 +15,9 @@ Creates a new index in Kuzzle
 Task CreateAsync(string index);
 ```
 
-| Arguments | Type                       | Description       | Required |
-| --------- | -------------------------- | ----------------- | -------- |
-| `index`   | string                     | Index name        | yes      |
+| Arguments | Type                       | Description       |
+| --------- | -------------------------- | ----------------- |
+| `index`   | string                     | Index name        |
 
 ## Usage
 

@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: getAutoRefresh
+title: GetAutoRefreshAsync
 description: Returns the status of autorefresh flag
 ---
 
-# GetAutoRefresh
+# GetAutoRefreshAsync
 
 The getAutoRefresh action returns the current autorefresh status for the index.
 
@@ -25,9 +25,9 @@ we recommend that you avoid using it in production or at least carefully monitor
 Task<bool> GetAutoRefreshAsync(string index);
 ```
 
-| Arguments | Type                       | Description       | Required |
-| --------- | -------------------------- | ----------------- | -------- |
-| `index`   | string                     | Index name        | yes      |
+| Arguments | Type                       | Description       |
+| --------- | -------------------------- | ----------------- |
+| `index`   | string                     | Index name        |
 
 ## Return
 

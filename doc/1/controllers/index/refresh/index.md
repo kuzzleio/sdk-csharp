@@ -1,11 +1,11 @@
 ---
 code: true
 type: page
-title: refresh
+title: RefreshAsync
 description: Force Elasticsearch search index update
 ---
 
-# Refresh
+# RefreshAsync
 
 When writing or deleting documents in Kuzzle, the update needs to be indexed before being available in search results.
 
@@ -23,9 +23,9 @@ From the [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticse
 Task RefreshAsync(string index);
 ```
 
-| Arguments | Type                       | Description       | Required |
-| --------- | -------------------------- | ----------------- | -------- |
-| `index`   | string                     | Index name        | yes      |
+| Arguments | Type                       | Description       |
+| --------- | -------------------------- | ----------------- |
+| `index`   | string                     | Index name        |
 
 ## Usage
 
