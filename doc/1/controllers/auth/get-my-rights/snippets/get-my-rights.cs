@@ -3,11 +3,18 @@ try {
 
   JArray rights = await kuzzle.Auth.GetMyRightsAsync();
 
-  foreach (JObject right in rights) {
-    Console.WriteLine(right["controller"]?.ToString() + " " + right["action"]?.ToString());
-    Console.WriteLine(right["index"]?.ToString() + " " + right["collection"]?.ToString());
-    Console.WriteLine(right["value"]?.ToString());
-  }
+  Console.WriteLine(rights.ToString(Formatting.None));
+  /*
+  [
+    {
+      "controller": "*",
+      "action": "*",
+      "collection": "*",
+      "index": "*",
+      "value": "allowed"
+    }
+  ]
+  */
 } catch (Exception e) {
   Console.WriteLine(e);
 }

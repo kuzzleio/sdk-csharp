@@ -1,12 +1,15 @@
 try {
   JObject response = (await kuzzle.Auth.LoginAsync("local", JObject.Parse("{username: 'foo', password: 'bar'}")));
 
-  JObject res = await kuzzle.Auth.CheckTokenAsync(response["jwt"].ToString());
+  JObject res = await kuzzle.Auth.CheckTokenAsync(response["jwt"]?.ToString());
 
-  if (res["valid"] != null && (bool)res["valid"])
-    Console.WriteLine("Success");
-  else
-    Console.WriteLine(res["state"].ToString());
+  Console.WriteLine(res.ToString(Formatting.None));
+  /*
+  {
+    "valid": true,
+    "expiresAt": 1564563452570
+  }
+  */
 } catch (Exception e) {
   Console.WriteLine(e);
 }
