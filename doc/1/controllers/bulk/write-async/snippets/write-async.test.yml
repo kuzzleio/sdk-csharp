@@ -6,6 +6,6 @@ hooks:
     curl -X PUT kuzzle:7512/nyc-open-data/yellow-taxi
   after: curl -X DELETE kuzzle:7512/nyc-open-data
 template: default
-expected: Success
+expected: ^{"_index":".+","_type":".+","_id":".+","_version":[0-9]+,"result":".+","_shards":{.*},"created":(false|true),"_source":{"kuzzle_info":{.*}}}$
 sdk: csharp
 version: 1
