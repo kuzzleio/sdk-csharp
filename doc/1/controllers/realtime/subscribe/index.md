@@ -29,7 +29,7 @@ public async Task<string> SubscribeAsync(
 
 ### listener
 
-Listener function that will be called each time a new notifications is received.
+Listener function that will be called each time a new notification is received.
 The listener will receive a [Response](/sdk/csharp/1/essentials/realtime-notifications) as only argument.
 
 ### options
