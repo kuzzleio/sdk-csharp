@@ -22,8 +22,8 @@ public async Task<JObject> ImportAsync(
     JArray bulkData);
 ```
 
-| Arguments    | Type              | Description                                                  |
-| ------------ | ----------------- | ------------------------------------------------------------ |
+| Argument     | Type              | Description                                                  |
+|--------------|-------------------|--------------------------------------------------------------|
 | `index`      | <pre>string</pre> | Index name                                                   |
 | `collection` | <pre>string</pre> | Collection name                                              |
 | `bulkData`   | <pre>JArray</pre> | Bulk operations to perform, following ElasticSearch Bulk API |
