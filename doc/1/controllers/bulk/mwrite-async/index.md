@@ -39,7 +39,7 @@ public async Task<JObject> MWriteAsync(
 
 ## Return
 
-A `hits` array, containing the list of created documents, in the same order than the one provided in the query.
+A `JObject` containing a `hits` array which represent the list of created documents, in the same order than the one provided in the query.
 
 | Property   | Type               | Description                                     |
 | ---------- | ------------------ | ----------------------------------------------- |
