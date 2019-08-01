@@ -15,7 +15,7 @@ Creates a new index in Kuzzle
 Task CreateAsync(string index);
 ```
 
-| Arguments | Type                       | Description       |
+| Argument  | Type                       | Description       |
 | --------- | -------------------------- | ----------------- |
 | `index`   | string                     | Index name        |
 
