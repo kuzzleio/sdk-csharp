@@ -23,7 +23,7 @@ From the [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticse
 Task RefreshAsync(string index);
 ```
 
-| Arguments | Type                       | Description       |
+| Argument  | Type                       | Description       |
 | --------- | -------------------------- | ----------------- |
 | `index`   | string                     | Index name        |
 

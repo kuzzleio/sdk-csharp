@@ -25,7 +25,7 @@ we recommend that you avoid using it in production or at least carefully monitor
 Task<bool> GetAutoRefreshAsync(string index);
 ```
 
-| Arguments | Type                       | Description       |
+| Argument  | Type                       | Description       |
 | --------- | -------------------------- | ----------------- |
 | `index`   | string                     | Index name        |
 

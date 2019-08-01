@@ -15,7 +15,7 @@ Checks if the given index exists in Kuzzle.
 Task<bool> ExistsAsync(string index);
 ```
 
-| Arguments | Type                       | Description       |
+| Argument  | Type                       | Description       |
 | --------- | -------------------------- | ----------------- |
 | `index`   | string                     | Index name        |
 
