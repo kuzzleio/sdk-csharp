@@ -2,7 +2,7 @@
 code: true
 type: page
 title: MUpdateAsync
-description: Updates documents
+description: Updates documents.
 ---
 
 # MUpdateAsync

@@ -2,7 +2,7 @@
 code: true
 type: page
 title: MDeleteAsync
-description: Deletes multiple documents
+description: Deletes multiple documents.
 ---
 
 # MDeleteAsync

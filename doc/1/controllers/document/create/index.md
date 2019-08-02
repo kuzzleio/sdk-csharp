@@ -2,7 +2,7 @@
 code: true
 type: page
 title: CreateAsync
-description: Creates a new document
+description: Creates a new document.
 ---
 
 # CreateAsync

@@ -2,7 +2,7 @@
 code: true
 type: page
 title: MCreateAsync
-description: Creates multiple documents in kuzzle
+description: Creates multiple documents in kuzzle.
 ---
 
 # MCreateAsync

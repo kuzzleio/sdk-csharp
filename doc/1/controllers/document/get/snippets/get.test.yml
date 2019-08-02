@@ -1,5 +1,5 @@
 name: Document#GetAsync
-description: Get a document from kuzzle
+description: Get a document from kuzzle.
 hooks:
   before: |
     curl -XDELETE kuzzle:7512/nyc-open-data

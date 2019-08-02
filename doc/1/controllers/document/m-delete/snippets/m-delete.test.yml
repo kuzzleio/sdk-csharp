@@ -1,5 +1,5 @@
 name: Document#MDeleteAsync
-description: Deletes multiple documents
+description: Deletes multiple documents.
 hooks:
   before: |
     curl -XDELETE kuzzle:7512/nyc-open-data

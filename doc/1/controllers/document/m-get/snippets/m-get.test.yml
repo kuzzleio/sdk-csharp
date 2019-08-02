@@ -1,5 +1,5 @@
 name: Document#MGetAsync
-description: Gets multiple documents from kuzzle
+description: Gets multiple documents from kuzzle.
 hooks:
   before: |
     curl -XDELETE kuzzle:7512/nyc-open-data

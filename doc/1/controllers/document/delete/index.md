@@ -2,7 +2,7 @@
 code: true
 type: page
 title: DeleteAsync
-description: Deletes a document from kuzzle
+description: Deletes a document from kuzzle.
 ---
 
 # DeleteAsync

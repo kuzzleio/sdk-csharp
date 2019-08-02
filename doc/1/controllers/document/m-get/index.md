@@ -2,7 +2,7 @@
 code: true
 type: page
 title: MGetAsync
-description: Gets multiple documents from kuzzle
+description: Gets multiple documents from kuzzle.
 ---
 
 # MGetAsync

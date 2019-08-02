@@ -1,5 +1,5 @@
 name: Document#MCreateOrReplaceAsync
-description: Creates or replaces documents in kuzzle
+description: Creates or replaces documents in kuzzle.
 hooks:
   before: |
     curl -XDELETE kuzzle:7512/nyc-open-data

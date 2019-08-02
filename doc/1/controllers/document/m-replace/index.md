@@ -2,7 +2,7 @@
 code: true
 type: page
 title: MReplaceAsync
-description: Replaces documents
+description: Replaces documents.
 ---
 
 # MReplaceAsync

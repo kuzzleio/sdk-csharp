@@ -1,5 +1,5 @@
 name: Document#CreateOrReplaceAsync
-description: Creates or replaces a document
+description: Creates or replaces a document.
 hooks:
   before: |
     curl -XDELETE kuzzle:7512/nyc-open-data

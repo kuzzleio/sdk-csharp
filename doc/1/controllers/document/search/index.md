@@ -2,7 +2,7 @@
 code: true
 type: page
 title: SearchAsync
-description: Searches documents
+description: Searches documents.
 ---
 
 # SearchAsync

@@ -2,7 +2,7 @@
 code: true
 type: page
 title: ValidateAsync
-description: Validates a document
+description: Validates a document.
 ---
 
 # ValidateAsync

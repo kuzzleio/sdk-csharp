@@ -2,7 +2,7 @@
 code: true
 type: page
 title: UpdateAsync
-description: Updates a document
+description: Updates a document.
 ---
 
 # UpdateAsync

@@ -2,7 +2,7 @@
 code: true
 type: page
 title: GetAsync
-description: Gets a document from kuzzle
+description: Gets a document from kuzzle.
 ---
 
 # GetAsync

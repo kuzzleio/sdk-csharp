@@ -2,7 +2,7 @@
 code: true
 type: page
 title: DeleteByQueryAsync
-description: Deletes documents matching query
+description: Deletes documents matching query.
 ---
 
 # DeleteByQueryAsync

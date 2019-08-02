@@ -2,7 +2,7 @@
 code: true
 type: page
 title: MCreateOrReplaceAsync
-description: Creates or replaces documents in kuzzle
+description: Creates or replaces documents in kuzzle.
 ---
 
 # MCreateOrReplaceAsync

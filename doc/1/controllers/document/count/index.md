@@ -2,7 +2,7 @@
 code: true
 type: page
 title: CountAsync
-description: Counts documents matching the given query
+description: Counts documents matching the given query.
 ---
 
 # CountAsync
