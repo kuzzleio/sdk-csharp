@@ -1,4 +1,4 @@
-name: bulk#MWriteAsync
+name: Bulk#MWriteAsync
 description: Create or replace multiple documents directly into the storage engine.
 hooks:
   before: |

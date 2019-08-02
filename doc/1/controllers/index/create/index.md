@@ -2,7 +2,7 @@
 code: true
 type: page
 title: CreateAsync
-description: Creates an index
+description: Creates an index.
 ---
 
 # CreateAsync

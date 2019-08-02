@@ -2,7 +2,7 @@
 code: true
 type: page
 title: RefreshInternalAsync
-description: Force refresh of Kuzzle internal index
+description: Force refresh of Kuzzle internal index.
 ---
 
 # RefreshInternalAsync

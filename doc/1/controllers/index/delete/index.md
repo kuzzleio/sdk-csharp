@@ -2,7 +2,7 @@
 code: true
 type: page
 title: DeleteAsync
-description: Deletes an index
+description: Deletes an index.
 ---
 
 # DeleteAsync

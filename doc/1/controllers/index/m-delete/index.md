@@ -2,7 +2,7 @@
 code: true
 type: page
 title: MDeleteAsync
-description: Deletes multiple indexes
+description: Deletes multiple indexes.
 ---
 
 # MDeleteAsync

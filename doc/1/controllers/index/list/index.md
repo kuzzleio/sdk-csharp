@@ -2,7 +2,7 @@
 code: true
 type: page
 title: ListAsync
-description: List the indexes
+description: List the indexes.
 ---
 
 # ListAsync

@@ -1,4 +1,4 @@
-name: bulk#WriteAsync
+name: Bulk#WriteAsync
 description: Create or replace a document directly into the storage engine.
 hooks:
   before: |

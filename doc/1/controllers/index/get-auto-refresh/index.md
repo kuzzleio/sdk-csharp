@@ -2,7 +2,7 @@
 code: true
 type: page
 title: GetAutoRefreshAsync
-description: Returns the status of autorefresh flag
+description: Returns the status of autorefresh flag.
 ---
 
 # GetAutoRefreshAsync

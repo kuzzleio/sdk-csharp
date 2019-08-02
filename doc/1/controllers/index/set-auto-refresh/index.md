@@ -2,7 +2,7 @@
 code: true
 type: page
 title: SetAutoRefreshAsync
-description: Set the autorefresh flag
+description: Set the autorefresh flag.
 ---
 
 # SetAutoRefreshAsync

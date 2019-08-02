@@ -2,7 +2,7 @@
 code: true
 type: page
 title: RefreshAsync
-description: Force Elasticsearch search index update
+description: Force Elasticsearch search index update.
 ---
 
 # RefreshAsync

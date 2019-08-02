@@ -2,7 +2,7 @@
 code: true
 type: page
 title: ExistsAsync
-description: Check for index existence
+description: Check for index existence.
 ---
 
 # ExistsAsync
