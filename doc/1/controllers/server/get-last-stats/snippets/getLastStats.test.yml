@@ -1,9 +1,7 @@
-name: server#getLastStats
+name: Server#GetLastStatsAsync
 description: Returns the most recent statistics snapshot.
 hooks:
   before:
   after:
 template: default
 expected: ^(Last Kuzzle stats:) {("connections":{.*}),("ongoingRequests":{.*}),("completedRequests":{.*}),("failedRequests":{.*}),("timestamp":[0-9]{13})}$
-sdk: csharp
-version: 0

@@ -17,13 +17,11 @@ These statistics include:
 - the number of completed requests since the last frame
 - the number of failed requests since the last frame
 
-## Signature
+## Arguments
 
 ```csharp
 async Task<JObject> GetStatsAsync(Int64 start, Int64 end)
 ```
-
-## Arguments
 
 | Arguments | Type | Description                      | Required |
 | --------- | ---- | -------------------------------- | -------- |

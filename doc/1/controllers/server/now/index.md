@@ -2,14 +2,14 @@
 code: true
 type: page
 title: NowAsync
-description: Returns the current server timestamp, in Epoch-millis
+description: Returns the current server timestamp, in Epoch-millis.
 ---
 
 # NowAsync
 
 Returns the current server timestamp, in Epoch-millis format.
 
-## Signature
+## Arguments
 
 ```csharp
 async Task<Int64> NowAsync()

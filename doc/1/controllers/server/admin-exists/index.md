@@ -9,7 +9,7 @@ description: Checks that an administrator account exists.
 
 Checks that an administrator account exists.
 
-## Signature
+## Arguments
 
 ```csharp
 async Task<bool> AdminExistsAsync()

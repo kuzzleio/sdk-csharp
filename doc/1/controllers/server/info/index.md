@@ -9,7 +9,7 @@ description: Returns information about Kuzzle server.
 
 Returns information about Kuzzle: available API (base + extended), plugins, external services (Redis, Elasticsearch, ...), servers, etc.
 
-## Signature
+## Arguments
 
 ```csharp
 async Task<JObject> InfoAsync()
