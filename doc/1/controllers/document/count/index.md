@@ -2,7 +2,7 @@
 code: true
 type: page
 title: CountAsync
-description: Count documents matching the given query
+description: Counts documents matching the given query
 ---
 
 # CountAsync
@@ -13,7 +13,7 @@ A query can be provided to alter the count result, otherwise returns the total n
 
 Kuzzle uses the [ElasticSearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/5.6/query-dsl.html) syntax.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<int> CountAsync(
@@ -23,7 +23,7 @@ public async Task<int> CountAsync(
 
 ```
 
-## Arguments
+<br/>
 
 | Argument     | Type                                 | Description                                 |
 | ------------ | ------------------------------------ | ------------------------------------------- |

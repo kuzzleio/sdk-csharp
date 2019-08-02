@@ -1,5 +1,5 @@
 name: Document#SearchAsync
-description: Search documents
+description: Searches documents
 hooks:
   before: |
     curl -XDELETE kuzzle:7512/nyc-open-data

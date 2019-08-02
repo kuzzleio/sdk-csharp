@@ -2,8 +2,8 @@ try {
   await kuzzle.Document.CreateAsync(
     "nyc-open-data",
     "yellow-taxi",
-    "some-id",
-    JObject.Parse(@"{""capacity"": 4}"));
+    JObject.Parse(@"{""capacity"": 4}"),
+    id: "some-id");
 
   JObject response = await kuzzle.Document.UpdateAsync(
     "nyc-open-data",
@@ -11,7 +11,7 @@ try {
     "some-id",
     JObject.Parse(@"{""category"": ""suv""}"));
 
-  Console.WriteLine(response.ToString());
+  Console.WriteLine(response.ToString(Formatting.None));
   /*
   {
     "_index": "nyc-open-data",
@@ -23,5 +23,5 @@ try {
   */
   Console.WriteLine("Document successfully updated");
 } catch (KuzzleException e) {
-  Console.Error.WriteLine(e.Message);
+  Console.Error.WriteLine(e);
 }

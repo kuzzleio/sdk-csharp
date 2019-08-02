@@ -2,7 +2,7 @@
 code: true
 type: page
 title: CreateAsync
-description: Create a new document
+description: Creates a new document
 ---
 
 # CreateAsync
@@ -11,7 +11,7 @@ Creates a new document in the persistent data storage.
 
 Throws an error if the document already exists.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JObject> CreateAsync( 
@@ -23,7 +23,7 @@ public async Task<JObject> CreateAsync(
 
 ```
 
-## Arguments
+<br/>
 
 | Option     | Type<br/>(default)                       | Description                                                                        |
 | ------------ | ------------------------------------ | ----------------------------------------------------------- |

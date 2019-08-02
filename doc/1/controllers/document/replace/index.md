@@ -2,14 +2,14 @@
 code: true
 type: page
 title: ReplaceAsync
-description: Replace a document
+description: Replaces a document
 ---
 
 # ReplaceAsync
 
 Replaces the content of an existing document.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JObject> ReplaceAsync(
@@ -17,7 +17,7 @@ public async Task<JObject> ReplaceAsync(
 
 ```
 
-## Arguments
+<br/>
 
 | Argument     | Type                                 | Description                           |
 | ------------ | ------------------------------------ | ------------------------------------- |

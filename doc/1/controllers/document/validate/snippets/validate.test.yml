@@ -1,5 +1,5 @@
 name: Document#ValidateAsync
-description: Validate a document
+description: Validates a document
 hooks:
   before: |
     curl -XDELETE kuzzle:7512/nyc-open-data

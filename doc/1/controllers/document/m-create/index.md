@@ -11,7 +11,7 @@ Creates multiple documents.
 
 Throws a partial error (error code 206) if one or more documents creations fail.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JArray> MCreateAsync(
@@ -22,7 +22,7 @@ public async Task<JArray> MCreateAsync(
 
 ```
 
-## Arguments
+<br/>
 
 | Argument     | Type                                 | Description                                      |
 | ------------ | ------------------------------------ | ------------------------------------------------ |

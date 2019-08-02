@@ -56,5 +56,5 @@ try {
 
   Console.WriteLine("Successfully created " + response.Count + " documents");
 } catch (KuzzleException e) {
-  Console.Error.WriteLine(e.Message);
+  Console.Error.WriteLine(e);
 }

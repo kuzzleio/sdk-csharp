@@ -15,7 +15,7 @@ try {
         ""category"": ""limousine""
       }"));
   }
-  await kuzzle.index.RefreshAsync("nyc-open-data");
+  await kuzzle.Index.RefreshAsync("nyc-open-data");
 
   SearchOptions options = new SearchOptions();
   options.From = 0;
@@ -35,5 +35,5 @@ try {
 
   Console.WriteLine("Successfully retrieved " + result.Total + " documents");
 } catch (KuzzleException e) {
-  Console.Error.WriteLine(e.Message);
+  Console.Error.WriteLine(e);
 }

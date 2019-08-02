@@ -11,7 +11,7 @@ Deletes multiple documents.
 
 Throws a partial error (error code 206) if one or more document deletions fail.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JArray> MDeleteAsync(
@@ -22,7 +22,7 @@ public async Task<JArray> MDeleteAsync(
 
 ```
 
-## Arguments
+<br/>
 
 | Argument     | Type                                      | Description                    |
 | ------------ | ----------------------------------------- | ------------------------------ |

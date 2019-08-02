@@ -10,5 +10,5 @@ try {
     Console.WriteLine("The document is valid");
   }
 } catch (KuzzleException e) {
-  Console.Error.WriteLine(e.Message);
+  Console.Error.WriteLine(e);
 }

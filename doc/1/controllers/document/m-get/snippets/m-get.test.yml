@@ -1,5 +1,5 @@
 name: Document#MGetAsync
-description: Get multiple documents from kuzzle
+description: Gets multiple documents from kuzzle
 hooks:
   before: |
     curl -XDELETE kuzzle:7512/nyc-open-data
@@ -12,5 +12,5 @@ hooks:
     curl -XDELETE kuzzle:7512/nyc-open-data
 template: default
 expected:
-  - "\"_id\":\"some-id\""
+  - \"_id\": \"some-id\"
   - Successfully retrieved 2 documents

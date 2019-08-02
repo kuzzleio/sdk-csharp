@@ -2,7 +2,7 @@
 code: true
 type: page
 title: ValidateAsync
-description: Validate a document
+description: Validates a document
 ---
 
 # ValidateAsync
@@ -13,7 +13,7 @@ Documents are always valid if no validation rules are defined on the provided in
 
 This request does not store the document.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<bool> ValidateAsync(
@@ -23,7 +23,7 @@ public async Task<bool> ValidateAsync(
 
 ```
 
-## Arguments
+<br/>
 
 | Argument     | Type                                 | Description                           |
 | ------------ | ------------------------------------ | ------------------------------------- |

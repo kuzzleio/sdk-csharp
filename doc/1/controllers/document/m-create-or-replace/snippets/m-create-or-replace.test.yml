@@ -1,5 +1,5 @@
 name: Document#MCreateOrReplaceAsync
-description: Create or replace documents in kuzzle
+description: Creates or replaces documents in kuzzle
 hooks:
   before: |
     curl -XDELETE kuzzle:7512/nyc-open-data
@@ -9,5 +9,5 @@ hooks:
     curl -XDELETE kuzzle:7512/nyc-open-data
 template: default
 expected:
-  - "\"_id\":\"some-id\""
-  - Document successfully created
+  - \"_id\": \"some-id\"
+  - Successfully created 2 documents

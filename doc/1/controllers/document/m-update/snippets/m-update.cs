@@ -58,5 +58,5 @@ try {
     */
   Console.WriteLine("Successfully updated " + response.Count + " documents");
 } catch (KuzzleException e) {
-  Console.Error.WriteLine(e.Message);
+  Console.Error.WriteLine(e);
 }

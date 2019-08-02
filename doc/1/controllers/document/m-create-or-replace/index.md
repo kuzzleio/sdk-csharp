@@ -2,7 +2,7 @@
 code: true
 type: page
 title: MCreateOrReplaceAsync
-description: Create or replace documents in kuzzle
+description: Creates or replaces documents in kuzzle
 ---
 
 # MCreateOrReplaceAsync
@@ -11,7 +11,7 @@ Creates or replaces multiple documents.
 
 Throws a partial error (error code 206) if one or more document creations/replacements fail.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JArray> MCreateOrReplaceAsync(
@@ -22,7 +22,7 @@ public async Task<JArray> MCreateOrReplaceAsync(
 
 ```
 
-## Arguments
+<br/>
 
 | Argument     | Type                                 | Description                                      |
 | ------------ | ------------------------------------ | ------------------------------------------------ |

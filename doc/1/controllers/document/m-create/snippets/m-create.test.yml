@@ -9,5 +9,5 @@ hooks:
     curl -XDELETE kuzzle:7512/nyc-open-data
 template: default
 expected:
-  - "\"this\":\"document id is auto-computed\""
-  - Documents successfully created
+  - "\"this\": \"document id is auto-computed\""
+  - Successfully created 2 documents

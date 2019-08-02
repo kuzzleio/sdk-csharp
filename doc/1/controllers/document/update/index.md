@@ -2,7 +2,7 @@
 code: true
 type: page
 title: UpdateAsync
-description: Update a document
+description: Updates a document
 ---
 
 # UpdateAsync
@@ -12,7 +12,7 @@ Updates a document content.
 Conflicts may occur if the same document gets updated multiple times within a short timespan, in a database cluster.  
 You can set the `retryOnConflict` optional argument (with a retry count), to tell Kuzzle to retry the failing updates the specified amount of times before rejecting the request with an error.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JObject> UpdateAsync(
@@ -25,7 +25,7 @@ public async Task<JObject> UpdateAsync(
 
 ```
 
-## Arguments
+<br/>
 
 | Argument     | Type                                 | Description                           |
 | ------------ | ------------------------------------ | ------------------------------------- |

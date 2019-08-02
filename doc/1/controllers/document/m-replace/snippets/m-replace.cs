@@ -51,5 +51,5 @@ try {
 
   Console.WriteLine("Successfully replaced " + response.Count + " documents");
 } catch (KuzzleException e) {
-  Console.Error.WriteLine(e.Message);
+  Console.Error.WriteLine(e);
 }

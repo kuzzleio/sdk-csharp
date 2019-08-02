@@ -9,5 +9,5 @@ hooks:
     curl -XDELETE kuzzle:7512/nyc-open-data
 template: default
 expected:
-  - "\"lastName\": \"Eggins\""
+  - \"lastName\": \"Eggins\"
   - Document successfully created

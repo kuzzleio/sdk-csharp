@@ -9,7 +9,7 @@ description: Creates or replaces a document
 
 Creates a new document in the persistent data storage, or replaces its content if it already exists.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JObject> CreateOrReplaceAsync( 
@@ -21,7 +21,7 @@ public async Task<JObject> CreateOrReplaceAsync(
 
 ```
 
-## Arguments
+<br/>
 
 | Argument     | Type                                 | Description                                       |
 | ------------ | ------------------------------------ | ------------------------------------------------- |

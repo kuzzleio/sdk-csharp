@@ -2,7 +2,7 @@
 code: true
 type: page
 title: MReplaceAsync
-description: Replace documents
+description: Replaces documents
 ---
 
 # MReplaceAsync
@@ -11,7 +11,7 @@ Replaces multiple documents.
 
 Throws a partial error (error code 206) if one or more documents can not be replaced.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JArray> MReplaceAsync(
@@ -22,7 +22,7 @@ public async Task<JArray> MReplaceAsync(
 
 ```
 
-## Arguments
+<br/>
 
 | Argument     | Type                                 | Description                                       |
 | ------------ | ------------------------------------ | ------------------------------------------------- |

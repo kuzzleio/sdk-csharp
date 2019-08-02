@@ -9,5 +9,5 @@ hooks:
     curl -XDELETE kuzzle:7512/nyc-open-data
 template: default
 expected:
-  - \"capacity\":4
+  - \"capacity\": 4
   - Success

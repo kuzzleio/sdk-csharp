@@ -2,7 +2,7 @@
 code: true
 type: page
 title: DeleteByQueryAsync
-description: Delete documents matching query
+description: Deletes documents matching query
 ---
 
 # DeleteByQueryAsync
@@ -11,7 +11,7 @@ Deletes documents matching the provided search query.
 
 Kuzzle uses the [ElasticSearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/5.6/query-dsl.html) syntax.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JArray> DeleteByQueryAsync(
@@ -21,7 +21,7 @@ public async Task<JArray> DeleteByQueryAsync(
 
 ```
 
-## Arguments
+<br/>
 
 | Argument     | Type                                 | Description                             |
 | ------------ | ------------------------------------ | --------------------------------------- |
@@ -32,7 +32,7 @@ public async Task<JArray> DeleteByQueryAsync(
 
 ## Return
 
-A JArray containing the ids of deleted documents.
+A JArray containing the IDs of deleted documents.
 
 ## Exceptions
 

@@ -2,7 +2,7 @@
 code: true
 type: page
 title: MGetAsync
-description: Get multiple documents from kuzzle
+description: Gets multiple documents from kuzzle
 ---
 
 # MGetAsync
@@ -11,7 +11,7 @@ Gets multiple documents.
 
 Throws a partial error (error code 206) if one or more document can not be retrieved.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JArray> MGetAsync(
@@ -21,7 +21,7 @@ public async Task<JArray> MGetAsync(
 
 ```
 
-## Arguments
+<br/>
 
 | Argument     | Type                                      | Description     |
 | ------------ | ----------------------------------------- | --------------- |

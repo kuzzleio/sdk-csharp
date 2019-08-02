@@ -11,7 +11,7 @@ Deletes a document.
 
 The optional parameter `waitForRefresh` can be set with the value `true` in order to wait for the document to be indexed (indexed documents are available for `search`).
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<string> DeleteAsync(
@@ -22,7 +22,7 @@ public async Task<string> DeleteAsync(
 
 ```
 
-## Arguments
+<br/>
 
 | Argument     | Type                                 | Description     |
 | ------------ | ------------------------------------ | --------------- |

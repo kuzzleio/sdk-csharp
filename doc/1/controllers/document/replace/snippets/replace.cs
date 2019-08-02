@@ -1,11 +1,11 @@
 try {
-  await kuzzle.Document.create(
+  await kuzzle.Document.CreateAsync(
     "nyc-open-data",
     "yellow-taxi",
-    "some-id",
-    JObject.Parse(@"{""color"": ""yellow""}"));
+    JObject.Parse(@"{""color"": ""yellow""}"),
+    id: "some-id");
 
-  string response = await kuzzle.Document.ReplaceAsync(
+  JObject response = await kuzzle.Document.ReplaceAsync(
     "nyc-open-data",
     "yellow-taxi",
     "some-id",
@@ -38,5 +38,5 @@ try {
   */
   Console.WriteLine("Document successfully replaced");
 } catch (KuzzleException e) {
-  Console.Error.WriteLine(e.Message);
+  Console.Error.WriteLine(e);
 }

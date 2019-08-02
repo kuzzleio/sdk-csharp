@@ -2,14 +2,14 @@
 code: true
 type: page
 title: GetAsync
-description: Get a document from kuzzle
+description: Gets a document from kuzzle
 ---
 
 # GetAsync
 
 Gets a document.
 
-## Signature
+## Arguments
 
 ```csharp
 public async Task<JObject> GetAsync(
@@ -19,7 +19,7 @@ public async Task<JObject> GetAsync(
 
 ```
 
-## Arguments
+<br/>
 
 | Argument     | Type                                 | Description     |
 | ------------ | ------------------------------------ | --------------- |

@@ -2,8 +2,8 @@ try {
   await kuzzle.Document.CreateAsync(
     "nyc-open-data",
     "yellow-taxi",
-    "some-id",
-    JObject.Parse(@"{""capacity"": 4}"));
+    JObject.Parse(@"{""capacity"": 4}"),
+    id: "some-id");
 
   JObject response =
     await kuzzle.Document.GetAsync("nyc-open-data", "yellow-taxi", "some-id");
@@ -32,5 +32,5 @@ try {
 
   Console.WriteLine("Success");
 } catch (KuzzleException e) {
-  Console.Error.WriteLine(e.GetAsyncMessage());
+  Console.Error.WriteLine(e);
 }
