@@ -1,0 +1,16 @@
+name: Document#MReplaceAsync
+description: Replace documents
+hooks:
+  before: |
+    curl -XDELETE kuzzle:7512/nyc-open-data
+    curl -XPOST kuzzle:7512/nyc-open-data/_create
+    curl -XPUT kuzzle:7512/nyc-open-data/yellow-taxi
+    curl -H "Content-type: application/json" -d '{}' kuzzle:7512/nyc-open-data/yellow-taxi/some-id/_create
+    curl -H "Content-type: application/json" -d '{}' kuzzle:7512/nyc-open-data/yellow-taxi/some-other-id/_create
+    curl -XPOST kuzzle:7512/nyc-open-data/_refresh
+  after: |
+    curl -XDELETE kuzzle:7512/nyc-open-data
+template: default
+expected:
+  - "\"capacity\":4"
+  - Successfully replaced 2 documents
