@@ -1,4 +1,4 @@
-name: auth#updateSelf
+name: Auth#UpdateSelfAsync
 description: Updates the current user object in Kuzzle.
 hooks:
   before: curl -X POST kuzzle:7512/users/foo/_create -H "Content-Type:application/json" --data '{"content":{"profileIds":["default"]},"credentials":{"local":{"username":"foo","password":"bar"}}}'

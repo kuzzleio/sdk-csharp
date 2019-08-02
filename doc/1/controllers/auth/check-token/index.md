@@ -23,11 +23,11 @@ public async Task<JObject> CheckTokenAsync(string token);
 
 A JObject which has the following properties:
 
-| Property   | Type              | Description                      |
-|------------|-------------------|----------------------------------|
-| valid      | <pre>bool</pre>   | Token validity                   |
-| state      | <pre>string</pre> | Explain why the token is invalid |
-| expires_at | <pre>Int64</pre>  | Token expiration timestamp       |
+| Property     | Type              | Description                      |
+|--------------|-------------------|----------------------------------|
+| `valid`      | <pre>bool</pre>   | Token validity                   |
+| `state`      | <pre>string</pre> | Explain why the token is invalid |
+| `expires_at` | <pre>Int64</pre>  | Token expiration timestamp       |
 
 ## Exceptions
 

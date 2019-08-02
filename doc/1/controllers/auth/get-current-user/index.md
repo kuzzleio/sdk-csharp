@@ -2,7 +2,7 @@
 code: true
 type: page
 title: GetCurrentUserAsync
-description: Returns the profile object for the user linked to the `JSON Web Token`
+description: Returns the profile object for the user linked to the `JSON Web Token`.
 ---
 
 # GetCurrentUserAsync

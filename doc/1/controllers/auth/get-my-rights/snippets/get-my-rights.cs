@@ -1,5 +1,7 @@
 try {
-  await kuzzle.Auth.LoginAsync("local", JObject.Parse("{username: 'foo', password: 'bar'}"));
+  await kuzzle.Auth.LoginAsync(
+    "local",
+    JObject.Parse("{username: 'foo', password: 'bar'}"));
 
   JArray rights = await kuzzle.Auth.GetMyRightsAsync();
 
@@ -15,6 +17,6 @@ try {
     }
   ]
   */
-} catch (Exception e) {
+} catch (KuzzleException e) {
   Console.WriteLine(e);
 }

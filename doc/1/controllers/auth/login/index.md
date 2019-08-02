@@ -2,7 +2,7 @@
 code: true
 type: page
 title: LoginAsync
-description: Authenticate a user
+description: Authenticate a user.
 ---
 
 # LoginAsync

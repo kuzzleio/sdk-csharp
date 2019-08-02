@@ -1,5 +1,7 @@
 try {
-  await kuzzle.Auth.LoginAsync("local", JObject.Parse("{username: 'foo', password: 'bar'}"));
+  await kuzzle.Auth.LoginAsync(
+    "local",
+    JObject.Parse("{username: 'foo', password: 'bar'}"));
   JObject response = await kuzzle.Auth.UpdateMyCredentialsAsync(
     "local",
     JObject.Parse("{username: 'foo', password: 'bar'}"));
@@ -12,6 +14,6 @@ try {
   }
   */
   Console.WriteLine("Credentials successfully updated");
-} catch (Exception e) {
+} catch (KuzzleException e) {
   Console.WriteLine(e);
 }

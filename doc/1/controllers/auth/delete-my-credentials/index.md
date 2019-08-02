@@ -2,7 +2,7 @@
 code: true
 type: page
 title: DeleteMyCredentialsAsync
-description: Delete the current user's credentials for the specified strategy
+description: Delete the current user's credentials for the specified strategy.
 ---
 
 # DeleteMyCredentialsAsync

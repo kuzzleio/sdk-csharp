@@ -1,5 +1,7 @@
 try {
-  await kuzzle.Auth.LoginAsync("local", JObject.Parse("{username: 'foo', password: 'bar'}"));
+  await kuzzle.Auth.LoginAsync(
+    "local",
+    JObject.Parse("{username: 'foo', password: 'bar'}"));
   JArray strategies = await kuzzle.Auth.GetStrategiesAsync();
 
   Console.WriteLine(strategies.ToString(Formatting.None));
@@ -8,6 +10,6 @@ try {
     "local"
   ]
   */
-} catch (Exception e) {
+} catch (KuzzleException e) {
   Console.WriteLine(e);
 }
