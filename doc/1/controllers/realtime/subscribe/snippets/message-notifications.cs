@@ -17,10 +17,13 @@ NotificationHandler listener = (notification) => {
 
 try {
   // Subscribes to notifications for documents
-  await kuzzle.Realtime.SubscribeAsync("i-dont-exist", "in-database", JObject.Parse("{}"), listener);
+  await kuzzle.Realtime.SubscribeAsync(
+    "i-dont-exist",
+    "in-database",
+    JObject.Parse("{}"), listener);
 
   JObject message = JObject.Parse("{ metAt: 'Insane', hello: 'world' }");
   await kuzzle.Realtime.PublishAsync("i-dont-exist", "in-database", message);
-} catch (Exception e) {
+} catch (KuzzleException e) {
   Console.WriteLine(e);
 }

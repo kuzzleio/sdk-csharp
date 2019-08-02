@@ -1,5 +1,6 @@
 NotificationHandler listener = (notification) => {
-  Console.WriteLine("Document moved " + notification.Scope.ToString() + " from the scope");
+  string scope = notification.Scope.ToString();
+  Console.WriteLine("Document moved " + scope + " from the scope");
 };
 
 try {
@@ -29,6 +30,6 @@ try {
     "yellow-taxi",
     "nina-vkote",
     JObject.Parse("{ age: 42 }"));
-} catch (Exception e) {
+} catch (KuzzleException e) {
   Console.WriteLine(e);
 }

@@ -10,6 +10,6 @@ try {
   int count = await kuzzle.Realtime.CountAsync(room_id);
 
   Console.WriteLine("Currently " + count + " active subscription");
-} catch (Exception e) {
+} catch (KuzzleException e) {
   Console.WriteLine(e);
 }

@@ -2,7 +2,7 @@
 code: true
 type: page
 title: ImportAsync
-desription: Creates, updates or deletes large amounts of documents as fast as possible.
+description: Creates, updates or deletes large amounts of documents as fast as possible.
 ---
 
 # ImportAsync

@@ -2,7 +2,7 @@
 code: true
 type: page
 title: PublishAsync
-description: Publish a real-time message
+description: Publish a real-time message.
 ---
 
 # PublishAsync

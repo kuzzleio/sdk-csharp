@@ -4,6 +4,6 @@ try {
   await kuzzle.Realtime.PublishAsync("i-dont-exist", "in-database", message);
 
   Console.WriteLine("Message successfully published");
-} catch (Exception e) {
+} catch (KuzzleException e) {
   Console.WriteLine(e);
 }

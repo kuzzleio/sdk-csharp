@@ -2,7 +2,7 @@
 code: true
 type: page
 title: SubscribeAsync
-description: Subscribe to real-time notifications
+description: Subscribe to real-time notifications.
 ---
 
 # SubscribeAsync

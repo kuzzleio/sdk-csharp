@@ -1,5 +1,5 @@
-name: realtime#count
-description: Count subscribers for a subscription room
+name: Realtime#CountAsync
+description: Count subscribers for a subscription room.
 hooks:
   before:
   after:

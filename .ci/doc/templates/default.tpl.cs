@@ -3,6 +3,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using KuzzleSdk;
+using KuzzleSdk.Exceptions;
 using KuzzleSdk.Protocol;
 using static KuzzleSdk.API.Controllers.RealtimeController;
 using Newtonsoft.Json.Linq;

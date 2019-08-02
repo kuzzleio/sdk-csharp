@@ -1,5 +1,5 @@
-name: realtime#unsubscribe
-description: Removes a subscription
+name: Realtime#UnsubscribeAsync
+description: Removes a subscription.
 hooks:
   before:
   after:

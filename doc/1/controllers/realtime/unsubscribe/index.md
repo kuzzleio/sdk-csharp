@@ -2,7 +2,7 @@
 code: true
 type: page
 title: UnsubscribeAsync
-description: Removes a subscription
+description: Removes a subscription.
 ---
 
 # UnsubscribeAsync

@@ -1,5 +1,5 @@
-name: realtime#subscribe-documents-leave-scope
-description: Subscribe to documents leaving the scope
+name: Realtime#Subscribe-documents-leave-scope
+description: Subscribe to documents leaving the scope.
 hooks:
   before: |
     curl -X POST kuzzle:7512/nyc-open-data/_create

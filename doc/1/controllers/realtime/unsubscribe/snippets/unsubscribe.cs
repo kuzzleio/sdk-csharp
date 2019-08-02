@@ -10,6 +10,6 @@ try {
   await kuzzle.Realtime.UnsubscribeAsync(room_id);
 
   Console.WriteLine("Successfully unsubscribed");
-} catch (Exception e) {
+} catch (KuzzleException e) {
   Console.WriteLine(e);
 }

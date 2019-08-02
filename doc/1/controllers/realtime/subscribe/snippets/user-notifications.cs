@@ -1,5 +1,6 @@
 NotificationHandler listener = (notification) => {
-  Console.WriteLine("Currently " + notification.Result["count"] + " users in the room");
+  int count = (int)notification.Result["count"];
+  Console.WriteLine("Currently " + count + " users in the room");
   Console.WriteLine(notification.Volatile);
   // "{ "username": "nina vkote" }"
 };
@@ -35,6 +36,6 @@ try {
     filters,
     listener,
     options2);
-} catch (Exception e) {
+} catch (KuzzleException e) {
   Console.WriteLine(e);
 }

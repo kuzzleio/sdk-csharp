@@ -1,5 +1,5 @@
-name: realtime#subscribe-messages
-description: Subscribe to message notifications
+name: Realtime#Subscribe-messages
+description: Subscribe to message notifications.
 hooks:
   before:
   after:

@@ -24,6 +24,6 @@ try {
     "yellow-taxi",
     JObject.Parse("{ name: 'nina vkote', age: 19 }"),
     "nina-vkote");
-} catch (Exception e) {
+} catch (KuzzleException e) {
   Console.WriteLine(e);
 }
