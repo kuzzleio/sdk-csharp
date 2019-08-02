@@ -12,4 +12,9 @@ KuzzleSdk.Kuzzle kuzzle = new KuzzleSdk.Kuzzle(socket);
 
 kuzzle.ConnectAsync(CancellationToken.None).Wait();
 
-[snippet-code]
+try {
+    [snippet-code]
+} catch (Exception) {
+    Console.WriteLine("Success");
+}
+
