@@ -16,14 +16,14 @@ Refreshes an authentication token.
 ## Arguments
 
 ```csharp
-public async Task<JObject> RefreshTokenAsync(string expiresIn = null);
+public async Task<JObject> RefreshTokenAsync(TimeSpan? expiresIn = null);
 ```
 
 **Optional:**
 
 | Argument    | Type              | Description                                                                 |
 |-------------|-------------------|-----------------------------------------------------------------------------|
-| `expiresIn` | <pre>string</pre> | Set the expiration duration (default: depends on Kuzzle configuration file) |
+| `expiresIn` | <pre>TimeSpan?</pre> | Set the token expiration duration (default: depends on Kuzzle configuration file) |
 
 ## Return
 
