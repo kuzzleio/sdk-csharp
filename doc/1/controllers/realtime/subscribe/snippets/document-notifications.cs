@@ -2,9 +2,9 @@ NotificationHandler listener = (notification) => {
   string id = notification.Result["_id"]?.ToString();
 
   if (notification.Scope == "in") {
-    Console.WriteLine("Document " + id + " enter the scope");
+    Console.WriteLine($"Document {id} entered the scope");
   } else {
-    Console.WriteLine("Document " + id + " leave the scope");
+    Console.WriteLine($"Document {id} left the scope");
   }
 
 };

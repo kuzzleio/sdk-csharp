@@ -2,12 +2,12 @@
 code: true
 type: page
 title: CountAsync
-description: Count subscribers for a subscription room.
+description: Counts subscribers for a subscription room.
 ---
 
 # CountAsync
 
-Count the number of subscribers for a subscription room
+Counts the number of subscribers for a subscription room
 
 ## Arguments
 

@@ -1,6 +1,10 @@
 NotificationHandler listener = (notification) => {
   string scope = notification.Scope.ToString();
-  Console.WriteLine("Document moved " + scope + " from the scope");
+  if (scope == "out") {
+    Console.WriteLine($"Document moved {scope} from the scope");
+  } else {
+    Console.WriteLine($"Document moved {scope} the scope");
+  }
 };
 
 try {

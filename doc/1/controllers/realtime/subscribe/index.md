@@ -13,8 +13,11 @@ Subscribes by providing a set of filters: messages, document changes and, option
 
 ```csharp
 public async Task<string> SubscribeAsync(
-        string index, string collection, JObject filters,
-        NotificationHandler handler, SubscribeOptions options = null);
+        string index,
+        string collection,
+        JObject filters,
+        NotificationHandler handler,
+        SubscribeOptions options = null);
 ```
 
 | Argument     | Type                                    | Description                                                                                                     |
