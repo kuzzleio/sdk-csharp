@@ -12,18 +12,18 @@ namespace Kuzzle.Tests.API {
     internal Mock<IRealtimeController> mockedRealtimeController;
     internal Mock<IAuthController> mockedAuthController;
     internal Mock<IKuzzle> mockedKuzzle;
-    internal Mock<IKuzzleEventHandler> mockedKuzzleEventHandler;
+    internal Mock<AbstractKuzzleEventHandler> mockedKuzzleEventHandler;
 
     public TestableKuzzle() {
       mockedRealtimeController = new Mock<IRealtimeController>();
       mockedAuthController = new Mock<IAuthController>();
       mockedKuzzle = new Mock<IKuzzle>();
-      mockedKuzzleEventHandler = new Mock<IKuzzleEventHandler>();
+      mockedKuzzleEventHandler = new Mock<AbstractKuzzleEventHandler>();
     }
 
     public string AuthenticationToken { get; set; } = "";
 
-    public IKuzzleEventHandler GetEventHandler() {
+    public AbstractKuzzleEventHandler GetEventHandler() {
       return mockedKuzzleEventHandler.Object;
     }
 

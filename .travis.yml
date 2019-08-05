@@ -1,7 +1,13 @@
+env:
+  global:
+    - AWS_ACCESS_KEY_ID=AKIAIYAXFUAHXOWP2MJA
+    # AWS_SECRET_ACCESS_KEY
+    - secure: "NwMEJIJ07T6XQ9AcvvzeYKZn9DDVCW4NZMv1lESOn3s1iFFhZ7iT2LsB+tHwjjjTf5L+DWclDhb0ec+5OU6ExgNuo18nh31bJjryEVX/GJ7ApEzuWAW/NgQ7Gq5wIQl2N2Lx2C3LeWyD35mCGz0wkjsFHgLh7SRBu/S7buMAL1N0KX6/xH1XwUgsNL7QcnckzovfBvW/ZkCOmQOQQuk+d4xUQUpgtd1Ey0U/KMC9Ot8dKHJkYaQlICK34zu9Ovx6rOBMwU5TWxgyrq8QYX3b170Kk7Yn/HvbUlgkQ7mPUlIh1uUgh4/Lwr3x3h03nVoyaPXWcP4PxlgDAjoshdJPOaoO8SV8JoBk6Wnkp4mHOwPReqtE33pCvjaYGM7Y6IGs0UQqZtR3CKHeKg8bPLQPnc/AA8SYz27H46DnRk1UG4vGj/5KuCnwC7MvYR2Ptx0GBCoseopTHot/gDjDKsQP4Q00sdTsTpwDL6e/MGuBup4l5u7QKwftwnACzsvl7m0B5oJOGOh3nXm22rZ9aJxi+oeKiiIxiEdfJKl/8cayYT6UCYpWUM8L+LuXeQljlezy038AMTHGPA/v+vH4nBIDt/ohCUkoonUQd21tCVbQ+RCzojg/GyuQ7nEKrCuVA4PLv9HoN2C5k9MUY0SvlrPz0t4wNkfInqDXOVyiudAh3xU="
+
 jobs:
   include:
-    - stage: "Tests"
-      name: "Unit Tests"
+    - stage: Tests
+      name: Unit Tests
       if: type = pull_request OR type = push AND branch =~ /^master|[0-9]+-dev$/ OR type = cron
       language: csharp
       solution: sdk-csharp.sln
@@ -16,12 +22,11 @@ jobs:
         - dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=$TRAVIS_BUILD_DIR/lcov.info
         - curl -s https://codecov.io/bash > codecov && bash codecov
 
-    - stage: "Tests"
-      name: "Documentation"
+    - stage: Tests
+      name: Documentation Snippets
       if: type = pull_request OR type = push AND branch =~ /^master|[0-9]+-dev$/ OR type = cron
-      stage: Tests
       language: node_js
-      node_js: 8
+      node_js: 10
 
       script:
         - docker-compose -f .ci/doc/docker-compose.yml run doc-tests node index
@@ -29,16 +34,28 @@ jobs:
     - stage: Tests
       name: Dead link check
       if: type = pull_request OR type = push AND branch =~ /^master|[0-9]+-(dev|stable)$/ OR type = cron
+      language: node_js
+      node_js: 10
 
       before_script:
         - npm run doc-prepare
         - npm run --prefix doc/framework clone-repos
-        - gem install typhoeus
       script:
+        - gem install typhoeus
         - HYDRA_MAX_CONCURRENCY=20 npm run --prefix doc/framework dead-links
 
-    - stage: "Deployments"
-      name: "NuGet"
+    - stage: Tests
+      name: Build documentation
+      if: type = pull_request OR type = push AND branch =~ /^master|[0-9]+-(dev|stable)$/ OR type = cron
+      language: node_js
+      node_js: 10
+
+      script:
+        - npm run doc-prepare
+        - npm run doc-build
+
+    - stage: Deployments
+      name: NuGet
       if: tag IS present AND branch = master
       language: csharp
       solution: sdk-csharp.sln
@@ -59,3 +76,69 @@ jobs:
         email: support@kuzzle.io
         provider: script
         script: bash deploy.sh
+
+    - stage: Deployment Doc Dev
+      name: Deploy next-docs.kuzzle.io
+      if: type = push AND branch =~ .*-dev
+      language: node_js
+      node_js: 10
+      env:
+        - NODE_ENV=production
+        - S3_BUCKET=docs-next.kuzzle.io
+        - CLOUDFRONT_DISTRIBUTION_ID=E2ZCCEK9GRB49U
+        - AWS_DEFAULT_REGION=us-west-2
+
+      addons:
+        apt:
+          packages:
+            - python
+            - python-pip
+
+      install:
+        - pip install awscli --upgrade --user
+
+      script:
+        - npm run doc-prepare
+        - npm run doc-build
+
+      deploy:
+        provider: script
+        script:
+          - npm run doc-upload
+        skip_cleanup: true
+
+      after_deploy:
+        - npm run doc-cloudfront
+
+    - stage: Deployment Doc Prod
+      name: Deploy docs.kuzzle.io
+      if: type = push AND branch =~ /^master|[0-9]+-stable$/
+      language: node_js
+      node_js: 10
+      env:
+        - NODE_ENV=production
+        - S3_BUCKET=docs.kuzzle.io
+        - CLOUDFRONT_DISTRIBUTION_ID=E3D6RP0POLCJMM
+        - AWS_DEFAULT_REGION=us-west-2
+
+      addons:
+        apt:
+          packages:
+            - python
+            - python-pip
+
+      install:
+        - pip install awscli --upgrade --user
+
+      script:
+        - npm run doc-prepare
+        - npm run doc-build
+
+      deploy:
+        provider: script
+        script:
+          - npm run doc-upload
+        skip_cleanup: true
+
+      after_deploy:
+        - npm run doc-cloudfront

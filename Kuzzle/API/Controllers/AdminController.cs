@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using KuzzleSdk.Utils;
+﻿using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.API.Controllers {
@@ -29,13 +27,12 @@ namespace KuzzleSdk.API.Controllers {
       JObject query = new JObject {
         {"controller", "admin"},
         {"action", "loadFixtures"},
+        {"waitForRefresh", waitForRefresh},
         {"body", new JObject {
             {"index-name", indexName}
           }
         }
       };
-
-      QueryUtils.HandleRefreshOption(query, waitForRefresh);
 
       await api.QueryAsync(query);
     }
@@ -48,13 +45,12 @@ namespace KuzzleSdk.API.Controllers {
       JObject query = new JObject {
         {"controller", "admin"},
         {"action", "loadMappings"},
+        {"waitForRefresh", waitForRefresh},
         {"body", new JObject {
             {"index-name", indexName}
           }
         }
       };
-
-      QueryUtils.HandleRefreshOption(query, waitForRefresh);
 
       await api.QueryAsync(query);
     }
@@ -67,10 +63,9 @@ namespace KuzzleSdk.API.Controllers {
       JObject query = new JObject {
         {"controller", "admin"},
         {"action", "loadSecurities"},
+        {"waitForRefresh", waitForRefresh},
         {"body", body}
       };
-
-      QueryUtils.HandleRefreshOption(query, waitForRefresh);
 
       await api.QueryAsync(query);
     }

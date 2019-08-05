@@ -4,7 +4,7 @@ using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.API.Controllers {
 
-  public interface IAuthController {
+  internal interface IAuthController {
     Task<JObject> CheckTokenAsync(string token);
     Task<JObject> RefreshTokenAsync(Int64 expiresIn);
     }
@@ -31,6 +31,10 @@ namespace KuzzleSdk.API.Controllers {
         });
 
       return (JObject)response.Result;
+    }
+
+    async Task<JObject> IAuthController.CheckTokenAsync(string token) {
+      return await (CheckTokenAsync(token));
     }
 
     /// <summary>
@@ -185,7 +189,7 @@ namespace KuzzleSdk.API.Controllers {
     /// <summary>
     /// Refreshes an authentication token.
     /// </summary>
-    public async Task<JObject> RefreshTokenAsync(Int64 expiresIn) {
+    async Task<JObject> IAuthController.RefreshTokenAsync(Int64 expiresIn) {
       Response response = await api.QueryAsync(new JObject {
         { "controller", "auth" },
         { "action", "refreshToken" },

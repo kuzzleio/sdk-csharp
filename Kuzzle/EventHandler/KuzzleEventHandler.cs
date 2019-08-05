@@ -4,11 +4,11 @@ using KuzzleSdk.API;
 using KuzzleSdk.EventHandler.Events;
 
 namespace KuzzleSdk.EventHandler {
-  public sealed class KuzzleEventHandler : IKuzzleEventHandler {
+  public sealed class KuzzleEventHandler : AbstractKuzzleEventHandler {
 
-    private Kuzzle kuzzle;
+    private IKuzzleApi kuzzle;
 
-    public KuzzleEventHandler(Kuzzle kuzzle) {
+    public KuzzleEventHandler(IKuzzleApi kuzzle) {
       this.kuzzle = kuzzle;
     }
 
@@ -24,7 +24,7 @@ namespace KuzzleSdk.EventHandler {
     /// <summary>
     /// Occurs when we have to [add, remove, clear] subscriptions :
     /// </summary>
-    public event EventHandler<SubscriptionEvent> Subscription {
+    public override event EventHandler<SubscriptionEvent> Subscription {
       add {
         eventHandlerList.AddHandler(subscriptionEventKey, value);
       }
@@ -34,7 +34,7 @@ namespace KuzzleSdk.EventHandler {
       }
     }
 
-    public void DispatchSubscription(SubscriptionEvent subscriptionData) {
+    internal override void DispatchSubscription(SubscriptionEvent subscriptionData) {
       EventHandler<SubscriptionEvent> subscriptionEvent =
       (EventHandler<SubscriptionEvent>)eventHandlerList[subscriptionEventKey];
 
@@ -44,7 +44,7 @@ namespace KuzzleSdk.EventHandler {
     /// <summary>
     /// Occurs when a user has logged in
     /// </summary>
-    public event EventHandler<UserLoggedInEvent> UserLoggedIn {
+    public override event EventHandler<UserLoggedInEvent> UserLoggedIn {
       add {
         eventHandlerList.AddHandler(userLoggedInEventKey, value);
       }
@@ -54,17 +54,17 @@ namespace KuzzleSdk.EventHandler {
       }
     }
 
-    public void DispatchUserLoggedIn(string username) {
+    internal override void DispatchUserLoggedIn(string kuid) {
       EventHandler<UserLoggedInEvent> userLoggedIn =
       (EventHandler<UserLoggedInEvent>)eventHandlerList[userLoggedInEventKey];
 
-      userLoggedIn?.Invoke(this, new UserLoggedInEvent(username));
+      userLoggedIn?.Invoke(this, new UserLoggedInEvent(kuid));
     }
 
     /// <summary>
     /// Occurs when the successfuly reconnected to the network
     /// </summary>
-    public event Action Reconnected {
+    public override event Action Reconnected {
       add {
         eventHandlerList.AddHandler(reconnectedEventKey, value);
       }
@@ -74,7 +74,7 @@ namespace KuzzleSdk.EventHandler {
       }
     }
 
-    public void DispatchReconnected() {
+    internal override void DispatchReconnected() {
       Action queueRecovered = (Action)eventHandlerList[reconnectedEventKey];
       queueRecovered?.Invoke();
     }
@@ -82,7 +82,7 @@ namespace KuzzleSdk.EventHandler {
     /// <summary>
     /// Occurs when the offline queue of query has been successfuly recovered
     /// </summary>
-    public event Action QueueRecovered {
+    public override event Action QueueRecovered {
       add {
         eventHandlerList.AddHandler(queueRecoveredEventKey, value);
       }
@@ -92,7 +92,7 @@ namespace KuzzleSdk.EventHandler {
       }
     }
 
-    public void DispatchQueueRecovered() {
+    internal override void DispatchQueueRecovered() {
       Action queueRecovered = (Action)eventHandlerList[queueRecoveredEventKey];
       queueRecovered?.Invoke();
     }
@@ -100,7 +100,7 @@ namespace KuzzleSdk.EventHandler {
     /// <summary>
     /// Occurs when an unhandled response is received.
     /// </summary>
-    public event EventHandler<Response> UnhandledResponse {
+    public override event EventHandler<Response> UnhandledResponse {
       add {
         eventHandlerList.AddHandler(unhandledResponseEventKey, value);
       }
@@ -110,7 +110,7 @@ namespace KuzzleSdk.EventHandler {
       }
     }
 
-    public void DispatchUnhandledResponse(Response response) {
+    internal override void DispatchUnhandledResponse(Response response) {
       EventHandler<Response> unhandledResponse =
       (EventHandler<Response>)eventHandlerList[unhandledResponseEventKey];
 
@@ -120,7 +120,7 @@ namespace KuzzleSdk.EventHandler {
     /// <summary>
     /// Token expiration event 
     /// </summary>
-    public event Action TokenExpired {
+    public override event Action TokenExpired {
       add {
         eventHandlerList.AddHandler(tokenExpiredEventKey, value);
       }
@@ -130,7 +130,7 @@ namespace KuzzleSdk.EventHandler {
       }
     }
 
-    public void DispatchTokenExpired() {
+    internal override void DispatchTokenExpired() {
       kuzzle.AuthenticationToken = null;
       Action tokenExpired = (Action)eventHandlerList[tokenExpiredEventKey];
       tokenExpired?.Invoke();

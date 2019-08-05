@@ -27,7 +27,7 @@ namespace KuzzleSdk {
     /// <value>The authentication token.</value>
     string AuthenticationToken { get; set; }
 
-    IKuzzleEventHandler EventHandler { get; }
+    AbstractKuzzleEventHandler EventHandler { get; }
 
     /// <summary>
     /// Gets the instance identifier.
@@ -69,7 +69,7 @@ namespace KuzzleSdk {
   internal interface IKuzzle {
     string AuthenticationToken { get; set; }
 
-    IKuzzleEventHandler GetEventHandler();
+    AbstractKuzzleEventHandler GetEventHandler();
     IAuthController GetAuth();
     IRealtimeController GetRealtime();
 
@@ -99,8 +99,7 @@ namespace KuzzleSdk {
 
     // Emitter for all responses not directly linked to a user request
     // (i.e. all real-time notifications)
-    [Obsolete(@"The UnhandledResponse event from Kuzzle is deprecated, " +
-              @"use UnhandledResponse event from Kuzzle.EventHandler instead", false)]
+    [Obsolete(@"The UnhandledResponse event from Kuzzle is deprecated, use UnhandledResponse event from Kuzzle.EventHandler instead", false)]
     public event EventHandler<Response> UnhandledResponse {
       add {
         eventHandler.UnhandledResponse += value;
@@ -114,8 +113,7 @@ namespace KuzzleSdk {
     /// <summary>
     /// Token expiration event
     /// </summary>
-    [Obsolete(@"The TokenExpired event from Kuzzle is deprecated, " +
-              @"use TokenExpired event from Kuzzle.EventHandler instead", false)]
+    [Obsolete(@"The TokenExpired event from Kuzzle is deprecated, use TokenExpired event from Kuzzle.EventHandler instead", false)]
     public event Action TokenExpired {
       add {
         eventHandler.TokenExpired += value;
@@ -126,8 +124,7 @@ namespace KuzzleSdk {
       }
     }
 
-    [Obsolete(@"DispatchTokenExpired from Kuzzle is deprecated, " +
-              @"use DispatchTokenExpired from Kuzzle.EventHandler instead", false)]
+    [Obsolete(@"DispatchTokenExpired from Kuzzle is deprecated, use DispatchTokenExpired from Kuzzle.EventHandler instead", false)]
     public void DispatchTokenExpired() {
       eventHandler.DispatchTokenExpired();
     }
@@ -163,6 +160,9 @@ namespace KuzzleSdk {
     public ServerController Server { get; private set; }
 
     /// <summary>
+    /// Exposes actions from the "bulk" Kuzzle API controller
+    /// </summary>
+    public BulkController Bulk { get; private set; }
     /// Exposes actions from the "admin" Kuzzle API controller
     /// </summary>
     public AdminController Admin { get; private set; }
@@ -200,9 +200,9 @@ namespace KuzzleSdk {
       }
     }
 
-    private IKuzzleEventHandler eventHandler;
+    private AbstractKuzzleEventHandler eventHandler;
 
-    public IKuzzleEventHandler EventHandler { get { return eventHandler; } }
+    public AbstractKuzzleEventHandler EventHandler { get { return eventHandler; } }
 
     /// <summary>
     /// Handles the ResponseEvent event from the network protocol
@@ -274,6 +274,7 @@ namespace KuzzleSdk {
       Index = new IndexController(this);
       Realtime = new RealtimeController(this);
       Server = new ServerController(this);
+      Bulk = new BulkController(this);
       Admin = new AdminController(this);
 
       Offline = new OfflineManager(networkProtocol, this) {
@@ -336,6 +337,13 @@ namespace KuzzleSdk {
         throw new Exceptions.NotConnectedException();
       }
 
+      if (query["waitForRefresh"] != null) {
+        if (query["waitForRefresh"].ToObject<bool>()) {
+          query.Add("refresh", "wait_for");
+        }
+        query.Remove("waitForRefresh");
+      }
+
       if (AuthenticationToken != null) {
         query["jwt"] = AuthenticationToken;
       }
@@ -373,7 +381,7 @@ namespace KuzzleSdk {
       return Realtime;
     }
 
-    IKuzzleEventHandler IKuzzle.GetEventHandler() {
+    AbstractKuzzleEventHandler IKuzzle.GetEventHandler() {
       return eventHandler;
     }
   }

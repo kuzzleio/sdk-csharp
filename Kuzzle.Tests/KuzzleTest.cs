@@ -74,6 +74,34 @@ namespace Kuzzle.Tests {
       });
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void QueryAsyncHandleWaitForRefreshOptionTest(bool refresh) {
+      JObject request = new JObject {
+        { "waitForRefresh", refresh}
+      };
+      _protocol.Setup(protocol => protocol.Send(It.IsAny<JObject>()));
+
+      _kuzzle.QueryAsync(request);
+
+      _protocol.Verify(
+        protocol => protocol.Send(It.Is<JObject>(o => testRefreshOption(o, refresh))));
+
+      Assert.Single(_kuzzle.requests);
+    }
+
+    private bool testRefreshOption(JObject query, bool refresh) {
+      Assert.Null(query["waitForRefresh"]);
+      if (refresh) {
+        Assert.NotNull(query["refresh"]);
+        Assert.Equal("wait_for", query["refresh"]);
+      } else {
+        Assert.Null(query["refresh"]);
+      }
+      return true;
+    }
+
     [Fact]
     public void QueryAsyncTest() {
       JObject request = new JObject {

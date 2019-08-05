@@ -9,3 +9,5 @@ packages/
 mono_crash.*
 lcov.info
 codecov
+
+doc/framework
