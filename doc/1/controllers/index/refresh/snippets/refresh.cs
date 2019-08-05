@@ -1,2 +1,2 @@
 await kuzzle.Index.RefreshAsync("nyc-open-data");
-Console.WriteLine("0 shards fail to refresh");
+Console.WriteLine("All shards refreshed the index");

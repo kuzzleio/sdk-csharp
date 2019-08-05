@@ -17,7 +17,7 @@ Task CreateAsync(string index);
 
 | Argument  | Type                       | Description       |
 | --------- | -------------------------- | ----------------- |
-| `index`   | string                     | Index name        |
+| `index`   | <pre>string</pre>                     | Index name        |
 
 ## Usage
 

@@ -7,7 +7,7 @@ description: Deletes multiple indexes.
 
 # MDeleteAsync
 
-Deletes multiple indexes at once.
+Deletes multiple indexes.
 
 ## Arguments
 

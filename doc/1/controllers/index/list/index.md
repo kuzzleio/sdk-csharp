@@ -7,7 +7,7 @@ description: List the indexes.
 
 # ListAsync
 
-Get the complete list of indexes handled by Kuzzle.
+Gets the complete list of indexes handled by Kuzzle.
 
 ## Arguments
 
@@ -17,7 +17,7 @@ Task<JArray> ListAsync();
 
 ## Return
 
-Returns an `JArray` containing the list of indexes names present in Kuzzle.
+Returns a `JArray` containing the list of index names present in Kuzzle.
 
 ## Usage
 
