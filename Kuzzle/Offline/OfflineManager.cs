@@ -10,6 +10,7 @@ namespace KuzzleSdk.API.Offline {
   public interface IOfflineManager {
     int MaxQueueSize { get; set; }
     int MinTokenDuration { get; set; }
+    int MinTokenInterval { get; set; }
     int MaxRequestDelay { get; set; }
     Func<JObject, bool> QueueFilter { get; set; }
     bool AutoRecover { get; set; }
@@ -25,6 +26,7 @@ namespace KuzzleSdk.API.Offline {
     private ProtocolState previousState = ProtocolState.Closed;
     private int maxQueueSize = -1;
     private int minTokenDuration = 3600000;
+    private int minTokenInterval = 3600000;
     private int maxRequestDelay = 1000;
     private IKuzzle kuzzle;
     protected internal ITokenVerifier tokenVerifier;
@@ -48,6 +50,15 @@ namespace KuzzleSdk.API.Offline {
     public int MinTokenDuration {
       get { return minTokenDuration; }
       set { minTokenDuration = value < 0 ? -1 : value; }
+    }
+
+    /// <summary>
+    /// The minimum duration of a Token before being automaticaly refreshed.
+    /// If set to -1 the SDK does not refresh the token automaticaly.
+    /// </summary>
+    public int MinTokenInterval {
+      get { return minTokenInterval; }
+      set { minTokenInterval = value < 0 ? -1 : value; }
     }
 
     /// <summary>

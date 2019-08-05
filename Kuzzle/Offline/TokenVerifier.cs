@@ -36,7 +36,7 @@ namespace KuzzleSdk.Offline {
       subscriptionRecoverer = offlineManager.GetSubscriptionRecoverer();
       kuzzle.GetEventHandler().UserLoggedIn += OnUserLoggedIn;
     }
-   
+
     /// <summary>
     /// Return true if the Token is valid
     /// </summary>
@@ -45,16 +45,29 @@ namespace KuzzleSdk.Offline {
 
       if (response == null || response["valid"] == null) return false;
 
-        bool tokenValid = (bool)response["valid"];
-        if (tokenValid && offlineManager.MinTokenDuration > -1) {
+      bool tokenValid = (bool)response["valid"];
+
+
+
+      if (tokenValid
+        && offlineManager.MinTokenDuration > -1
+        && offlineManager.MinTokenInterval > -1) {
+
+        Int64 remainingTime = (Int64) new DateTime(1970, 1, 1)
+          .AddMilliseconds((Int64)response["expiresAt"])
+          .Subtract(DateTime.UtcNow)
+          .TotalMilliseconds;
+
+        if (offlineManager.MinTokenInterval > remainingTime) {
           try {
             await authController.RefreshTokenAsync(offlineManager.MinTokenDuration);
-          } catch (Exception e) {
+          } catch (Exception) {
 
           }
-          return true;
         }
-      
+        return true;
+      }
+
       return tokenValid;
     }
 

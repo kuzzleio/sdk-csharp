@@ -23,14 +23,32 @@ namespace Kuzzle.Tests.Offline {
     }
 
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public async Task SuccessIsTokenValid(bool isValid) {
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    public async Task SuccessIsTokenValid(bool isValid, bool needRefresh) {
       kuzzle.AuthenticationToken = "foobar";
+
+      Int64 expiresAt = 
+        (Int64)DateTime.UtcNow.AddHours(1.5)
+        .Subtract(new DateTime(1970, 1, 1))
+        .TotalMilliseconds;
+
+      if (needRefresh) {
+        expiresAt =
+          (Int64)DateTime.UtcNow.AddHours(0.5)
+          .Subtract(new DateTime(1970, 1, 1))
+          .TotalMilliseconds;
+      }
 
       kuzzle.mockedAuthController.Setup(obj => 
          obj.CheckTokenAsync(It.IsAny<string>()))
-         .Returns(Task.FromResult<JObject>(new JObject { { "valid", isValid } }));
+         .Returns(Task.FromResult<JObject>(new JObject {
+            { "valid", isValid },
+            {"expiresAt", expiresAt}
+          })
+        );
 
       bool valid = await tokenVerifier.IsTokenValid();
 
@@ -38,7 +56,7 @@ namespace Kuzzle.Tests.Offline {
         (obj) => obj.CheckTokenAsync(It.Is<string>(o => o.Equals("foobar")))
       );
 
-      if (isValid) {
+      if (needRefresh && isValid) {
         kuzzle.mockedAuthController.Verify(
           (obj) => obj.RefreshTokenAsync(It.IsAny<Int64>()), Times.Once
         );
@@ -102,9 +120,18 @@ namespace Kuzzle.Tests.Offline {
     [InlineData(true, true, true)]
     public async Task SuccessCheckTokenToReplay(bool tokenValid, bool autoRecover, bool locked) {
 
+      Int64 expiresAt =
+        (Int64)DateTime.UtcNow.AddHours(1.5)
+        .Subtract(new DateTime(1970, 1, 1))
+        .TotalMilliseconds;
+
       kuzzle.mockedAuthController.Setup(obj =>
          obj.CheckTokenAsync(It.IsAny<string>()))
-         .Returns(Task.FromResult<JObject>(new JObject { { "valid", tokenValid } }));
+         .Returns(Task.FromResult<JObject>(new JObject {
+          { "valid", tokenValid },
+          { "expiresAt", expiresAt },
+         })
+       );
 
       testableOfflineManager.AutoRecover = autoRecover;
       testableOfflineManager.mockedQueryReplayer.SetupProperty(obj => obj.Lock, locked);

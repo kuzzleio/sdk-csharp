@@ -7,7 +7,7 @@ namespace KuzzleSdk.API.Controllers {
   internal interface IAuthController {
     Task<JObject> CheckTokenAsync(string token);
     Task<JObject> RefreshTokenAsync(Int64 expiresIn);
-    }
+  }
 
   /// <summary>
   /// Implements the "auth" Kuzzle API controller
