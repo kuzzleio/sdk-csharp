@@ -17,7 +17,7 @@ Task<JArray> ListAsync();
 
 ## Return
 
-Returns a `JArray` containing the list of index names present in Kuzzle.
+Returns a `JArray` containing the list of index names handled by Kuzzle.
 
 ## Usage
 
