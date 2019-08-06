@@ -126,6 +126,9 @@ namespace KuzzleSdk {
     public ServerController Server { get; private set; }
 
     /// <summary>
+    /// Exposes actions from the "bulk" Kuzzle API controller
+    /// </summary>
+    public BulkController Bulk { get; private set; }
     /// Exposes actions from the "admin" Kuzzle API controller
     /// </summary>
     public AdminController Admin { get; private set; }
@@ -220,6 +223,7 @@ namespace KuzzleSdk {
       Index = new IndexController(this);
       Realtime = new RealtimeController(this);
       Server = new ServerController(this);
+      Bulk = new BulkController(this);
       Admin = new AdminController(this);
 
       // Initializes instance unique properties
@@ -269,6 +273,13 @@ namespace KuzzleSdk {
 
       if (NetworkProtocol.State != ProtocolState.Open) {
         throw new Exceptions.NotConnectedException();
+      }
+
+      if (query["waitForRefresh"] != null) {
+        if (query["waitForRefresh"].ToObject<bool>()) {
+          query.Add("refresh", "wait_for");
+        }
+        query.Remove("waitForRefresh");
       }
 
       if (AuthenticationToken != null) {
