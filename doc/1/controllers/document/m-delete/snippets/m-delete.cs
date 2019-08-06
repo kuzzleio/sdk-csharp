@@ -5,7 +5,7 @@ try {
     "yellow-taxi",
     JArray.Parse(@"[""some-id"", ""some-other-id""]"));
 
-  Console.WriteLine("Successfully deleted " + deleted.Count + " documents");
+  Console.WriteLine($"Successfully deleted {deleted.Count} documents");
 } catch (KuzzleException e) {
   Console.Error.WriteLine(e);
 }

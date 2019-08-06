@@ -12,7 +12,7 @@ try {
         }
       }"));
 
-  Console.WriteLine("Successfully deleted " + ids.Count + " documents");
+  Console.WriteLine($"Successfully deleted {ids.Count} documents");
 } catch (KuzzleException e) {
   Console.Error.WriteLine(e);
 }

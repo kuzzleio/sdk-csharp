@@ -4,7 +4,7 @@ try {
     "yellow-taxi",
     "some-id");
 
-  Console.WriteLine("Document " + id + " successfully deleted");
+  Console.WriteLine($"Document {id} successfully deleted");
 } catch (KuzzleException e) {
   Console.Error.WriteLine(e);
 }

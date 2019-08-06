@@ -45,7 +45,7 @@ try {
       }
     ]
   */
-  Console.WriteLine("Successfully retrieved " + response.Count + " documents");
+  Console.WriteLine($"Successfully retrieved {response.Count} documents");
 } catch (KuzzleException e) {
   Console.Error.WriteLine(e);
 }

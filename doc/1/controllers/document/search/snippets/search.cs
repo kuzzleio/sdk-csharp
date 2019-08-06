@@ -33,7 +33,7 @@ try {
     }"),
     options);
 
-  Console.WriteLine("Successfully retrieved " + result.Total + " documents");
+  Console.WriteLine($"Successfully retrieved {result.Total} documents");
 } catch (KuzzleException e) {
   Console.Error.WriteLine(e);
 }

@@ -49,7 +49,7 @@ try {
       total: 2 }
   */
 
-  Console.WriteLine("Successfully replaced " + response.Count + " documents");
+  Console.WriteLine($"Successfully replaced {response.Count} documents");
 } catch (KuzzleException e) {
   Console.Error.WriteLine(e);
 }

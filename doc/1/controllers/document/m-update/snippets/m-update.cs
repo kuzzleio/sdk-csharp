@@ -30,12 +30,8 @@ try {
               createdAt: 1538639586995 },
             capacity: 4,
             category: "sedan"},
-        _index: 'nyc-open-data',
-        _type: 'yellow-taxi',
         _version: 2,
         result: 'updated',
-        _shards: { total: 2, successful: 1, failed: 0 },
-        created: false,
         status: 200 },
       { _id: 'some-other-id',
         _source:
@@ -48,15 +44,11 @@ try {
               createdAt: 1538639586995 },
             capacity: 4,
             category: "limousine" },
-        _index: 'nyc-open-data',
-        _type: 'yellow-taxi',
         _version: 2,
         result: 'updated',
-        _shards: { total: 2, successful: 1, failed: 0 },
-        created: false,
         status: 200 } ]
     */
-  Console.WriteLine("Successfully updated " + response.Count + " documents");
+  Console.WriteLine($"Successfully updated {response.Count} documents");
 } catch (KuzzleException e) {
   Console.Error.WriteLine(e);
 }
