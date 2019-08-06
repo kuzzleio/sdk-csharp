@@ -14,6 +14,6 @@ try {
     "ttl": 3600000
   }
   */
-} catch (Exception e) {
+} catch (KuzzleException e) {
   Console.WriteLine(e);
 }

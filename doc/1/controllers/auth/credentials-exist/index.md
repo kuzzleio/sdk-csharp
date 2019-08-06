@@ -2,12 +2,12 @@
 code: true
 type: page
 title: CredentialsExistAsync
-description: Check that the current user has credentials for the specified strategy
+description: Check that the current user has credentials for the specified strategy.
 ---
 
 # CredentialsExistAsync
 
-Check that the current user has credentials for the specified strategy.
+Checks that the current user has credentials for the specified strategy.
 
 ## Arguments
 

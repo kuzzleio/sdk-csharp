@@ -13,6 +13,6 @@ try {
   }
   */
   Console.WriteLine("Successfuly logged in");
-} catch (Exception e) {
+} catch (KuzzleException e) {
   Console.WriteLine(e);
 }

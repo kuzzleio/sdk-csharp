@@ -1,6 +1,9 @@
 try {
-  await kuzzle.Auth.LoginAsync("local", JObject.Parse("{username: 'foo', password: 'bar'}"));
-  JObject updatedUser = await kuzzle.Auth.UpdateSelfAsync(JObject.Parse("{age: 42}"));
+  await kuzzle.Auth.LoginAsync(
+    "local",
+    JObject.Parse("{username: 'foo', password: 'bar'}"));
+  JObject updatedUser = await kuzzle.Auth.UpdateSelfAsync(
+    JObject.Parse("{age: 42}"));
 
   Console.WriteLine(updatedUser.ToString(Formatting.None));
   /*
@@ -26,6 +29,6 @@ try {
     }
   }
   */
-} catch (Exception e) {
+} catch (KuzzleException e) {
   Console.WriteLine(e);
 }

@@ -3,6 +3,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using KuzzleSdk;
+using KuzzleSdk.Exceptions;
 using KuzzleSdk.Protocol;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
