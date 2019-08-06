@@ -149,7 +149,7 @@ namespace Kuzzle.Tests.API.Controllers {
       MemberType = typeof(MockGenerators))
     ]
     public async void DeleteByQueryAsyncTest(JObject filters) {
-      _api.SetResult("{ result: { hits: [1, 2, 3] } }");
+      _api.SetResult("{ result: { ids: [1, 2, 3] } }");
 
       JArray result = await _documentController.DeleteByQueryAsync(
         "foo", "bar", filters);
@@ -441,7 +441,7 @@ namespace Kuzzle.Tests.API.Controllers {
       _api.SetResult(@"{
         result: {
           scrollId: 'scrollId',
-          hits: ['foo', 'bar', 'baz'], 
+          hits: ['foo', 'bar', 'baz'],
           total: 42,
           aggregations: { foo: 'bar' }
         }
