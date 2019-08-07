@@ -1,7 +1,7 @@
 ---
 code: false
 type: branch
-order: 10
+order: 20
 title: Core classes
 description: Core classes
 ---
