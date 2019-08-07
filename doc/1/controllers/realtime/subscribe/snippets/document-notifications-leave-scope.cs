@@ -20,7 +20,7 @@ try {
     listener,
     options);
 
-  // Creates a document who is in the scope
+  // Creates a document which is in the scope
   await kuzzle.Document.CreateAsync(
     "nyc-open-data",
     "yellow-taxi",

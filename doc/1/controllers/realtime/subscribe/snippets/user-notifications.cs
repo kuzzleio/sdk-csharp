@@ -6,7 +6,7 @@ NotificationHandler listener = (notification) => {
 };
 
 try {
-  // Subscription to notifications and notifications when user join or leave
+  // Subscription to notifications when user join or leave
   JObject filters = JObject.Parse("{ exists: 'name' }");
   SubscribeOptions options = new SubscribeOptions();
   options.Users = "all";
@@ -25,7 +25,7 @@ try {
   Kuzzle kuzzle2 = new Kuzzle(ws2);
   await kuzzle2.ConnectAsync(CancellationToken.None);
 
-  // Set some volatile data
+  // Sets some volatile data
   SubscribeOptions options2 = new SubscribeOptions();
   options2.Volatile = JObject.Parse("{ username: 'nina vkote' }");
 

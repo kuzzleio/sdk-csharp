@@ -1,5 +1,5 @@
 name: Bulk#WriteAsync
-description: Create or replace a document directly into the storage engine.
+description: Creates or replace a document directly into the storage engine.
 hooks:
   before: |
     curl -X POST kuzzle:7512/nyc-open-data/_create

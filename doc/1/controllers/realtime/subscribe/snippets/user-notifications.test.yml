@@ -1,5 +1,5 @@
 name: Realtime#Subscribe-users
-description: Subscribe to users joining or leaving the room.
+description: Subscribes to users joining or leaving the room.
 hooks:
   before: |
     curl -X POST kuzzle:7512/nyc-open-data/_create
