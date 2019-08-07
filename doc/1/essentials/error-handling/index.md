@@ -10,10 +10,8 @@ order: 100
 
 All SDK methods can throw subclasses of [KuzzleException](/sdk/csharp/1/exceptions/kuzzle-exception) in case of failure.
 
-[KuzzleException](/sdk/csharp/1/exceptions/kuzzle-exception) inherits from the standard `System.Exception` class and add the following properties to it:
-
-| Property | Type              | Description                                                                                |
-| -------- | ----------------- | ------------------------------------------------------------------------------------------ |
-| `Status` | <pre>int</pre>    | Status following [HTTP Standards](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) |
-
-You can find a detailed list of possible errors messages and statuses in the [documentation API](/core/1/api/essentials/errors).
+The following exceptions are available:
+  - [ApiErrorException](/sdk/csharp/1/exceptions/api-error-exception)
+  - [ConnectionLostException](/sdk/csharp/1/exceptions/connection-lost-exception)
+  - [InternalException](/sdk/csharp/1/exceptions/internal-exception)
+  - [NotConnectionException](/sdk/csharp/1/exceptions/not-connected-exception)
