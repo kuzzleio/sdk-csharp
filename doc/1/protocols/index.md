@@ -1,7 +1,7 @@
 ---
 code: false
 type: branch
-order: 20
+order: 30
 title: Protocols
-description: Protocols
+description: C# SDK protocols
 ---

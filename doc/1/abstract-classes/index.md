@@ -1,7 +1,7 @@
 ---
 code: false
 type: branch
-order: 30
+order: 20
 title: Abstract Classes
-description: Abstract Classes
+description: C# SDK abstract Classes
 ---
