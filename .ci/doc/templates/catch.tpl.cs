@@ -11,8 +11,6 @@ using Newtonsoft.Json;
 WebSocket socket = new WebSocket(new Uri("ws://kuzzle:7512"));
 KuzzleSdk.Kuzzle kuzzle = new KuzzleSdk.Kuzzle(socket);
 
-
-
 kuzzle.ConnectAsync(CancellationToken.None).Wait();
 
 try {

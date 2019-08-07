@@ -7,7 +7,7 @@ description: Check that the current user has credentials for the specified strat
 
 # CredentialsExistAsync
 
-Check that the current user has credentials for the specified strategy.
+Checks that the current user has credentials for the specified strategy.
 
 ## Arguments
 

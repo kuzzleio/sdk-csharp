@@ -2,7 +2,7 @@
 code: true
 type: page
 title: LoginAsync
-description: Authenticate a user.
+description: Authenticates a user.
 ---
 
 # LoginAsync
@@ -15,9 +15,9 @@ If this action is successful, all further requests emitted by this SDK instance 
 
 ```csharp
 public async Task<JObject> LoginAsync(
-      string strategy,
-      JObject credentials,
-      string expiresIn = null);
+  string strategy,
+  JObject credentials,
+  TimeSpan? expiresIn = null);
 ```
 
 <br/>
@@ -26,7 +26,7 @@ public async Task<JObject> LoginAsync(
 |---------------|--------------------|--------------------------------------|
 | `strategy`    | <pre>string</pre>  | Strategy to use                      |
 | `credentials` | <pre>JObject</pre> | JObject representing the credentials |
-| `expiresIn`   | <pre>Int64</pre>   | Expiration time, in milliseconds     |
+| `expiresIn`   | <pre>TimeSpan?</pre>   | Token duration  |
 
 #### strategy
 

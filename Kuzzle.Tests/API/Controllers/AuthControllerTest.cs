@@ -3,11 +3,18 @@ using KuzzleSdk.API.Controllers;
 using Newtonsoft.Json.Linq;
 using KuzzleSdk.Exceptions;
 using Moq;
+using System;
+using System.Collections.Generic;
 
 namespace Kuzzle.Tests.API.Controllers {
   public class AuthControllerTest {
     private readonly AuthController _authController;
     private readonly KuzzleApiMock _api;
+
+    public static IEnumerable<object[]> GenerateTimeSpans() {
+      yield return new object[] { null };
+      yield return new object[] { new TimeSpan(1, 2, 3) };
+    }
 
     public AuthControllerTest() {
       _api = new KuzzleApiMock();
@@ -164,9 +171,12 @@ namespace Kuzzle.Tests.API.Controllers {
     }
 
     [Theory]
-    [InlineData(null)]
-    [InlineData("6d")]
-    public async void LoginAsyncTestSuccess(string expiresIn) {
+    [
+      MemberData(
+        nameof(AuthControllerTest.GenerateTimeSpans),
+        MemberType = typeof(AuthControllerTest))
+    ]
+    public async void LoginAsyncTestSuccess(TimeSpan? expiresIn) {
       var credentials = new JObject { { "fake", "credentials" } };
       var expected = JObject.Parse(@"{
         _id: '<kuid>',
@@ -186,7 +196,7 @@ namespace Kuzzle.Tests.API.Controllers {
         { "controller", "auth" },
         { "action", "login" },
         { "strategy", "foostrategy" },
-        { "expiresIn", expiresIn },
+        { "expiresIn", expiresIn?.TotalMilliseconds },
         { "body", credentials }
       });
 
@@ -223,9 +233,12 @@ namespace Kuzzle.Tests.API.Controllers {
     }
 
     [Theory]
-    [InlineData(null)]
-    [InlineData("6d")]
-    public async void RefreshTokenTestSuccess(string expiresIn) {
+    [
+      MemberData(
+        nameof(AuthControllerTest.GenerateTimeSpans),
+        MemberType = typeof(AuthControllerTest))
+    ]
+    public async void RefreshTokenTestSuccess(TimeSpan? expiresIn) {
       var expected = JObject.Parse(@"{
         _id: '<kuid>',
         jwt: '<encrypted token>',
@@ -240,7 +253,7 @@ namespace Kuzzle.Tests.API.Controllers {
       _api.Verify(new JObject {
         { "controller", "auth" },
         { "action", "refreshToken" },
-        { "expiresIn", expiresIn }
+        { "expiresIn", expiresIn?.TotalMilliseconds }
       });
 
       Assert.Equal<JObject>(
