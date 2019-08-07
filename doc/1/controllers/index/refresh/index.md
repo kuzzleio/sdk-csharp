@@ -23,9 +23,9 @@ From the [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticse
 Task RefreshAsync(string index);
 ```
 
-| Argument  | Type                       | Description       |
-| --------- | -------------------------- | ----------------- |
-| `index`   | string                     | Index name        |
+| Argument | Type              | Description |
+|----------|-------------------|-------------|
+| `index`  | <pre>string</pre> | Index name  |
 
 ## Usage
 

@@ -25,10 +25,10 @@ we recommend that you avoid using it in production or at least carefully monitor
 Task SetAutoRefreshAsync(string index , boolean autoRefresh);
 ```
 
-| Argument      | Type                       | Description       |
-| ------------- | -------------------------- | ----------------- |
-| `index`       | string                     | Index name        |
-| `autoRefresh` | bool                       | autoRefresh flag  |
+| Argument      | Type              | Description      |
+|---------------|-------------------|------------------|
+| `index`       | <pre>string</pre> | Index name       |
+| `autoRefresh` | <pre>bool</pre>   | autoRefresh flag |
 
 ## Usage
 

@@ -15,9 +15,9 @@ Deletes multiple indexes.
 Task<JArray> MDeleteAsync(JArray indexes);
 ```
 
-| Argument  | Type                 | Description           |
-| --------- | -------------------- | --------------------- |
-| `indexes` | JArray               | List of indexes names |
+| Argument  | Type              | Description           |
+|-----------|-------------------|-----------------------|
+| `indexes` | <pre>JArray</pre> | List of indexes names |
 
 ## Return
 

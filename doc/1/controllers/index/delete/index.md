@@ -15,9 +15,9 @@ Deletes an entire index from Kuzzle.
 Task DeleteAsync(string index);
 ```
 
-| Argument  | Type                       | Description       |
-| --------- | -------------------------- | ----------------- |
-| `index`   | string                     | Index name        |
+| Argument | Type              | Description |
+|----------|-------------------|-------------|
+| `index`  | <pre>string</pre> | Index name  |
 
 ## Usage
 
