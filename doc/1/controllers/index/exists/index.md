@@ -21,7 +21,7 @@ Task<bool> ExistsAsync(string index);
 
 ## Return
 
-Returns a `bool` that indicate whether the index exists or not.
+Returns a `bool` that indicates whether the index exists or not.
 
 ## Usage
 

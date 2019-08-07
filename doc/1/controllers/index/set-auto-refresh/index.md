@@ -10,7 +10,7 @@ description: Set the autorefresh flag.
 The setAutoRefresh action updates the autorefresh flag for the provided index.
 
 Each index has an autorefresh flag.  
-When set to true, each write request triggers a [refresh](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-refresh.html) action on Elasticsearch.  
+When set to true, each write request triggers a [refresh](https://www.elastic.co/guide/en/elasticsearch/reference/5.6/docs-refresh.html) action on Elasticsearch.  
 Without a refresh after a write request, the documents may not be immediately available in search results.
 
 :::info
