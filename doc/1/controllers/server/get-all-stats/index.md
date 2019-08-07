@@ -2,12 +2,12 @@
 code: true
 type: page
 title: GetAllStatsAsync
-description: Gets all stored internal statistic snapshots.
+description: Gets all stored internal statistics snapshots.
 ---
 
 # GetAllStatsAsync
 
-Gets all stored internal statistic snapshots.
+Gets all stored internal statistics snapshots.
 By default, snapshots are made every 10 seconds and they are stored for 1 hour.
 
 These statistics include:

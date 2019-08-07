@@ -21,7 +21,7 @@ async Task<JObject> GetConfigAsync()
 
 ## Return
 
-Return server configuration as a `JObject`.
+Returns server configuration as a `JObject`.
 
 ## Usage
 

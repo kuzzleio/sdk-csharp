@@ -1,5 +1,5 @@
 name: Server#NowAsync
-description: Fetch the current server timestamp, in Epoch-millis format.
+description: Fetches the current server timestamp, in Epoch-millis format.
 hooks:
   before:
   after:

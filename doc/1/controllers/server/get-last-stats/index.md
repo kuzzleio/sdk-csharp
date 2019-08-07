@@ -25,7 +25,7 @@ async Task<JObject> GetLastStatsAsync()
 
 ## Return
 
-Return the most recent statistics snapshot as a `JObject`.
+Returns the most recent statistics snapshot as a `JObject`.
 
 ## Usage
 

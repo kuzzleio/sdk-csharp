@@ -17,7 +17,7 @@ async Task<JObject> InfoAsync()
 
 ## Return
 
-Return server information as a `JObject`.
+Returns server information as a `JObject`.
 
 ## Usage
 
