@@ -23,10 +23,10 @@ These statistics include:
 async Task<JObject> GetStatsAsync(Int64 start, Int64 end)
 ```
 
-| Arguments | Type | Description                      | Required |
-| --------- | ---- | -------------------------------- | -------- |
-| `start`   | long | begining of statistics frame set | yes      |
-| `end`     | long | end of statistics frame set      | yes      |
+| Argument | Type            | Description                      |
+|----------|-----------------|----------------------------------|
+| `start`  | <pre>long</pre> | begining of statistics frame set |
+| `end`    | <pre>long</pre> | end of statistics frame set      |
 
 ## Return
 
