@@ -7,6 +7,8 @@ description: Force Elasticsearch search index update.
 
 # RefreshAsync
 
+Forces an immediate [reindexation](https://www.elastic.co/guide/en/elasticsearch/reference/5.6/docs-refresh.html) of the provided index.
+
 When writing or deleting documents in Kuzzle, the update needs to be indexed before being available in search results.
 
 :::info
