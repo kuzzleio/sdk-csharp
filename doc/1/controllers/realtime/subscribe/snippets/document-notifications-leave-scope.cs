@@ -27,7 +27,7 @@ try {
     JObject.Parse("{ name: 'nina vkote', age: 19 }"),
     "nina-vkote");
 
-  // Update the document so he isn't in the scope anymore
+  // Updates the document so he isn't in the scope anymore
   // we shall receive a notification
   await kuzzle.Document.UpdateAsync(
     "nyc-open-data",

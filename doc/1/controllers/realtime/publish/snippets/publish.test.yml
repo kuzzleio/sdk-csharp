@@ -1,5 +1,5 @@
 name: Realtime#PublishAsync
-description: Publish a realtime message.
+description: Publishes a realtime message.
 hooks:
   before:
   after:

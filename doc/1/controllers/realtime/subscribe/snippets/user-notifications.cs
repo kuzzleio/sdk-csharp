@@ -29,7 +29,7 @@ try {
   SubscribeOptions options2 = new SubscribeOptions();
   options2.Volatile = JObject.Parse("{ username: 'nina vkote' }");
 
-  // Subscribe to the same room with the second client
+  // Subscribes to the same room with the second client
   await kuzzle2.Realtime.SubscribeAsync(
     "nyc-open-data",
     "yellow-taxi",

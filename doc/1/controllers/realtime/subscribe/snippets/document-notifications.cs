@@ -10,7 +10,7 @@ NotificationHandler listener = (notification) => {
 };
 
 try {
-  // Subscribe to notifications for documents containing a 'name' property
+  // Subscribes to notifications for documents containing a 'name' property
   JObject filters = JObject.Parse("{ exists: 'name' }");
   await kuzzle.Realtime.SubscribeAsync(
     "nyc-open-data",
@@ -18,7 +18,7 @@ try {
     filters,
     listener);
 
-  // Create a document matching the provided filters
+  // Creates a document matching the provided filters
   await kuzzle.Document.CreateAsync(
     "nyc-open-data",
     "yellow-taxi",
