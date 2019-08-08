@@ -20,9 +20,9 @@ This option is enabled by default and can be disabled by modifying the [Kuzzle.F
 
 ## Connection loss
 
-When a connection is lost, the requests made are stored in the queue.  
+When the SDK lost the connection to Kuzzle, the following requests are stored into the offline queue.  
 
-If an [auth:login](/sdk/csharp/1/controllers/auth/login) or [auth:logout](/sdk/csharp/1/controllers/auth/login) request is added to the queue, the SDK closes it and will not keep the new requests made.  
+If an [auth:login](/sdk/csharp/1/controllers/auth/login) or [auth:logout](/sdk/csharp/1/controllers/auth/login) request is added to the queue, the SDK closes it and will not keep the following requests.  
 This behavior is necessary to prevent the SDK from playing requests with the wrong credentials.
 
 ![offline queue closed](./offline-queue-closed.png)
