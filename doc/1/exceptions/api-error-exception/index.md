@@ -10,11 +10,11 @@ order: 0
 
 Inherits from the [KuzzleException](/sdk/csharp/1/exceptions/kuzzle-exception) class.
 
-The `ApiErrorException` class represents an [error response from Kuzzle API](/core/1/api/essentials/errors/).
+The `ApiErrorException` exception is used to reject API requests upon receiving an [error response from Kuzzle's API](/core/1/api/essentials/errors/).
 
 ## Properties
 
-Theses additional properties are available in addition to the [KuzzleException](/sdk/csharp/1/exceptions/kuzzle-exception) properties.
+These additional properties are available in addition to the [KuzzleException](/sdk/csharp/1/exceptions/kuzzle-exception) properties.
 
 | Property name        | Type     | Description          |
 | -------------------- | -------- | --------------------------------------- |

@@ -10,4 +10,4 @@ order: 0
 
 Inherits from the [KuzzleException](/sdk/csharp/1/exceptions/kuzzle-exception) class.
 
-The `NotConnectedException` class is thrown when trying to send a request while the SDK is not connected to a Kuzzle server.
+The `NotConnectedException` exception is thrown when trying to send a request while the SDK is not connected to a Kuzzle server.
