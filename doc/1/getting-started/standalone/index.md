@@ -8,10 +8,10 @@ order: 0
 
 # Getting Started with Kuzzle and C#
 
-This tutorial explains you how to use **Kuzzle** with **C#**, **.NET Core SDK 2.1** and the **Kuzzle C# SDK**.
+This tutorial explains how to use **Kuzzle** with **C#**, **.NET Core SDK 2.1** and the **Kuzzle C# SDK**.
 It will walk you through creating scripts that can **store** documents in Kuzzle and subscribe to **notifications** about document creations.
 
-You are going to write an application that **stores** documents in Kuzzle Server and subscribe to **real time notifications** for each created document.
+You are going to write an application that **stores** documents in Kuzzle Server and subscribes to **real time notifications** for each created document.
 
 To follow this tutorial, you must have a Kuzzle Server up and running. Follow these instructions if this is not already the case: [Running Kuzzle](/core/1/guides/getting-started/running-kuzzle/).
 
@@ -22,17 +22,17 @@ Having trouble? Get in touch with us on [Gitter](https://gitter.im/kuzzleio/kuzz
 
 ## Explore the SDK
 
-It's time to get started with the [Kuzzle C# SDK](/sdk/csharp/1). This section, explains you how to store a document and subscribe to notifications in Kuzzle using the C# SDK.
+It's time to get started with the [Kuzzle C# SDK](/sdk/csharp/1). This section explains how to store a document and how to subscribe to notifications in Kuzzle using the C# SDK.
 
 Before proceeding, please make sure your system has **.NET Core SDK** version 2.1 or higher.
 
 ::: warning
-If you're using monodevelop on Linux, you'll need at least mono 5.20+ (w/ msbuild 16+). Due to compatibility problems, you HAVE TO install .NET Core SDK 2.1, if you only have the 2.2 one, you won't be able to build the project with msbuild (which monodevelop uses).
+If you're using monodevelop on Linux, you'll need at least mono 5.20+ (w/ msbuild 16+). Due to compatibility issues, you HAVE TO install .NET Core SDK 2.1, if you only have the 2.2 one, you won't be able to build the project with msbuild (which monodevelop uses).
 :::
 
 ## Prepare your environment
 
-Create your playground directory, initialize a new console application using dotnet CLI and add reference to the [Kuzzle SDK package](https://www.nuget.org/packages/kuzzlesdk/).  
+Create your playground directory, initialize a new console application using dotnet CLI and add a reference to the [Kuzzle SDK package](https://www.nuget.org/packages/kuzzlesdk/).  
 
 ```sh
 mkdir "kuzzle-playground"
@@ -41,13 +41,13 @@ dotnet new console
 dotnet add package kuzzlesdk
 ```
 
-Then inside the `Program.cs` file, we will create a console application that take an argument to either initialize the application, subscribe to notification or create a document.
+Then inside the `Program.cs` file, we will create a console application that takes an argument to either initialize the application, subscribe to notification or create a document.
 
 <<< ./snippets/Switch.cs
 
-Then create a `GetSdk` function to instantiate the SDK and connects it to a Kuzzle instance using the WebSocket protocol.
+Then create a `GetSdk` function to instantiate the SDK and connect it to a Kuzzle instance using the WebSocket protocol.
 
-After, connect the client to your Kuzzle server with the [Kuzzle.ConnectAsync](/sdk/csharp/1/core-classes/kuzzle/connect-async) method.
+Once done, connect the client to your Kuzzle server using the [Kuzzle.ConnectAsync](/sdk/csharp/1/core-classes/kuzzle/connect-async) method.
 
 <<< ./snippets/Program1.cs:1
 
@@ -55,7 +55,7 @@ After, connect the client to your Kuzzle server with the [Kuzzle.ConnectAsync](/
 Replace 'kuzzle' which is the Kuzzle server hostname with 'localhost' or with the host name where your Kuzzle server is running.
 :::
 
-Afterwards you have to add the code that will access Kuzzle to create a new index 'nyc-open-data' and a new collection 'yellow-taxi' that you will use to store data later on.
+Now, you need to create a new 'nyc-open-data'  index, holding a new 'yellow-taxi' collection. This structure will be used later on to store data.
 
 <<< ./snippets/Program1.cs:2
 
@@ -68,7 +68,7 @@ This code does the following:
 - creates an instance of the SDK
 - connects it to Kuzzle running on `kuzzle` (change the hostname if needed) using WebSocket
 - creates the `nyc-open-data` index
-- creates the `yellow-taxi` collection (within the `nyc-open-data` index)
+- creates the `yellow-taxi` collection within the `nyc-open-data` index
 
 Run the code with dotnet:
 
@@ -123,9 +123,9 @@ Run the code with dotnet:
 dotnet run -- subscribe
 ```
 
-The  program is now running endlessly, waiting for notifications about documents matching its filters, specifically documents that have a `license` field equal to `'B'`.
+The program is now running endlessly, waiting for notifications about documents matching its filters, specifically documents that have a `license` field equal to `'B'`.
 
-We will add a `await Task.Delay(10000, token.Token);` after a successfull subscribe to keep the program running. The `CancellationToken` will allow us to stop the thread after receiving a notification.
+We added a `await Task.Delay(10000, token.Token);` line after a successfull subscribe to keep the program running until after a notification has been received.
 
 Now in another terminal, launch the program to create a document:
 
@@ -133,7 +133,7 @@ Now in another terminal, launch the program to create a document:
 dotnet run -- create
 ```
 
-This creates a new document in Kuzzle which, in turn, triggers a [document notification](/core/1/api/essentials/notifications/#documents-changes-messages) sent to the program who subscribes.
+This creates a new document in Kuzzle which, in turn, triggers a [document notification](/core/1/api/essentials/notifications/#documents-changes-messages). That notification is sent by Kuzzle to our other running program, which subscribed to changes occuring in that index and collection.
 Check the subscribe program terminal: a new message is printed everytime a document is created.
 
 ```bash
