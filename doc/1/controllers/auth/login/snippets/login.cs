@@ -7,7 +7,7 @@ try {
   /*
   {
     "_id": "foo",
-    "jwt": "eyJhbGciOiJI.eyJfaWQiOiJmb28iL.qOTDPUH7So9QL0qaMkUsyTWRhjHd",
+    "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfa...",
     "expiresAt": 1564568979921,
     "ttl": 3600000
   }
