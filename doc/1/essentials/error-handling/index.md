@@ -8,7 +8,7 @@ order: 100
 
 # Error handling
 
-All SDK methods can throw subclasses of [KuzzleException](/sdk/csharp/1/exceptions/kuzzle-exception) in case of failure.
+All SDK methods can throw exception inheriting from [KuzzleException](/sdk/csharp/1/exceptions/kuzzle-exception) in case of failure.
 
 The following exceptions are available:
   - [ApiErrorException](/sdk/csharp/1/exceptions/api-error-exception)
