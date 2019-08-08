@@ -10,7 +10,7 @@
 
     /// <summary>
     /// The network protocol accepts new requests.
-    /// But place them in a Queue until it reconnects
+    /// Those are queued until it reconnects.
     /// </summary>
     Reconnecting,
 

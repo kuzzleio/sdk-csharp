@@ -24,11 +24,7 @@ namespace KuzzleSdk {
     public TimedQuery(JObject query, Int64 time, string uuid = null) {
       Query = query;
       Time = time;
-      if (uuid == null) {
-        UUID = Guid.NewGuid().ToString();
-      } else {
-        UUID = uuid;
-      }
+      UUID = uuid ?? Guid.NewGuid().ToString();
     }
 
     public override int GetHashCode() {

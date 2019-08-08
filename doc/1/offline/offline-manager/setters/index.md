@@ -1,62 +1,50 @@
 ---
 code: true
 type: page
-title: Setters
-order: 100
-desription: Setters for Offline
+title: Getters and Setters
+desription: Getters and Setters for Offline Tools
 ---
 
-# OfflineManager class setters
-
-
+# OfflineManager class properties
 
 ## MaxQueueSize
 
-Return the maximum amount of elements that the offline queue can contains.
+Gets or sets the maximum amount of elements that the offline queue can contain.
 
-### Signature
-
-```csharp
-public int MaxQueueSize {
-    get { return maxQueueSize; }
-    set { maxQueueSize = value < 0 ? -1 : value; }
-}
-```
-
-## MinTokenDuration
-
-Return the minimum duration of a Token after refresh.
-
-### Signature
+### Definition
 
 ```csharp
-public int MinTokenDuration {
-    get { return minTokenDuration; }
-    set { minTokenDuration = value < 0 ? -1 : value; }
-}
+public int MaxQueueSize { get; set; }
 ```
 
 ## MaxRequestDelay
 
-Return the maximum delay between two requests to be replayed
+Gets or sets the maximum delay between two replayed requests.
 
-### Signature
+### Definition
 
 ```csharp
-public int MaxRequestDelay {
-    get { return maxRequestDelay; }
-    set { maxRequestDelay = value < 0 ? 0 : value; }
-}
+public int MaxRequestDelay { get; set; }
 ```
 
 ## QueueFilter
 
-Return the queue filter applied when a queue is being replayed.
+Gets or sets the custom queue filter applied when a queue is being replayed.
 
-### Signature
+### Definition
 
 ```csharp
 public Func<JObject, bool> QueueFilter { get; set; }
+```
+
+## RefreshedTokenDuration
+
+Gets or sets the minimum duration of a token after being refreshed.
+
+### Definition
+
+```csharp
+public int RefreshedTokenDuration { get; set; }
 ```
 
 ## Usage

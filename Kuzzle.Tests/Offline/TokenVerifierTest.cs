@@ -58,11 +58,11 @@ namespace Kuzzle.Tests.Offline {
 
       if (needRefresh && isValid) {
         kuzzle.mockedAuthController.Verify(
-          (obj) => obj.RefreshTokenAsync(It.IsAny<Int64>()), Times.Once
+          (obj) => obj.RefreshTokenAsync(It.IsAny<TimeSpan>()), Times.Once
         );
       } else {
         kuzzle.mockedAuthController.Verify(
-          (obj) => obj.RefreshTokenAsync(It.IsAny<Int64>()), Times.Never
+          (obj) => obj.RefreshTokenAsync(It.IsAny<TimeSpan>()), Times.Never
         );
       }
 

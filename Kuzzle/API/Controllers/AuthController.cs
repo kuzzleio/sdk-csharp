@@ -6,7 +6,7 @@ namespace KuzzleSdk.API.Controllers {
 
   internal interface IAuthController {
     Task<JObject> CheckTokenAsync(string token);
-    Task<JObject> RefreshTokenAsync(Int64 expiresIn);
+    Task<JObject> RefreshTokenAsync(TimeSpan? expiresIn = null);
   }
 
   /// <summary>
@@ -179,21 +179,6 @@ namespace KuzzleSdk.API.Controllers {
         { "controller", "auth" },
         { "action", "refreshToken" },
         { "expiresIn", expiresIn?.TotalMilliseconds }
-      });
-
-      api.AuthenticationToken = (string)response.Result["jwt"];
-
-      return (JObject)response.Result;
-    }
-
-    /// <summary>
-    /// Refreshes an authentication token.
-    /// </summary>
-    async Task<JObject> IAuthController.RefreshTokenAsync(Int64 expiresIn) {
-      Response response = await api.QueryAsync(new JObject {
-        { "controller", "auth" },
-        { "action", "refreshToken" },
-        { "expiresIn", expiresIn }
       });
 
       api.AuthenticationToken = (string)response.Result["jwt"];

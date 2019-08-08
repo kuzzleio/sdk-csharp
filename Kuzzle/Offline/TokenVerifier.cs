@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using KuzzleSdk.API.Controllers;
 using KuzzleSdk.API.Offline;
 using KuzzleSdk.EventHandler.Events;
+using KuzzleSdk.Exceptions;
 using KuzzleSdk.Offline.Subscription;
 using Newtonsoft.Json.Linq;
 
@@ -50,17 +51,17 @@ namespace KuzzleSdk.Offline {
 
 
       if (tokenValid
-        && offlineManager.MinTokenDuration > -1
-        && offlineManager.MinTokenInterval > -1) {
+        && offlineManager.RefreshedTokenDuration > -1
+        && offlineManager.MinTokenDuration > -1) {
 
         Int64 remainingTime = (Int64) new DateTime(1970, 1, 1)
           .AddMilliseconds((Int64)response["expiresAt"])
           .Subtract(DateTime.UtcNow)
           .TotalMilliseconds;
 
-        if (offlineManager.MinTokenInterval > remainingTime) {
+        if (offlineManager.MinTokenDuration > remainingTime) {
           try {
-            await authController.RefreshTokenAsync(offlineManager.MinTokenDuration);
+            await authController.RefreshTokenAsync(new TimeSpan(offlineManager.MinTokenDuration * 10000));
           } catch (Exception) {
 
           }
@@ -81,7 +82,7 @@ namespace KuzzleSdk.Offline {
       if (previousKUID != e.Kuid) {
 
         if (offlineManager.AutoRecover && queryReplayer.WaitLoginToReplay) {
-            queryReplayer.RejectAllQueries(new Exception("Unauthorized"));
+            queryReplayer.RejectAllQueries(new UnauthorizeException("Unauthorized", 0));
             queryReplayer.Lock = false;
             queryReplayer.WaitLoginToReplay = false;
         }

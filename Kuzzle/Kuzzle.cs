@@ -256,7 +256,7 @@ namespace KuzzleSdk {
     /// <param name="networkProtocol">Network protocol.</param>
     public Kuzzle(
       AbstractProtocol networkProtocol,
-      int minTokenDuration = 3600000,
+      int refreshedTokenDuration = 3600000,
       int maxQueueSize = -1,
       int maxRequestDelay = 1000,
       Func<JObject, bool> queueFiler = null
@@ -278,7 +278,7 @@ namespace KuzzleSdk {
       Admin = new AdminController(this);
 
       Offline = new OfflineManager(networkProtocol, this) {
-        MinTokenDuration = minTokenDuration,
+        RefreshedTokenDuration = refreshedTokenDuration,
         MaxQueueSize = maxQueueSize,
         MaxRequestDelay = maxRequestDelay,
         QueueFilter = queueFiler

@@ -55,10 +55,13 @@ namespace KuzzleSdk.Offline.Subscription {
       }
     }
 
+    /// <summary>
+    /// Returns how many elements are in the queue.
+    /// </summary>
     public int Count { get { return subscriptions.Count; } }
 
     /// <summary>
-    /// Remove every subscriptions that satisfy the predicate.
+    /// Remove every subscription that satisfies the predicate.
     /// </summary>
     public int Remove(Predicate<Subscription> predicate) {
       lock (subscriptions) {
@@ -95,7 +98,6 @@ namespace KuzzleSdk.Offline.Subscription {
     /// <summary>
     /// Renew every saved subscriptions.
     /// </summary>
-#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
     public void RenewSubscriptions() {
       lock (subscriptions) {
         for (int i = 0; i < subscriptions.Count; i++) {
@@ -104,7 +106,5 @@ namespace KuzzleSdk.Offline.Subscription {
         }
       }
     }
-#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-
   }
 }

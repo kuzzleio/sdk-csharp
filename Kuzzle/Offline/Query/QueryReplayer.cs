@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using KuzzleSdk.API.Offline;
@@ -26,16 +27,15 @@ namespace KuzzleSdk {
   }
 
   internal sealed class QueryReplayer : IQueryReplayer {
-
-    private Int64 startTime;
     private IKuzzle kuzzle;
     private List<TimedQuery> queue;
     private IOfflineManager offlineManager;
     private CancellationTokenSource cancellationTokenSource;
     private bool currentlyReplaying = false;
+    private Stopwatch stopWatch = new Stopwatch();
 
     /// <summary>
-    /// Does the QueryReplayer accepts new queries.
+    /// Tells if the QueryReplayer is locked (i.e. it doesn't accept new queries).
     /// Should only be true if there is an 'auth:login' or 'auth:logout' call in the queue
     /// </summary>
     public bool Lock { get; set; } = false;
@@ -58,31 +58,30 @@ namespace KuzzleSdk {
 
     /// <summary>
     /// Add a new query to the queue.
-    /// Return true if success
+    /// Return true if successful
     /// </summary>
     public bool Enqueue(JObject query) {
       if (Lock) return false;
 
       lock (queue) {
-        if ((queue.Count < offlineManager.MaxQueueSize) || offlineManager.MaxQueueSize < 0) {
+        if (queue.Count < offlineManager.MaxQueueSize || offlineManager.MaxQueueSize < 0) {
 
           if (queue.Count == 0) {
-            startTime = DateTime.Now.Ticks;
+            stopWatch.Start();
             queue.Add(new TimedQuery(query, 0));
           } else {
             TimedQuery previous = queue[queue.Count - 1];
-            Int64 elapsedTime = ((DateTime.Now.Ticks - startTime) / 10000) - previous.Time;
+            Int64 elapsedTime = stopWatch.ElapsedMilliseconds - previous.Time;
             elapsedTime = Math.Min(elapsedTime, offlineManager.MaxRequestDelay);
             queue.Add(new TimedQuery(query, previous.Time + elapsedTime));
           }
 
-          if (query["controller"] != null
-              && query["action"] != null
-              && query["controller"].ToString() == "auth"
-              && (query["action"].ToString() == "login"
-              || query["action"].ToString() == "logout")) {
+          if (query["controller"]?.ToString() == "auth"
+              && (query["action"]?.ToString() == "login"
+                || query["action"]?.ToString() == "logout")
+              ) {
                 Lock = true;
-            }
+              }
 
           return true;
         }
@@ -116,8 +115,8 @@ namespace KuzzleSdk {
     }
 
     /// <summary>
-    /// If the query satisfy the predicate,
-    /// she is set with an exception and removed from the replayable queue.
+    /// If the query satisfies the predicate,
+    /// it is set with an exception and removed from the replayable queue.
     /// </summary>
     public void RejectQueries(Predicate<JObject> predicate, Exception exception) {
       lock (queue) {
@@ -132,7 +131,7 @@ namespace KuzzleSdk {
     }
 
     /// <summary>
-    /// Remove every query that satisfy the predicate
+    /// Remove every query that satisfies the predicate
     /// </summary>
     /// <returns>How many items where removed.</returns>
     public int Remove(Predicate<JObject> predicate) {
