@@ -33,7 +33,7 @@ public async Task<SearchResults> SearchAsync(
 | `index`      | <pre>string</pre>        | Index name                                |
 | `collection` | <pre>string</pre>        | Collection name                           |
 | `query`      | <pre>JObject</pre>        | JObject representing the search query |
-| `options`    | <pre>SearchOptions</pre> | Search options                             |
+| `options`    | <pre>SearchOptions</pre> | An instance of [SearchOptions](/sdk/csharp/1/core-classes/search-options) class|
 
 ### query
 
@@ -44,16 +44,6 @@ A JObject representing the query. Query can have the following root properties:
 - `sort`: contains a list of fields, used to [sort search results](https://www.elastic.co/guide/en/elasticsearch/reference/5.6/search-request-sort.html), in order of importance.
 
 An empty body matches all documents in the queried collection.
-
-### options
-
-Additional search options.
-
-| Option     | Type<br/>(default)                       | Description                         |
-| ---------- | ---------------------------------------- | -------------------------------------------------------------------------------- |
-| `From`     | <pre>int</pre><br/>(`0`)                 | Offset of the first document to fetch                                                                                                                                                                                 |
-| `Size`     | <pre>int</pre><br/>(`10`)                | Maximum number of documents to retrieve per page                                                                                                                                                                      |
-| `Scroll`   | <pre>string</pre><br/>(`""`) | When set, gets a forward-only cursor having its ttl set to the given value (ie `30s`; cf [elasticsearch time limits](https://www.elastic.co/guide/en/elasticsearch/reference/current/common-options.html#time-units)) |
 
 ## Return
 

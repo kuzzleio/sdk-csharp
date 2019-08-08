@@ -9,8 +9,6 @@ description: Deletes a document from kuzzle.
 
 Deletes a document.
 
-The optional parameter `waitForRefresh` can be set with the value `true` in order to wait for the document to be indexed (indexed documents are available for `search`).
-
 ## Arguments
 
 ```csharp

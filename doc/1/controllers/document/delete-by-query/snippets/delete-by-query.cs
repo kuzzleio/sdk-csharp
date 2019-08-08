@@ -1,5 +1,4 @@
 try {
-      Console.WriteLine("YOOO");
   JArray ids =
     await kuzzle.Document.DeleteByQueryAsync(
       "nyc-open-data",
