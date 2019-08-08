@@ -9,7 +9,7 @@ description: Updates documents.
 
 Updates multiple documents.
 
-Returns a partial error (error code 206) if one or more documents can not be updated.
+Returns a partial error (error code 206) if one or more documents cannot be updated.
 
 Conflicts may occur if the same document gets updated multiple times within a short timespan in a database cluster.
 
@@ -33,7 +33,7 @@ public async Task<JArray> MUpdateAsync(
 | ------------ | ------------------------------------ | ------------------------------------------------ |
 | `index`      | <pre>string</pre>        | Index name                                       |
 | `collection` | <pre>string</pre>        | Collection name                                  |
-| `documents`  | <pre>JObject</pre>        | JObject representing the documents to update |
+| `documents`  | <pre>JArray</pre>        | JArray of documents to update |
 | `waitForRefresh`   | <pre>bool</pre><br/>(`false`)       | If `true`, waits for the change to be reflected for `search` (up to 1s)           |
 | `retryOnConflict` | <pre>int</pre><br/>(`0`)                 | The number of times the database layer should retry in case of version conflict    |
 

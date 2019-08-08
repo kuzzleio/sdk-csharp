@@ -9,7 +9,7 @@ description: Creates a new document.
 
 Creates a new document in the persistent data storage.
 
-Throws an error if the document already exists.
+Throws an error if an ID is provided and if a document with that ID already exists.
 
 ## Arguments
 
@@ -29,8 +29,8 @@ public async Task<JObject> CreateAsync(
 | ------------ | ------------------------------------ | ----------------------------------------------------------- |
 | `index`      | <pre>string</pre>        | Index name                                                  |
 | `collection` | <pre>string</pre>        | Collection name                                             |
-| `content`   | <pre>string</pre>        | JObject representing the body of the document           |
-| `id`         | <pre>string</pre><br/>(`null`)        | Document ID. Will use an auto-generated id if not specified |
+| `content`   | <pre>JObject</pre>        | JObject representing the body of the document           |
+| `id`         | <pre>string</pre><br/>(`null`)        | Document ID. Will use an auto-generated ID if not specified |
 | `waitForRefresh`   | <pre>bool</pre><br/>(`false`)       | If `true`, waits for the change to be reflected for `search` (up to 1s)           |
 
 ## Return

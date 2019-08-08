@@ -29,7 +29,7 @@ public async Task<int> CountAsync(
 | ------------ | ------------------------------------ | ------------------------------------------- |
 | `index`      | <pre>string</pre>        | Index name                                  |
 | `collection` | <pre>string</pre>        | Collection name                             |
-| `query`      | <pre>string</pre>        | JObject representing the query to match |
+| `query`      | <pre>JObject</pre>        | JObject representing the query to match |
 
 ## Return
 

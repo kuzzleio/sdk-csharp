@@ -9,7 +9,7 @@ description: Replaces documents.
 
 Replaces multiple documents.
 
-Throws a partial error (error code 206) if one or more documents can not be replaced.
+Throws a partial error (error code 206) if one or more documents cannot be replaced.
 
 ## Arguments
 
@@ -28,17 +28,17 @@ public async Task<JArray> MReplaceAsync(
 | ------------ | ------------------------------------ | ------------------------------------------------- |
 | `index`      | <pre>string</pre>        | Index name                                        |
 | `collection` | <pre>string</pre>        | Collection name                                   |
-| `documents`  | <pre>JArray</pre>        | JObject representing the documents to replace |
+| `documents`  | <pre>JArray</pre>        | Array of JObject instances, each representing a document to replace |
 | `waitForRefresh`   | <pre>bool</pre><br/>(`false`)       | If `true`, waits for the change to be reflected for `search` (up to 1s)           |
 
 ### documents
 
-Each document has the following properties:
+Array of documents, each one with the following expected properties:
 
 | Property  | Type              | Description                                            |
 | --------- | ----------------- | ------------------------------------------------------ |
 | `_id`      | <pre>string</pre> | Document ID      |
-| `body` | <pre>JObject</pre> | Document body |
+| `body` | <pre>JObject</pre> | Document content |
 
 ## Return
 

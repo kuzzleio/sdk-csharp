@@ -25,7 +25,7 @@ public async Task<JObject> ReplaceAsync(
 | `collection` | <pre>string</pre>        | Collection name                       |
 | `id`         | <pre>string</pre>        | Document ID                           |
 | `document`   | <pre>JObject</pre>        | JObject representing the document |
-| `waitForRefresh`   | <pre>bool</pre><br/>(`false`)       | If `true`, waits for the change to be reflected for `search` (up to 1s)           |
+| `waitForRefresh`   | <pre>bool</pre><br/>(`false`)       | if `true`, Kuzzle will not respond until the newly replaced document is indexed  |
 
 
 ## Return
