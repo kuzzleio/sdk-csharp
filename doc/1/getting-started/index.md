@@ -1,6 +1,6 @@
 ---
 code: false
 type: branch
-order: 50
-title: Controllers
+order: 0
+title: Getting Started
 ---
