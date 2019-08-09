@@ -47,7 +47,7 @@ An empty body matches all documents in the queried collection.
 
 ## Return
 
-Returns a [SearchResult](/sdk/csharp/1/sdk/csharp/1/core-classes/search-result) instance.
+Returns a [SearchResult](/sdk/csharp/1/sdk/csharp/1/core-classes/search-result/introduction) instance.
 
 ## Exceptions
 
