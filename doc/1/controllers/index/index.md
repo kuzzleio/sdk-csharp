@@ -1,7 +1,7 @@
 ---
 code: true
 type: branch
-title: getIndex
+title: Index
 description: Index Controller
 ---
 
