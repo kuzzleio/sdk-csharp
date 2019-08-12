@@ -1,5 +1,5 @@
 ---
-code: false
+code: true
 type: page
 title: KuzzleException
 description: KuzzleException

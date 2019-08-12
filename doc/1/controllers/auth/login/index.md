@@ -2,22 +2,22 @@
 code: true
 type: page
 title: LoginAsync
-description: Authenticate a user.
+description: Authenticates a user.
 ---
 
 # LoginAsync
 
 Authenticates a user.
 
-If this action is successful, all further requests emitted by this SDK instance will be in the name of the authenticated user, until either the authenticated token expires, the [logout](/sdk/csharp/1/controllers/auth/logout) action is called, or the [jwt](/sdk/csharp/1/core-classes/kuzzle/introduction/) property is manually unset.
+If this action is successful, all further requests emitted by this SDK instance will be in the name of the authenticated user, until either the authenticated token expires, the [logout](/sdk/csharp/1/controllers/auth/logout) action is called, or the [jwt](/sdk/csharp/1/core-classes/kuzzle/introduction) property is manually unset.
 
 ## Arguments
 
 ```csharp
 public async Task<JObject> LoginAsync(
-      string strategy,
-      JObject credentials,
-      string expiresIn = null);
+  string strategy,
+  JObject credentials,
+  TimeSpan? expiresIn = null);
 ```
 
 <br/>
@@ -26,7 +26,7 @@ public async Task<JObject> LoginAsync(
 |---------------|--------------------|--------------------------------------|
 | `strategy`    | <pre>string</pre>  | Strategy to use                      |
 | `credentials` | <pre>JObject</pre> | JObject representing the credentials |
-| `expiresIn`   | <pre>Int64</pre>   | Expiration time, in milliseconds     |
+| `expiresIn`   | <pre>TimeSpan?</pre>   | Token duration  |
 
 #### strategy
 
@@ -35,7 +35,7 @@ The name of the authentication [strategy](/core/1/guides/kuzzle-depth/authentica
 Depending on the chosen authentication `strategy`, additional [credential arguments](/core/1/guides/kuzzle-depth/authentication/#authentication) may be required.
 The API request example on this page provides the necessary arguments for the [`local` authentication plugin](https://github.com/kuzzleio/kuzzle-plugin-auth-passport-local).
 
-Check the appropriate [authentication plugin](/core/1/plugins/guides/strategies/overview/) documentation to get the list of additional arguments to provide.
+Check the appropriate [authentication plugin](/core/1/plugins/guides/strategies/overview) documentation to get the list of additional arguments to provide.
 
 
 ### expiresIn
@@ -58,7 +58,7 @@ Once `auth:login` has been called, the returned JWT is stored by the SDK and use
 
 ## Exceptions
 
-Throws a `KuzzleException` if there is an error. See how to [handle error](/sdk/csharp/1/essentials/error-handling/).
+Throws a `KuzzleException` if there is an error. See how to [handle error](/sdk/csharp/1/essentials/error-handling).
 
 ## Usage
 

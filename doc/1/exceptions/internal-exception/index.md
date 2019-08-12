@@ -1,9 +1,9 @@
 ---
-code: false
+code: true
 type: page
 title: InternalException
 description: InternalException
-order: 0
+order: 10
 ---
 
 # InternalException

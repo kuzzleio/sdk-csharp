@@ -1,7 +1,7 @@
 ---
 code: false
 type: branch
-order: 10
+order: 50
 title: Exceptions
 description: C# SDK exceptions
 ---

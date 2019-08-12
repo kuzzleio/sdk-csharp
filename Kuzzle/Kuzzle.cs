@@ -42,7 +42,7 @@ namespace KuzzleSdk {
     /// </summary>
     /// <returns>The query response.</returns>
     /// <param name="query">Kuzzle API query</param>
-    Task<Response> QueryAsync(JObject query);
+    ConfiguredTaskAwaitable<Response> QueryAsync(JObject query);
 
     /// <summary>
     /// Dispatches a TokenExpired event.
@@ -109,7 +109,7 @@ namespace KuzzleSdk {
     /// Exposes actions from the "document" Kuzzle API controller
     /// </summary>
     public DocumentController Document { get; private set; }
-  
+
     /// <summary>
     /// Exposes actions from the "index" Kuzzle API controller
     /// </summary>
@@ -129,6 +129,8 @@ namespace KuzzleSdk {
     /// Exposes actions from the "bulk" Kuzzle API controller
     /// </summary>
     public BulkController Bulk { get; private set; }
+
+    /// <summary>
     /// Exposes actions from the "admin" Kuzzle API controller
     /// </summary>
     public AdminController Admin { get; private set; }
@@ -266,7 +268,7 @@ namespace KuzzleSdk {
     /// </summary>
     /// <returns>API response</returns>
     /// <param name="query">Kuzzle API query</param>
-    public Task<Response> QueryAsync(JObject query) {
+    public ConfiguredTaskAwaitable<Response> QueryAsync(JObject query) {
       if (query == null) {
         throw new Exceptions.InternalException("You must provide a query", 400);
       }
@@ -304,7 +306,7 @@ namespace KuzzleSdk {
         requests[requestId] = new TaskCompletionSource<Response>();
       }
 
-      return requests[requestId].Task;
+      return requests[requestId].Task.ConfigureAwait(false);
     }
   }
 }

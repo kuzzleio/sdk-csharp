@@ -30,7 +30,10 @@ namespace Kuzzle.Tests.API {
     public void SetResult(string apiResult) {
       Mock
         .Setup(api => api.QueryAsync(It.IsAny<JObject>()))
-        .Returns(Task.FromResult(Response.FromString(apiResult)));
+        .Returns(
+          Task
+            .FromResult(Response.FromString(apiResult))
+            .ConfigureAwait(false));
     }
 
     public void SetError(int status = 400, string message = "Errored Test") {
@@ -39,7 +42,7 @@ namespace Kuzzle.Tests.API {
 
       Mock
         .Setup(api => api.QueryAsync(It.IsAny<JObject>()))
-        .Returns(t.Task);
+        .Returns(t.Task.ConfigureAwait(false));
     }
 
     public void Verify(JObject expectedQuery) {

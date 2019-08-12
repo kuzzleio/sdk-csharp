@@ -80,7 +80,7 @@ namespace KuzzleSdk.API.Controllers {
 
       Response response = await api.QueryAsync(request);
 
-      return (JArray)response.Result["indexes"];
+      return (JArray)response.Result["deleted"];
     }
 
     /// <summary>

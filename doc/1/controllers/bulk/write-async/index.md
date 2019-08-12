@@ -40,7 +40,7 @@ public async Task<JObject> WriteAsync(
 Return a JObject with the following properties:
 
 | Property   | Type               | Description                                     |
-| ---------- | ------------------ | ----------------------------------------------- |
+|------------|--------------------|-------------------------------------------------|
 | `_id`      | <pre>string</pre>  | Created document unique identifier.             |
 | `_source`  | <pre>JObject</pre> | Document content.                               |
 | `_version` | <pre>int</pre>     | Version number of the document                  |

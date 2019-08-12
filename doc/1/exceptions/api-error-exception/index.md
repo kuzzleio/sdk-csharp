@@ -1,9 +1,9 @@
 ---
-code: false
+code: true
 type: page
 title: ApiErrorException
 description: ApiErrorException
-order: 0
+order: 10
 ---
 
 # ApiErrorException

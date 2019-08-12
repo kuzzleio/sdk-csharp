@@ -1,9 +1,9 @@
 ---
-code: false
+code: true
 type: page
 title: ConnectionLostException
 description: ConnectionLostException
-order: 0
+order: 10
 ---
 
 # ConnectionLostException

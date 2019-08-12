@@ -1,9 +1,9 @@
 ---
-code: false
+code: true
 type: page
 title: NotConnectedException
 description: NotConnectedException
-order: 0
+order: 10
 ---
 
 # NotConnectedException
