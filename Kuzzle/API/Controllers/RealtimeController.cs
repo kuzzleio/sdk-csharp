@@ -157,7 +157,7 @@ namespace KuzzleSdk.API.Controllers {
     public async Task<string> SubscribeAsync(
         string index, string collection, JObject filters,
         NotificationHandler handler, SubscribeOptions options = null) {
-      string roomId = await SubscribeAndAddToSubscriptionRecoverer(index, collection, filters, handler, options);
+      string roomId = await SubscribeAndAddToSubscriptionRecoverer(index, collection, filters, handler, options, true);
       return roomId;
     }
 
@@ -223,7 +223,7 @@ namespace KuzzleSdk.API.Controllers {
     /// <param name="addToRecoverer">If set to <c>true</c> add to recoverer.</param>
     async Task<string> IRealtimeController.SubscribeAndAddToRecoverer(
         string index, string collection, JObject filters,
-        NotificationHandler handler, SubscribeOptions options = null, bool addToRecoverer = true) {
+        NotificationHandler handler, SubscribeOptions options, bool addToRecoverer) {
       return await SubscribeAndAddToSubscriptionRecoverer(index, collection, filters, handler, options, addToRecoverer);
     }
 

@@ -69,9 +69,9 @@ namespace KuzzleSdk {
   internal interface IKuzzle {
     string AuthenticationToken { get; set; }
 
-    AbstractKuzzleEventHandler GetEventHandler();
     IAuthController GetAuth();
     IRealtimeController GetRealtime();
+    AbstractKuzzleEventHandler GetEventHandler();
 
     TaskCompletionSource<Response> GetRequestById(string requestId);
     }
@@ -102,11 +102,11 @@ namespace KuzzleSdk {
     [Obsolete(@"The UnhandledResponse event from Kuzzle is deprecated, use UnhandledResponse event from Kuzzle.EventHandler instead", false)]
     public event EventHandler<Response> UnhandledResponse {
       add {
-        eventHandler.UnhandledResponse += value;
+        EventHandler.UnhandledResponse += value;
       }
 
       remove {
-        eventHandler.UnhandledResponse -= value;
+        EventHandler.UnhandledResponse -= value;
       }
     }
 
@@ -116,17 +116,17 @@ namespace KuzzleSdk {
     [Obsolete(@"The TokenExpired event from Kuzzle is deprecated, use TokenExpired event from Kuzzle.EventHandler instead", false)]
     public event Action TokenExpired {
       add {
-        eventHandler.TokenExpired += value;
+        EventHandler.TokenExpired += value;
       }
 
       remove {
-        eventHandler.TokenExpired -= value;
+        EventHandler.TokenExpired -= value;
       }
     }
 
     [Obsolete(@"DispatchTokenExpired from Kuzzle is deprecated, use DispatchTokenExpired from Kuzzle.EventHandler instead", false)]
     public void DispatchTokenExpired() {
-      eventHandler.DispatchTokenExpired();
+      EventHandler.DispatchTokenExpired();
     }
 
     /// <summary>
@@ -163,9 +163,70 @@ namespace KuzzleSdk {
     /// Exposes actions from the "bulk" Kuzzle API controller
     /// </summary>
     public BulkController Bulk { get; private set; }
+
+    /// <summary>
     /// Exposes actions from the "admin" Kuzzle API controller
     /// </summary>
     public AdminController Admin { get; private set; }
+
+    /// <summary>
+    /// Exposes the event handler
+    /// </summary>
+    public AbstractKuzzleEventHandler EventHandler { get; private set; }
+
+    /// <summary>
+    /// Exposes actions from the OfflineManager
+    /// </summary>
+    public OfflineManager Offline { get; private set; }
+
+    /// <summary>
+    /// The maximum amount of elements that the queue can contains.
+    /// If set to -1, the size is unlimited.
+    /// </summary>
+    public int MaxQueueSize {
+      get { return Offline.MaxQueueSize; }
+      set { Offline.MaxQueueSize = value; }
+    }
+
+    /// <summary>
+    /// The minimum duration of a Token after refresh.
+    /// If set to -1 the SDK does not refresh the token automaticaly.
+    /// </summary>
+    public int RefreshedTokenDuration {
+      get { return Offline.RefreshedTokenDuration; }
+      set { Offline.RefreshedTokenDuration = value; }
+    }
+
+    /// <summary>
+    /// The minimum duration of a Token before being automaticaly refreshed.
+    /// If set to -1 the SDK does not refresh the token automaticaly.
+    /// </summary>
+    public int MinTokenDuration {
+      get { return Offline.MinTokenDuration; }
+      set { Offline.MinTokenDuration = value; }
+    }
+
+    /// <summary>
+    /// The maximum delay between two requests to be replayed
+    /// </summary>
+    public int MaxRequestDelay {
+      get { return Offline.MaxRequestDelay; }
+      set { Offline.MaxRequestDelay = value; }
+    }
+
+    public Func<JObject, bool> QueueFilter {
+      get { return Offline.QueueFilter; }
+      set { Offline.QueueFilter = value; }
+    }
+
+    /// <summary>
+    /// Queue requests when network is down,
+    /// and automatically replay them when the SDK successfully reconnects.
+    /// </summary>
+    public bool AutoRecover {
+      get { return Offline.AutoRecover; }
+      set { Offline.AutoRecover = value; }
+    }
 
     /// <summary>
     /// Authentication token
@@ -200,9 +261,6 @@ namespace KuzzleSdk {
       }
     }
 
-    private AbstractKuzzleEventHandler eventHandler;
-
-    public AbstractKuzzleEventHandler EventHandler { get { return eventHandler; } }
 
     /// <summary>
     /// Handles the ResponseEvent event from the network protocol
@@ -215,7 +273,7 @@ namespace KuzzleSdk {
       if (requests.ContainsKey(response.Room)) {
         if (response.Error != null) {
           if (response.Error.Message == "Token expired") {
-            eventHandler.DispatchTokenExpired();
+            EventHandler.DispatchTokenExpired();
           }
 
           requests[response.RequestId].SetException(
@@ -228,10 +286,10 @@ namespace KuzzleSdk {
           requests.Remove(response.RequestId);
         }
 
-        Offline?.GetQueryReplayer()?.Remove((obj) => obj["requestId"].ToString() == response.RequestId);
+        Offline?.QueryReplayer?.Remove((obj) => obj["requestId"].ToString() == response.RequestId);
 
       } else {
-        eventHandler.DispatchUnhandledResponse(response);
+        EventHandler.DispatchUnhandledResponse(response);
       }
     }
 
@@ -248,7 +306,6 @@ namespace KuzzleSdk {
       }
     }
 
-    public OfflineManager Offline { get; private set; }
 
     /// <summary>
     /// Initialize a new instance of the <see cref="T:Kuzzle.Kuzzle"/> class.
@@ -257,15 +314,16 @@ namespace KuzzleSdk {
     public Kuzzle(
       AbstractProtocol networkProtocol,
       int refreshedTokenDuration = 3600000,
+      int minTokenDuration = 3600000,
       int maxQueueSize = -1,
       int maxRequestDelay = 1000,
       Func<JObject, bool> queueFiler = null
-      ) {
+    ) {
       NetworkProtocol = networkProtocol;
       NetworkProtocol.ResponseEvent += ResponsesListener;
       NetworkProtocol.StateChanged += StateChangeListener;
 
-      eventHandler = new KuzzleEventHandler(this);
+      EventHandler = new KuzzleEventHandler(this);
 
       // Initializes the controllers
       Auth = new AuthController(this);
@@ -279,6 +337,7 @@ namespace KuzzleSdk {
 
       Offline = new OfflineManager(networkProtocol, this) {
         RefreshedTokenDuration = refreshedTokenDuration,
+        MinTokenDuration = minTokenDuration,
         MaxQueueSize = maxQueueSize,
         MaxRequestDelay = maxRequestDelay,
         QueueFilter = queueFiler
@@ -363,7 +422,7 @@ namespace KuzzleSdk {
       if (NetworkProtocol.State == ProtocolState.Open) {
         NetworkProtocol.Send(query);
       } else if (NetworkProtocol.State == ProtocolState.Reconnecting) {
-        Offline.GetQueryReplayer().Enqueue(query);
+        Offline.QueryReplayer.Enqueue(query);
       }
 
       lock (requests) {
@@ -382,7 +441,7 @@ namespace KuzzleSdk {
     }
 
     AbstractKuzzleEventHandler IKuzzle.GetEventHandler() {
-      return eventHandler;
+      return EventHandler;
     }
   }
 }

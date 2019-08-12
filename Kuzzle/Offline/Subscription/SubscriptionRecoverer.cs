@@ -100,8 +100,7 @@ namespace KuzzleSdk.Offline.Subscription {
     /// </summary>
     public void RenewSubscriptions() {
       lock (subscriptions) {
-        for (int i = 0; i < subscriptions.Count; i++) {
-          Subscription subscription = subscriptions[i];
+        foreach (Subscription subscription in subscriptions) {
           RenewSubscription(subscription);
         }
       }
