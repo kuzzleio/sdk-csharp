@@ -38,7 +38,7 @@ When the SDK successfully reconnects to Kuzzle, the following actions are perfor
   - the SDK starts to replay the content of the offline queue.
 
 ::: info
-You can set the [Kuzzle.FailOnNetworkLoss](/sdk/csharp/1/core-classes/kuzzle/properties) property to adjust the time limit within which the SDK consider the current authentication token as too old and refresh it.
+You can set the [Kuzzle.MinTokenDuration](/sdk/csharp/1/core-classes/kuzzle/properties) property to adjust the time limit within which the SDK consider the current authentication token as too old and refresh it.
 :::
 
 ::: info
@@ -73,7 +73,7 @@ After an [auth:login](/sdk/csharp/1/controllers/auth/login) or [auth:logout](/sd
   - replay requests in the same order, taking into account the original time between each request,
   - the [Recovered](/sdk/csharp/1/essentials/events#recovered) event is issued when all requests have been replayed.
 
- 2) the SDK is authenticated with a different user than the offline queue requests: real-time subscriptions and queue requests are rejected with a [401](/core/1/api/essentials/errors#specific-errors) error.
+ 2) the SDK is authenticated with a different user than the offline queue requests: real-time subscriptions and queued requests are discarded with a [401](/core/1/api/essentials/errors#specific-errors) error.
 
 This operation prevents the SDK from replaying requests with a different user than the one who made the original requests.
 
@@ -89,7 +89,7 @@ After executing this [auth:login](/sdk/csharp/1/controllers/auth/login) or [auth
   - real-time subscription renewal,
   - replay requests in the same order, taking into account the original time between each request,
   - the [Recovered](/sdk/csharp/1/essentials/events#recovered) event is issued when all requests have been replayed.
- 2) the SDK is authenticated with a different user than the offline queue requests: real-time subscriptions and subsequent queue requests are rejected with a [401](/core/1/api/essentials/errors#specific-errors) error.
+ 2) the SDK is authenticated with a different user than the offline queue requests: real-time subscriptions and subsequent queues requests are discarded with a [401](/core/1/api/essentials/errors#specific-errors) error.
 
 This operation prevents the SDK from replaying requests with a different user than the one who made the original requests.
 
