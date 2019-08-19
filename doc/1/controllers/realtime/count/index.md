@@ -2,12 +2,12 @@
 code: true
 type: page
 title: CountAsync
-description: Counts subscribers for a subscription room.
+description: Returns the number of other connections sharing the same subscription.
 ---
 
 # CountAsync
 
-Counts the number of subscribers for a subscription room
+Returns the number of other connections sharing the same subscription.
 
 ## Arguments
 
