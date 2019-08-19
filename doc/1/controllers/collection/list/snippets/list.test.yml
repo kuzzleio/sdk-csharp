@@ -1,5 +1,5 @@
-name: collection#list
-description: Returns the collection list of an index
+name: Collection#ListAsync
+description: Returns the collection list of an index.
 hooks:
   before: |
     curl -X POST kuzzle:7512/mtp-open-data/_create
@@ -8,5 +8,3 @@ hooks:
   after:
 template: default
 expected: "{\"name\":\"pink-taxi\",\"type\":\"stored\""
-sdk: csharp
-version: 1

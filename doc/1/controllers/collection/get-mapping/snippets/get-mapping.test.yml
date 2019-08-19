@@ -1,5 +1,5 @@
-name: collection#getMapping
-description: Return collection mapping
+name: Collection#GetMappingAsync
+description: Return collection mapping.
 hooks:
   before: |
     curl -X POST kuzzle:7512/nyc-open-data/_create
@@ -7,5 +7,3 @@ hooks:
   after:
 template: default
 expected: "\"curriculum\":{\"type\":\"text\"}"
-sdk: csharp
-version: 1

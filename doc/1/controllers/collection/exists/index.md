@@ -2,14 +2,15 @@
 code: true
 type: page
 title: ExistsAsync
-description: Check if collection exists
+description: Check if collection exists.
 ---
 
 # ExistsAsync
 
 Check if a collection exists in Kuzzle.
 
-## Signature
+
+## Arguments
 
 ```csharp
 public async Task<bool> ExistsAsync(
@@ -17,9 +18,7 @@ public async Task<bool> ExistsAsync(
     string collection);
 ```
 
-## Arguments
-
-| Arguments    | Type              | Description     |
+| Argument     | Type              | Description     |
 |--------------|-------------------|-----------------|
 | `index`      | <pre>string</pre> | Index name      |
 | `collection` | <pre>string</pre> | Collection name |

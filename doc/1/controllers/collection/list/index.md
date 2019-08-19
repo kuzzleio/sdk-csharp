@@ -2,7 +2,7 @@
 code: true
 type: page
 title: ListAsync
-description: Returns the collection list of an index
+description: Returns the collection list of an index.
 ---
 
 # ListAsync
@@ -10,7 +10,8 @@ description: Returns the collection list of an index
 Returns the complete list of realtime and stored collections in requested index sorted by name in alphanumerical order.
 The `from` and `size` arguments allow pagination. They are returned in the response if provided.
 
-## Signature
+
+## Arguments
 
 ```csharp
 public async Task<JObject> ListAsync(
@@ -21,11 +22,9 @@ public async Task<JObject> ListAsync(
     );
 ```
 
-## Arguments
-
-| Arguments | Type              | Description |
-|-----------|-------------------|-------------|
-| `index`   | <pre>string</pre> | Index name  |
+| Argument | Type              | Description |
+|----------|-------------------|-------------|
+| `index`  | <pre>string</pre> | Index name  |
 
 ### options
 
@@ -49,7 +48,7 @@ A JObject representing the following object:
 Each object in the `collections` array contains the following properties:
 
 | Property | Type              | Description                              |
-| -------- | ----------------- | ---------------------------------------- |
+|----------|-------------------|------------------------------------------|
 | `name`   | <pre>string</pre> | Collection name                          |
 | `type`   | <pre>string</pre> | Collection type (`realtime` or `stored`) |
 

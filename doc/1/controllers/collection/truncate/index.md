@@ -1,19 +1,20 @@
 ---
 code: true
 type: page
-title: GetMappingAsync
-description: Return collection mapping.
+title: TruncateAsync
+description: Remove all documents from collection.
 ---
 
-# GetMappingAsync
+# TruncateAsync
 
-Returns the mapping for the given collection.
+Remove all documents from a collection while keeping the associated mapping.  
+It is faster than deleting all documents from a collection.
 
 
 ## Arguments
 
 ```csharp
-public async Task<JObject> GetMappingAsync(
+public async Task TruncateAsync(
         string index,
         string collection);
 ```
@@ -23,10 +24,6 @@ public async Task<JObject> GetMappingAsync(
 | `index`      | <pre>string</pre> | Index name      |
 | `collection` | <pre>string</pre> | Collection name |
 
-## Return
-
-A JObject representing the collection data mapping.
-
 ## Usage
 
-<<< ./snippets/get-mapping.cs
+<<< ./snippets/truncate.cs

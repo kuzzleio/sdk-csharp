@@ -1,5 +1,5 @@
-name: collection#getSpecifications
-description: Returns the validation specifications
+name: Collection#GetSpecificationsAsync
+description: Returns the validation specifications.
 hooks:
   before: |
     curl -X POST kuzzle:7512/nyc-open-data/_create
@@ -8,5 +8,3 @@ hooks:
   after:
 template: default
 expected: "{\"license\":{\"type\":\"string\"}}"
-sdk: csharp
-version: 1

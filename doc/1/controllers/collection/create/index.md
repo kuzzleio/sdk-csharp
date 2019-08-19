@@ -2,18 +2,19 @@
 code: true
 type: page
 title: CreateAsync
-description: Create a new collection
+description: Create a new collection.
 ---
 
 # CreateAsync
 
-Creates a new [collection](/core/1/guides/essentials/store-access-data/) in the provided `index`.
+Creates a new [collection](/core/1/guides/essentials/store-access-data) in the provided `index`.
 You can also provide an optional data mapping that allow you to exploit the full capabilities of our
 persistent data storage layer, [ElasticSearch](https://www.elastic.co/products/elasticsearch) (check here the [mapping capabilities of ElasticSearch](https://www.elastic.co/guide/en/elasticsearch/reference/5.4/mapping.html)).
 
 This method will only update the mapping if the collection already exists.
 
-## Signature
+
+## Arguments
 
 ```csharp
 public async Task CreateAsync(
@@ -22,9 +23,7 @@ public async Task CreateAsync(
         JObject mappings = null);
 ```
 
-## Arguments
-
-| Arguments    | Type                           | Description                                      |
+| Argument     | Type                           | Description                                      |
 |--------------|--------------------------------|--------------------------------------------------|
 | `index`      | <pre>string&</pre>             | Index name                                       |
 | `collection` | <pre>string&</pre>             | Collection name                                  |

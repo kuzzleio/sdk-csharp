@@ -2,14 +2,15 @@
 code: true
 type: page
 title: GetSpecificationsAsync
-description: Returns the validation specifications
+description: Returns the validation specifications.
 ---
 
 # GetSpecificationsAsync
 
 Returns the validation specifications associated to the collection.
 
-## Signature
+
+## Arguments
 
 ```csharp
 public async Task<JObject> GetSpecificationsAsync(
@@ -17,9 +18,7 @@ public async Task<JObject> GetSpecificationsAsync(
     string collection);
 ```
 
-## Arguments
-
-| Arguments    | Type              | Description     |
+| Argument     | Type              | Description     |
 |--------------|-------------------|-----------------|
 | `index`      | <pre>string</pre> | Index name      |
 | `collection` | <pre>string</pre> | Collection name |
