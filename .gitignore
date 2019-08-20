@@ -10,4 +10,6 @@ mono_crash.*
 lcov.info
 codecov
 
+node_modules/
 doc/framework
+frontmatter-errors.json
