@@ -256,9 +256,9 @@ namespace Kuzzle.Tests.API.Controllers {
     public async void MDeleteAsync(bool refresh) {
       _api.SetResult("{ result: ['foo', 'bar', 'baz'] }");
 
-      var ids = new JArray { "foo", "bar", "baz" };
+      var ids = new string[] { "foo", "bar", "baz" };
 
-      JArray result = await _documentController.MDeleteAsync(
+      string[] result = await _documentController.MDeleteAsync(
         "foo",
         "bar",
         ids,
@@ -273,14 +273,11 @@ namespace Kuzzle.Tests.API.Controllers {
       };
 
       expected.Add("body", new JObject());
-      ((JObject)expected["body"]).Add("ids", ids);
+      ((JObject)expected["body"]).Add("ids", new JArray(ids));
 
       _api.Verify(expected);
 
-      Assert.Equal(
-        new JArray { "foo", "bar", "baz" },
-        result,
-        new JTokenEqualityComparer());
+      Assert.Equal(ids, result);
     }
 
     [Fact]
