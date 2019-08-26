@@ -205,16 +205,16 @@ namespace KuzzleSdk.API.Controllers {
     /// Throws a partial error(error code 206) if one or more document
     /// deletions fail.
     /// </summary>
-    public async Task<JArray> MDeleteAsync(
+    public async Task<string[]> MDeleteAsync(
       string index,
       string collection,
-      JArray ids,
+      string[] ids,
       bool waitForRefresh = false
     ) {
       var request = new JObject {
         { "controller", "document" },
         { "action", "mDelete" },
-        { "body", new JObject{ { "ids", ids } } },
+        { "body", new JObject{ { "ids", new JArray(ids) } } },
         { "index", index },
         { "collection", collection },
         {"waitForRefresh", waitForRefresh},
@@ -222,7 +222,7 @@ namespace KuzzleSdk.API.Controllers {
 
       Response response = await api.QueryAsync(request);
 
-      return (JArray)response.Result;
+      return response.Result.ToObject<string[]>();
     }
 
     /// <summary>

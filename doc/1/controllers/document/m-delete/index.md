@@ -14,10 +14,10 @@ Throws a partial error (error code 206) if one or more document deletions fail.
 ## Arguments
 
 ```csharp
-public async Task<JArray> MDeleteAsync(
+public async Task<string[]> MDeleteAsync(
   string index, 
   string collection, 
-  JArray ids, 
+  string[] ids, 
   bool waitForRefresh = false);
 
 ```
@@ -28,12 +28,12 @@ public async Task<JArray> MDeleteAsync(
 | ------------ | ----------------------------------------- | ------------------------------ |
 | `index`      | <pre>string</pre>             | Index name                     |
 | `collection` | <pre>string</pre>             | Collection name                |
-| `ids`        | <pre>JArray</pre> | IDs of the documents to delete |
+| `ids`        | <pre>string[]</pre> | IDs of the documents to delete |
 | `waitForRefresh`   | <pre>bool</pre><br/>(`false`)       | If `true`, waits for the change to be reflected for `search` (up to 1s)           |
 
 ## Return
 
-A JArray containing the deleted documents IDs.
+An array of strings containing the deleted document IDs.
 
 ## Exceptions
 
