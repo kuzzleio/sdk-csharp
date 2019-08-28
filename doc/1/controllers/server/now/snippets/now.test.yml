@@ -1,0 +1,7 @@
+name: Server#NowAsync
+description: Fetches the current server timestamp, in Epoch-millis format.
+hooks:
+  before:
+  after:
+template: default
+expected: ^(Epoch-millis timestamp:) [0-9]{13}$
