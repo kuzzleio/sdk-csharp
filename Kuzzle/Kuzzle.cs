@@ -47,23 +47,6 @@ namespace KuzzleSdk {
     /// <returns>The query response.</returns>
     /// <param name="query">Kuzzle API query</param>
     Task<Response> QueryAsync(JObject query);
-
-    /// <summary>
-    /// Dispatches a TokenExpired event.
-    /// </summary>
-    [Obsolete("use IKuzzleApi.EventHandler.DispatchTokenExpired instead", false)]
-    void DispatchTokenExpired();
-
-    /// <summary>
-    /// Occurs when an unhandled response is received.
-    /// </summary>
-    [Obsolete("use IKuzzleApi.EventHandler.UnhandledResponse event instead", false)]
-    event EventHandler<Response> UnhandledResponse;
-
-    /// <summary>
-    /// Occurs when the authentication token has expired
-    /// </summary>
-    event Action TokenExpired;
   }
 
   internal interface IKuzzle {
@@ -96,38 +79,6 @@ namespace KuzzleSdk {
     /// Instance unique identifier.
     /// </summary>
     public string InstanceId { get; }
-
-    // Emitter for all responses not directly linked to a user request
-    // (i.e. all real-time notifications)
-    [Obsolete(@"The UnhandledResponse event from Kuzzle is deprecated, use UnhandledResponse event from Kuzzle.EventHandler instead", false)]
-    public event EventHandler<Response> UnhandledResponse {
-      add {
-        EventHandler.UnhandledResponse += value;
-      }
-
-      remove {
-        EventHandler.UnhandledResponse -= value;
-      }
-    }
-
-    /// <summary>
-    /// Token expiration event
-    /// </summary>
-    [Obsolete(@"The TokenExpired event from Kuzzle is deprecated, use TokenExpired event from Kuzzle.EventHandler instead", false)]
-    public event Action TokenExpired {
-      add {
-        EventHandler.TokenExpired += value;
-      }
-
-      remove {
-        EventHandler.TokenExpired -= value;
-      }
-    }
-
-    [Obsolete(@"DispatchTokenExpired from Kuzzle is deprecated, use DispatchTokenExpired from Kuzzle.EventHandler instead", false)]
-    public void DispatchTokenExpired() {
-      EventHandler.DispatchTokenExpired();
-    }
 
     /// <summary>
     /// Exposes actions from the "auth" Kuzzle API controller

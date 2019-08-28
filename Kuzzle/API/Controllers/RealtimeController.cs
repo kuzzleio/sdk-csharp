@@ -108,7 +108,7 @@ namespace KuzzleSdk.API.Controllers {
     internal RealtimeController(IKuzzleApi api) : base(api) {
       api.EventHandler.UnhandledResponse += NotificationsListener;
       api.NetworkProtocol.StateChanged += StateChangeListener;
-      api.TokenExpired += TokenExpiredListener;
+      api.EventHandler.TokenExpired += TokenExpiredListener;
     }
 
     /// <summary>
