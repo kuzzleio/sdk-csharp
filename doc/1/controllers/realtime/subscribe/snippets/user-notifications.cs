@@ -6,7 +6,7 @@ NotificationHandler listener = (notification) => {
 };
 
 try {
-  // Subscription to notifications when user join or leave
+  // Subscription to notifications sent whenever a user joins or leaves
   JObject filters = JObject.Parse("{ exists: 'name' }");
   SubscribeOptions options = new SubscribeOptions();
   options.Users = "all";

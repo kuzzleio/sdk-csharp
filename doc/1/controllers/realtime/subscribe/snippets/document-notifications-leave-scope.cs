@@ -1,17 +1,17 @@
 NotificationHandler listener = (notification) => {
   string scope = notification.Scope.ToString();
   if (scope == "out") {
-    Console.WriteLine($"Document moved {scope} from the scope");
+    Console.WriteLine("Document left the scope");
   } else {
     Console.WriteLine($"Document moved {scope} the scope");
   }
 };
 
 try {
-  // Subscribes to notifications when document leaves the scope
+  // Subscribes to notifications when documents leave the scope
   JObject filters = JObject.Parse("{ range: { age: { lte: 20 } } }");
   SubscribeOptions options = new SubscribeOptions();
-  options.Scope = "out";
+  options.Scope = "all";
 
   await kuzzle.Realtime.SubscribeAsync(
     "nyc-open-data",
@@ -27,7 +27,7 @@ try {
     JObject.Parse("{ name: 'nina vkote', age: 19 }"),
     "nina-vkote");
 
-  // Updates the document so he isn't in the scope anymore
+  // Updates the document to make it leave the scope
   // we shall receive a notification
   await kuzzle.Document.UpdateAsync(
     "nyc-open-data",

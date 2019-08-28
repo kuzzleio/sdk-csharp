@@ -2,7 +2,7 @@
 code: true
 type: page
 title: WriteAsync
-description: Creates or replace a document directly into the storage engine.
+description: Creates or replaces a document directly into the storage engine.
 ---
 
 # WriteAsync
