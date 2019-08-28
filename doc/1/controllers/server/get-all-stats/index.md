@@ -25,7 +25,7 @@ async Task<JObject> GetAllStatsAsync()
 
 ## Return
 
-Return all the stored statistics as a `JObject`.
+Returns all the stored statistics as a `JObject`.
 
 ## Usage
 
