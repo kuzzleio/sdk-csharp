@@ -25,7 +25,7 @@ async Task<JObject> GetStatsAsync(Int64 start, Int64 end)
 
 | Argument | Type            | Description                      |
 |----------|-----------------|----------------------------------|
-| `start`  | <pre>long</pre> | begining of statistics frame set |
+| `start`  | <pre>long</pre> | beginning of statistics frame set |
 | `end`    | <pre>long</pre> | end of statistics frame set      |
 
 ## Return
