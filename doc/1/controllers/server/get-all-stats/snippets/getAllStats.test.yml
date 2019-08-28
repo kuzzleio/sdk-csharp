@@ -1,5 +1,5 @@
 name: Server#GetAllStatsAsync
-description: Gets all stored internal statistic snapshots.
+description: Gets all stored internal statistics snapshots.
 hooks:
   before:
   after:
