@@ -8,9 +8,6 @@ description: Update the collection mapping.
 # updateMapping
 
 Updates the collection mappings.
-Mapping allow you to exploit the full capabilities of our
-persistent data storage layer, [ElasticSearch](https://www.elastic.co/products/elasticsearch) (check here the [mapping capabilities of ElasticSearch](https://www.elastic.co/guide/en/elasticsearch/reference/5.6/mapping.html)).
-
 
 ## Arguments
 
@@ -31,30 +28,32 @@ public async Task UpdateMappingAsync(
 
 A JObject representing the collection data mapping.
 
-The mapping must have a root field `properties` that contain the mapping definition:
+- `dynamic`: [dynamic mapping polyci](/core/1/guides/essentials/database-mappings#dynamic-mapping-policy) for new fields. Allowed values: `true` (default), `false`, `strict`
+- `_meta`: [collection additional metadata](core/1/guides/essentials/database-mappings#collection-metadata) stored next to the collection
+- `properties`: object describing the data mapping to associate to the new collection, using [Elasticsearch types definitions format](object describing the data mapping to associate to the new collection, using)
 
 ```json
 {
+  "dynamic": "[true|false|strict]",
+  "_meta": {
+    "field": "value"
+  },
   "properties": {
-    "field1": { "type": "text" },
+    "field1": {
+      "type": "integer"
+    },
     "field2": {
-      "properties": {
-        "nestedField": { "type": "keyword" }
-      }
+      "type": "keyword"
+    },
+    "field3": {
+      "type":   "date",
+      "format": "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis"
     }
   }
 }
 ```
 
 More information about database mappings [here](/core/1/guides/essentials/database-mappings).
-
-### options
-
-Additional query options
-
-| Property   | Type                         | Description                                                                  |
-|------------|------------------------------|------------------------------------------------------------------------------|
-| `queuable` | <pre>bool</pre><br/>(`true`) | If true, queues the request during downtime, until connected to Kuzzle again |
 
 ## Usage
 

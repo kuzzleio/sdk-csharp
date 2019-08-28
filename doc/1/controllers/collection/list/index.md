@@ -24,16 +24,9 @@ public async Task<JObject> ListAsync(
     );
 ```
 
-| Argument | Type              | Description |
-|----------|-------------------|-------------|
-| `index`  | <pre>string</pre> | Index name  |
-
-### options
-
-Additional query options
-
-| Property | Type<br/>(default)            | Description                                                                                         |
+| Argument | Type                          | Description                                                                                         |
 |----------|-------------------------------|-----------------------------------------------------------------------------------------------------|
+| `index`  | <pre>string</pre>             | Index name                                                                                          |
 | `from`   | <pre>int?</pre><br>(`null`)   | Offset of the first result                                                                          |
 | `size`   | <pre>int?</pre><br>(`null`)   | Maximum number of returned results                                                                  |
 | `type`   | <pre>string</pre><br>(`null`) | Filters the returned collections. Allowed values: `all`, `stored` and `realtime` (default : `all`). |
