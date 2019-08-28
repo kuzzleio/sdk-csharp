@@ -33,16 +33,16 @@ public async Task<JObject> ImportAsync(
 A JObject containing information about the import status for each document.
 
 | Property | Type              | Description                                                                                |
-| -------- | ----------------- | ------------------------------------------------------------------------------------------ |
+|----------|-------------------|--------------------------------------------------------------------------------------------|
 | `errors` | <pre>bool</pre>   | Boolean indicating if some error occured during the import.                                |
 | `items`  | <pre>JArray</pre> | Array containing the list of executed queries result, in the same order than in the query. |
 
 **Notes:** Each object has the following properties:
 
-| Property | Type              | Description                                                                                |
-| -------- | ----------------- | ------------------------------------------------------------------------------------------ |
-| `_id`    | <pre>string</pre> | Document unique identifier.                                                                |
-| `status` | <pre>int</pre>    | HTTP status code for that query. `201` (created) or `206` (partial error).                 |
+| Property | Type              | Description                                                                |
+|----------|-------------------|----------------------------------------------------------------------------|
+| `_id`    | <pre>string</pre> | Document unique identifier.                                                |
+| `status` | <pre>int</pre>    | HTTP status code for that query. `201` (created) or `206` (partial error). |
 
 ## Usage
 

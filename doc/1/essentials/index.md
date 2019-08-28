@@ -1,7 +1,7 @@
 ---
 code: false
 type: branch
-order: 0
+order: 10
 title: Essentials
-description: Essentials
+description: C# SDK essentials
 ---

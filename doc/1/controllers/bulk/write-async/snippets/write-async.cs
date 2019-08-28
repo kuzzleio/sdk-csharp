@@ -9,7 +9,10 @@ try {
         deletedAt: null
       }
     }");
-    JObject response = await kuzzle.Bulk.WriteAsync("nyc-open-data", "yellow-taxi", content);
+    JObject response = await kuzzle.Bulk.WriteAsync(
+        "nyc-open-data",
+        "yellow-taxi",
+        content);
     Console.WriteLine(response.ToString(Formatting.None));
     /*
     {

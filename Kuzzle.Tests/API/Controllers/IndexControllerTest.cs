@@ -109,8 +109,8 @@ namespace Kuzzle.Tests.API.Controllers {
     [Fact]
     public async void MDeleteAsyncTest() {
       var indexes = new JArray { "foo", "bar", "zoo" };
-      _api.SetResult(new JObject { 
-        { "result" , new JObject { { "indexes", indexes } } } 
+      _api.SetResult(new JObject {
+        { "result" , new JObject { { "deleted", indexes } } } 
       });
 
       Assert.Equal(
