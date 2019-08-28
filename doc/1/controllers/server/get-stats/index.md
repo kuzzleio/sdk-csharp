@@ -30,7 +30,7 @@ async Task<JObject> GetStatsAsync(Int64 start, Int64 end)
 
 ## Return
 
-Return statistics snapshots within a provided timestamp range as a `JObject`.
+Returns statistics snapshots within a provided timestamp range as a `JObject`.
 
 ## Usage
 
