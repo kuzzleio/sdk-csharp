@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.API.Controllers {
@@ -169,7 +170,24 @@ namespace KuzzleSdk.API.Controllers {
         string index,
         string collection,
         JObject specifications) {
-      Response response = await api.QueryAsync(new JObject {
+
+      Response response = null;
+
+      if (specifications[index] != null
+        && specifications[index].HasValues
+        && specifications[index][collection] != null
+        && specifications[index][collection].HasValues
+      ) {
+          response = await api.QueryAsync(new JObject {
+            { "controller", "collection" },
+            { "action", "updateSpecifications" },
+            { "body", specifications }
+          });
+
+        return (JObject)response.Result[index][collection];
+      }
+
+      response = await api.QueryAsync(new JObject {
         { "controller", "collection" },
         { "action", "updateSpecifications" },
         { "index", index },
