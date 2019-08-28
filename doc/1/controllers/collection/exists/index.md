@@ -7,7 +7,7 @@ description: Check if collection exists.
 
 # ExistsAsync
 
-Check if a collection exists in Kuzzle.
+Checks if a collection exists in Kuzzle.
 
 
 ## Arguments

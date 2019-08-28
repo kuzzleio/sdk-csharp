@@ -7,8 +7,7 @@ description: Remove all documents from collection.
 
 # TruncateAsync
 
-Remove all documents from a collection while keeping the associated mapping.  
-It is faster than deleting all documents from a collection.
+Removes all documents from a collection while keeping the associated mappings.  
 
 
 ## Arguments

@@ -7,9 +7,9 @@ description: Update the validation specifications.
 
 # updateSpecifications
 
-The updateSpecifications method allows you to create or update the validation specifications for one or more index/collection pairs.
+Creates or updates the validation specifications for one or more index/collection pairs.
 
-When the validation specification is not formatted correctly, a detailed error message is returned to help you to debug.
+When the validation specifications are not correctly formatted, a detailed error message is returned to help with debugging.
 
 
 ## Arguments
@@ -25,7 +25,7 @@ public async Task<JObject> UpdateSpecificationsAsync(
 |------------------|--------------------|------------------------------|
 | `index`          | <pre>string</pre>  | Index name                   |
 | `collection`     | <pre>string</pre>  | Collection name              |
-| `specifications` | <pre>JObject</pre> | Specification in JSON format |
+| `specifications` | <pre>JObject</pre> | Specifications in JSON format |
 
 ### specifications
 
@@ -48,7 +48,7 @@ The JSON must follow the [Specification Structure](/core/1/guides/cookbooks/data
 
 ## Return
 
-A JObject representing the specifications
+A JObject representing the specifications.
 
 ## Usage
 

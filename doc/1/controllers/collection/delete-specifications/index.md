@@ -7,7 +7,7 @@ description: Delete validation specifications for a collection.
 
 # DeleteSpecificationsAsync
 
-Delete the validation specifications associated with the collection.
+Deletes the validation specifications associated with the collection.
 
 
 ## Arguments

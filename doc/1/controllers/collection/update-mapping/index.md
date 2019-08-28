@@ -7,7 +7,7 @@ description: Update the collection mapping.
 
 # updateMapping
 
-Update the collection mapping.
+Updates the collection mappings.
 Mapping allow you to exploit the full capabilities of our
 persistent data storage layer, [ElasticSearch](https://www.elastic.co/products/elasticsearch) (check here the [mapping capabilities of ElasticSearch](https://www.elastic.co/guide/en/elasticsearch/reference/5.6/mapping.html)).
 
@@ -46,7 +46,7 @@ The mapping must have a root field `properties` that contain the mapping definit
 }
 ```
 
-More informations about database mappings [here](/core/1/guides/essentials/database-mappings).
+More information about database mappings [here](/core/1/guides/essentials/database-mappings).
 
 ### options
 

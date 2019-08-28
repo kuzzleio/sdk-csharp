@@ -8,8 +8,7 @@ description: Create a new collection.
 # CreateAsync
 
 Creates a new [collection](/core/1/guides/essentials/store-access-data) in the provided `index`.
-You can also provide an optional data mapping that allow you to exploit the full capabilities of our
-persistent data storage layer, [ElasticSearch](https://www.elastic.co/products/elasticsearch) (check here the [mapping capabilities of ElasticSearch](https://www.elastic.co/guide/en/elasticsearch/reference/5.4/mapping.html)).
+You can also provide an optional body with a [collection mapping](/core/1/guides/essentials/database-mappings) allowing you to exploit the full capabilities of our persistent data storage layer.
 
 This method will only update the mapping if the collection already exists.
 
@@ -25,15 +24,15 @@ public async Task CreateAsync(
 
 | Argument     | Type                           | Description                                      |
 |--------------|--------------------------------|--------------------------------------------------|
-| `index`      | <pre>string&</pre>             | Index name                                       |
-| `collection` | <pre>string&</pre>             | Collection name                                  |
+| `index`      | <pre>string</pre>             | Index name                                       |
+| `collection` | <pre>string</pre>             | Collection name                                  |
 | `mapping`    | <pre>JObject</pre><br>(`null`) | JObject representing the collection data mapping |
 
 ### mapping
 
 A JObject representing the collection data mapping.
 
-The mapping must have a root field `properties` that contain the mapping definition:
+The mapping must have a root field `properties` containing the mapping definition:
 
 ```json
 {
@@ -48,7 +47,7 @@ The mapping must have a root field `properties` that contain the mapping definit
 }
 ```
 
-More informations about database mappings [here](/core/1/guides/essentials/database-mappings).
+More information about database mappings [here](/core/1/guides/essentials/database-mappings).
 
 ## Exceptions
 

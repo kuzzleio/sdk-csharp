@@ -7,9 +7,9 @@ description: Validate specifications format.
 
 # ValidateSpecificationsAsync
 
-The validateSpecifications method checks if a validation specification is well formatted. It does not store nor modify the existing specification.
+The validateSpecifications method checks if validation specifications are well formatted. It does not store nor modify the existing specifications.
 
-When the validation specification is not formatted correctly, a detailed error message is returned to help you to debug.
+If the validation specifications are not formatted correctly, a detailed error message is returned to help with debugging.
 
 
 ## Arguments
@@ -24,11 +24,11 @@ public async Task<bool> ValidateSpecificationsAsync(JObject specifications);
 
 ### specifications
 
-A JObject representing the specifications the specifications.
+A JObject representing the specifications to validate.
 
-The JObject must follow the [Specification Structure](/core/1/guides/cookbooks/datavalidation):
+The JObject data must follow the [Specifications Structure](/core/1/guides/cookbooks/datavalidation):
 
-```json
+```js
 {
   "strict": "true",
   "fields": {

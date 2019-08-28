@@ -7,7 +7,9 @@ description: Returns the collection list of an index.
 
 # ListAsync
 
-Returns the complete list of realtime and stored collections in requested index sorted by name in alphanumerical order.
+Returns the list of collections associated to a provided index.
+
+The returned list is sorted in alphanumerical order.
 The `from` and `size` arguments allow pagination. They are returned in the response if provided.
 
 
@@ -34,7 +36,7 @@ Additional query options
 |----------|-------------------------------|-----------------------------------------------------------------------------------------------------|
 | `from`   | <pre>int?</pre><br>(`null`)   | Offset of the first result                                                                          |
 | `size`   | <pre>int?</pre><br>(`null`)   | Maximum number of returned results                                                                  |
-| `type`   | <pre>string</pre><br>(`null`) | filters the returned collections. Allowed values: `all`, `stored` and `realtime` (default : `all`). |
+| `type`   | <pre>string</pre><br>(`null`) | Filters the returned collections. Allowed values: `all`, `stored` and `realtime` (default : `all`). |
 
 ## Return
 
