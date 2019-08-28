@@ -10,7 +10,7 @@ description: Returns the current Kuzzle configuration.
 Returns the current Kuzzle configuration.
 
 :::warning
-This route should only be accessible to administrators, as it might return sensitive information about the backend.
+This route should only be accessible to administrators, as it might returns sensitive information about the backend.
 :::
 
 ## Arguments
