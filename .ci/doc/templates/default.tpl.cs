@@ -4,8 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using KuzzleSdk;
 using KuzzleSdk.Protocol;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using KuzzleSdk.Exceptions;
 using KuzzleSdk.API.Options;
 using KuzzleSdk.API.DataObjects;
 

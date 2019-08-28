@@ -2,23 +2,19 @@
 using KuzzleSdk.API.Options;
 using KuzzleSdk.API.DataObjects;
 using Newtonsoft.Json.Linq;
+using System;
 
 namespace KuzzleSdk.API.Controllers {
   /// <summary>
   /// Implements the "document" Kuzzle API controller
   /// </summary>
   public sealed class DocumentController : BaseController {
-    private void HandleRefreshOption(JObject query, bool waitForRefresh) {
-      if (waitForRefresh) {
-        query.Add("refresh", "wait_for");
-      }
-    }
 
     internal DocumentController(IKuzzleApi api) : base(api) { }
 
     /// <summary>
     /// Counts documents in a collection.
-    /// A query can be provided to alter the count result, otherwise returns 
+    /// A query can be provided to alter the count result, otherwise returns
     /// the total number of documents in the collection.
     /// </summary>
     public async Task<int> CountAsync(
@@ -54,10 +50,9 @@ namespace KuzzleSdk.API.Controllers {
         { "body", content },
         { "index", index },
         { "collection", collection },
-        { "_id", id }
+        { "_id", id },
+        {"waitForRefresh", waitForRefresh},
       };
-
-      HandleRefreshOption(query, waitForRefresh);
 
       Response response = await api.QueryAsync(query);
 
@@ -80,10 +75,9 @@ namespace KuzzleSdk.API.Controllers {
         { "body", content },
         { "index", index },
         { "collection", collection },
-        { "_id", id }
+        { "_id", id },
+        {"waitForRefresh", waitForRefresh},
       };
-
-      HandleRefreshOption(query, waitForRefresh);
 
       Response response = await api.QueryAsync(query);
 
@@ -104,10 +98,9 @@ namespace KuzzleSdk.API.Controllers {
         { "action", "delete" },
         { "index", index },
         { "collection", collection },
-        { "_id", id }
+        { "_id", id },
+        {"waitForRefresh", waitForRefresh},
       };
-
-      HandleRefreshOption(query, waitForRefresh);
 
       Response response = await api.QueryAsync(query);
 
@@ -133,7 +126,7 @@ namespace KuzzleSdk.API.Controllers {
 
       Response response = await api.QueryAsync(request);
 
-      return (JArray)response.Result["hits"];
+      return (JArray)response.Result["ids"];
     }
 
     /// <summary>
@@ -173,10 +166,9 @@ namespace KuzzleSdk.API.Controllers {
         { "action", "mCreate" },
         { "body", new JObject{ { "documents", documents } } },
         { "index", index },
-        { "collection", collection }
+        { "collection", collection },
+        {"waitForRefresh", waitForRefresh},
       };
-
-      HandleRefreshOption(request, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 
@@ -199,10 +191,9 @@ namespace KuzzleSdk.API.Controllers {
         { "action", "mCreateOrReplace" },
         { "body", new JObject{ { "documents", documents } } },
         { "index", index },
-        { "collection", collection }
+        { "collection", collection },
+        {"waitForRefresh", waitForRefresh},
       };
-
-      HandleRefreshOption(request, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 
@@ -211,28 +202,27 @@ namespace KuzzleSdk.API.Controllers {
 
     /// <summary>
     /// Deletes multiple documents.
-    /// Throws a partial error(error code 206) if one or more document 
+    /// Throws a partial error(error code 206) if one or more document
     /// deletions fail.
     /// </summary>
-    public async Task<JArray> MDeleteAsync(
+    public async Task<string[]> MDeleteAsync(
       string index,
       string collection,
-      JArray ids,
+      string[] ids,
       bool waitForRefresh = false
     ) {
       var request = new JObject {
         { "controller", "document" },
         { "action", "mDelete" },
-        { "body", new JObject{ { "ids", ids } } },
+        { "body", new JObject{ { "ids", new JArray(ids) } } },
         { "index", index },
-        { "collection", collection }
+        { "collection", collection },
+        {"waitForRefresh", waitForRefresh},
       };
-
-      HandleRefreshOption(request, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 
-      return (JArray)response.Result;
+      return response.Result.ToObject<string[]>();
     }
 
     /// <summary>
@@ -274,10 +264,9 @@ namespace KuzzleSdk.API.Controllers {
         { "action", "mReplace" },
         { "body", new JObject{ { "documents", documents } } },
         { "index", index },
-        { "collection", collection }
+        { "collection", collection },
+        {"waitForRefresh", waitForRefresh},
       };
-
-      HandleRefreshOption(request, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 
@@ -302,10 +291,9 @@ namespace KuzzleSdk.API.Controllers {
         { "body", new JObject{ { "documents", documents } } },
         { "index", index },
         { "collection", collection },
-        { "retryOnConflict", retryOnConflict }
+        { "retryOnConflict", retryOnConflict },
+        {"waitForRefresh", waitForRefresh},
       };
-
-      HandleRefreshOption(request, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 
@@ -328,10 +316,9 @@ namespace KuzzleSdk.API.Controllers {
         { "body", content },
         { "index", index },
         { "collection", collection },
-        { "_id", id }
+        { "_id", id },
+        {"waitForRefresh", waitForRefresh},
       };
-
-      HandleRefreshOption(request, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 
@@ -379,10 +366,9 @@ namespace KuzzleSdk.API.Controllers {
         { "index", index },
         { "collection", collection },
         { "_id", id },
-        { "retryOnConflict", retryOnConflict }
+        { "retryOnConflict", retryOnConflict },
+        {"waitForRefresh", waitForRefresh},
       };
-
-      HandleRefreshOption(request, waitForRefresh);
 
       Response response = await api.QueryAsync(request);
 
@@ -391,7 +377,7 @@ namespace KuzzleSdk.API.Controllers {
 
     /// <summary>
     /// Validates data against existing validation rules.
-    /// Documents are always valid if no validation rules are defined on 
+    /// Documents are always valid if no validation rules are defined on
     /// the provided index and collection.
     /// This request does not store the document.
     /// </summary>

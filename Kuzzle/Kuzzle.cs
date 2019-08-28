@@ -42,7 +42,7 @@ namespace KuzzleSdk {
     /// </summary>
     /// <returns>The query response.</returns>
     /// <param name="query">Kuzzle API query</param>
-    Task<Response> QueryAsync(JObject query);
+    ConfiguredTaskAwaitable<Response> QueryAsync(JObject query);
 
     /// <summary>
     /// Dispatches a TokenExpired event.
@@ -109,7 +109,7 @@ namespace KuzzleSdk {
     /// Exposes actions from the "document" Kuzzle API controller
     /// </summary>
     public DocumentController Document { get; private set; }
-  
+
     /// <summary>
     /// Exposes actions from the "index" Kuzzle API controller
     /// </summary>
@@ -124,6 +124,11 @@ namespace KuzzleSdk {
     /// Exposes actions from the "server" Kuzzle API controller
     /// </summary>
     public ServerController Server { get; private set; }
+
+    /// <summary>
+    /// Exposes actions from the "bulk" Kuzzle API controller
+    /// </summary>
+    public BulkController Bulk { get; private set; }
 
     /// <summary>
     /// Exposes actions from the "admin" Kuzzle API controller
@@ -220,6 +225,7 @@ namespace KuzzleSdk {
       Index = new IndexController(this);
       Realtime = new RealtimeController(this);
       Server = new ServerController(this);
+      Bulk = new BulkController(this);
       Admin = new AdminController(this);
 
       // Initializes instance unique properties
@@ -262,13 +268,20 @@ namespace KuzzleSdk {
     /// </summary>
     /// <returns>API response</returns>
     /// <param name="query">Kuzzle API query</param>
-    public Task<Response> QueryAsync(JObject query) {
+    public ConfiguredTaskAwaitable<Response> QueryAsync(JObject query) {
       if (query == null) {
         throw new Exceptions.InternalException("You must provide a query", 400);
       }
 
       if (NetworkProtocol.State != ProtocolState.Open) {
         throw new Exceptions.NotConnectedException();
+      }
+
+      if (query["waitForRefresh"] != null) {
+        if (query["waitForRefresh"].ToObject<bool>()) {
+          query.Add("refresh", "wait_for");
+        }
+        query.Remove("waitForRefresh");
       }
 
       if (AuthenticationToken != null) {
@@ -293,7 +306,7 @@ namespace KuzzleSdk {
         requests[requestId] = new TaskCompletionSource<Response>();
       }
 
-      return requests[requestId].Task;
+      return requests[requestId].Task.ConfigureAwait(false);
     }
   }
 }

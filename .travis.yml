@@ -44,6 +44,16 @@ jobs:
         - gem install typhoeus
         - HYDRA_MAX_CONCURRENCY=20 npm run --prefix doc/framework dead-links
 
+    - stage: Tests
+      name: Build documentation
+      if: type = pull_request OR type = push AND branch =~ /^master|[0-9]+-(dev|stable)$/ OR type = cron
+      language: node_js
+      node_js: 10
+
+      script:
+        - npm run doc-prepare
+        - npm run doc-build
+
     - stage: Deployments
       name: NuGet
       if: tag IS present AND branch = master
