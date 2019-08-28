@@ -16,8 +16,18 @@ try {
       specifications
     );
 
-  Console.WriteLine(specifications.ToString(Formatting.None));
-  // {"strict":false,"fields":{"license":{"mandatory":true,"type":"string"}}}
+  Console.WriteLine(updatedSpecifications.ToString(Formatting.None));
+  /*
+  {
+    "strict": false,
+    "fields": {
+      "license": {
+        "mandatory": true,
+        "type": "string"
+      }
+    }
+  }
+  */
 } catch (Exception e) {
   Console.WriteLine(e);
 }

@@ -177,7 +177,7 @@ namespace KuzzleSdk.API.Controllers {
         { "body", specifications }
       });
 
-      return (JObject)response.Result[index][collection];
+      return (JObject)response.Result;
     }
 
     /// <summary>

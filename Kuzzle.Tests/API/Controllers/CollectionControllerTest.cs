@@ -267,7 +267,7 @@ namespace Kuzzle.Tests.API.Controllers {
       });
 
       Assert.Equal(
-        expected["foo"]["bar"],
+        expected,
         mappings,
         new JTokenEqualityComparer());
     }
