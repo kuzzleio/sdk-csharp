@@ -28,7 +28,7 @@ public async Task UpdateMappingAsync(
 
 A JObject representing the collection data mapping.
 
-- `dynamic`: [dynamic mapping polyci](/core/1/guides/essentials/database-mappings#dynamic-mapping-policy) for new fields. Allowed values: `true` (default), `false`, `strict`
+- `dynamic`: [dynamic mapping policy](/core/1/guides/essentials/database-mappings#dynamic-mapping-policy) for new fields. Allowed values: `true` (default), `false`, `strict`
 - `_meta`: [collection additional metadata](core/1/guides/essentials/database-mappings#collection-metadata) stored next to the collection
 - `properties`: object describing the data mapping to associate to the new collection, using [Elasticsearch types definitions format](object describing the data mapping to associate to the new collection, using)
 

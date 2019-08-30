@@ -7,7 +7,7 @@ description: Validate specifications format.
 
 # ValidateSpecificationsAsync
 
-The validateSpecifications method checks if validation specifications are well formatted. It does not store nor modify the existing specifications.
+The validateSpecifications method checks if validation specifications are well-formed. It does not store nor modify the existing specifications.
 
 If the validation specifications are not formatted correctly, a detailed error message is returned to help with debugging.
 
