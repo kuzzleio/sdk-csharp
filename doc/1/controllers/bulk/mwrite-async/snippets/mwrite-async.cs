@@ -26,6 +26,6 @@ try {
         "total": 1
     }
     */
-} catch (Exception e) {
+} catch (KuzzleException e) {
     Console.WriteLine(e);
 }

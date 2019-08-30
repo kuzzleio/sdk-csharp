@@ -39,6 +39,6 @@ try {
         }
     }
     */
-} catch (Exception e) {
+} catch (KuzzleException e) {
     Console.WriteLine(e);
 }
