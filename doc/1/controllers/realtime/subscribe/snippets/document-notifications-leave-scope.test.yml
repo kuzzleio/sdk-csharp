@@ -7,4 +7,4 @@ hooks:
     curl -X DELETE kuzzle:7512/nyc-open-data/yellow-taxi/nina-vkote
   after:
 template: realtime
-expected: Document moved out from the scope
+expected: Document moved in the scope
