@@ -9,7 +9,7 @@ try {
 
   int count = await kuzzle.Realtime.CountAsync(room_id);
 
-  Console.WriteLine($"Currently {count} active subscription");
+  Console.WriteLine($"Currently {count} active subscriptions");
 } catch (KuzzleException e) {
   Console.WriteLine(e);
 }
