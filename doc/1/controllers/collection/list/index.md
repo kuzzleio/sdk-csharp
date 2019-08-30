@@ -20,16 +20,16 @@ public async Task<JObject> ListAsync(
       string index,
       int? from = null,
       int? size = null,
-      string type = null
+      TypeFilter type = TypeFilter.All
     );
 ```
 
-| Argument | Type                          | Description                                                                                         |
-|----------|-------------------------------|-----------------------------------------------------------------------------------------------------|
-| `index`  | <pre>string</pre>             | Index name                                                                                          |
-| `from`   | <pre>int?</pre><br>(`null`)   | Offset of the first result                                                                          |
-| `size`   | <pre>int?</pre><br>(`null`)   | Maximum number of returned results                                                                  |
-| `type`   | <pre>string</pre><br>(`null`) | Filters the returned collections. Allowed values: `all`, `stored` and `realtime` (default : `all`). |
+| Argument | Type                             | Description                                                                                         |
+|----------|----------------------------------|-----------------------------------------------------------------------------------------------------|
+| `index`  | <pre>string</pre>                | Index name                                                                                          |
+| `from`   | <pre>int?</pre><br>(`null`)      | Offset of the first result                                                                          |
+| `size`   | <pre>int?</pre><br>(`null`)      | Maximum number of returned results                                                                  |
+| `type`   | <pre>TypeFilter</pre><br>(`All`) | Filters the returned collections. Allowed values: `All`, `Stored` and `Realtime` (default : `All`). |
 
 ## Return
 

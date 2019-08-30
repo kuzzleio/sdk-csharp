@@ -4,6 +4,7 @@ using KuzzleSdk.API.Controllers;
 using KuzzleSdk.API.DataObjects;
 using KuzzleSdk.API.Options;
 using Newtonsoft.Json;
+using KuzzleSdk.Enums.CollectionController;
 using Newtonsoft.Json.Linq;
 using Xunit;
 
@@ -18,10 +19,10 @@ namespace Kuzzle.Tests.API.Controllers {
     }
 
     public static IEnumerable<object[]> GenerateListOptions() {
-      yield return new object[] { null, null, null };
-      yield return new object[] { null, null, "stored" };
-      yield return new object[] { -10, 42, "realtime" };
-      yield return new object[] { 12, null, null };
+      yield return new object[] { null, null, TypeFilter.All };
+      yield return new object[] { null, null, TypeFilter.Stored };
+      yield return new object[] { -10, 42, TypeFilter.Realtime };
+      yield return new object[] { 12, null, TypeFilter.All };
     }
 
     [Theory]
@@ -136,7 +137,7 @@ namespace Kuzzle.Tests.API.Controllers {
 
     [Theory]
     [MemberData(nameof(GenerateListOptions))]
-    public async void ListAsyncTest(int? from, int? size, string type) {
+    public async void ListAsyncTest(int? from, int? size, TypeFilter type) {
       _api.SetResult(@"{result: {foo: 123}}");
 
       JObject result = await _collectionController.ListAsync(
@@ -149,9 +150,23 @@ namespace Kuzzle.Tests.API.Controllers {
         { "index", "foo" }
       };
 
+      string listType = "";
+
+      switch (type) {
+        case TypeFilter.All:
+          listType = "all";
+          break;
+        case TypeFilter.Realtime:
+          listType = "realtime";
+          break;
+        case TypeFilter.Stored:
+          listType = "stored";
+          break;
+      }
+
       if (from != null) expected.Add("from", from);
       if (size != null) expected.Add("size", size);
-      if (type != null) expected.Add("type", type);
+      expected.Add("type", listType);
 
       _api.Verify(expected);
 

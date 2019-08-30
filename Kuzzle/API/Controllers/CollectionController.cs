@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using KuzzleSdk.Enums.CollectionController;
 
 namespace KuzzleSdk.API.Controllers {
   /// <summary>
@@ -94,7 +95,7 @@ namespace KuzzleSdk.API.Controllers {
     /// The returned list is sorted in alphanumerical order.
     /// </summary>
     public async Task<JObject> ListAsync(
-      string index, int? from = null, int? size = null, string type = null
+      string index, int? from = null, int? size = null, TypeFilter type = TypeFilter.All
     ) {
       var request = new JObject {
         { "controller", "collection" },
@@ -102,9 +103,23 @@ namespace KuzzleSdk.API.Controllers {
         { "index", index }
       };
 
+      string listType = "";
+
+      switch (type) {
+        case TypeFilter.All:
+          listType = "all";
+          break;
+        case TypeFilter.Realtime:
+          listType = "realtime";
+          break;
+        case TypeFilter.Stored:
+          listType = "stored";
+          break;
+      }
+
       if (from != null) request.Add("from", from);
       if (size != null) request.Add("size", size);
-      if (type != null) request.Add("type", type);
+      request.Add("type", listType);
 
       Response response = await api.QueryAsync(request);
 

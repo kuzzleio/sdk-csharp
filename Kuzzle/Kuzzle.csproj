@@ -31,6 +31,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="API\Options\DocumentOptions.cs" />
+    <Compile Remove="Enums\CollectionController\DynamicProperty.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Enums\" />
+    <Folder Include="Enums\CollectionController\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
