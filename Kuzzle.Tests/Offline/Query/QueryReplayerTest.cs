@@ -95,7 +95,7 @@ namespace Kuzzle.Tests.Offline.Query {
       queryReplayer.Lock = false;
       Assert.Equal(0, queryReplayer.Count);
 
-      Assert.Throws<InvalidOperationException>(() => queryReplayer.Dequeue());
+      Assert.Null(queryReplayer.Dequeue());
     }
 
     [Fact]
@@ -187,13 +187,15 @@ namespace Kuzzle.Tests.Offline.Query {
     }
 
     [Theory]
-    [InlineData(false)]
-    [InlineData(true)]
-    public void SuccessReplayQueries(bool resetWaitLogin) {
+    [InlineData(false, false)]
+    [InlineData(false, true)]
+    [InlineData(true, false)]
+    [InlineData(true, true)]
+    public void SuccessReplayQueries(bool waitLoginToReplay, bool resetWaitLogin) {
       testableOfflineManager.MaxQueueSize = -1;
       testableOfflineManager.MaxRequestDelay = 0;
       queryReplayer.Lock = false;
-      queryReplayer.WaitLoginToReplay = true;
+      queryReplayer.WaitLoginToReplay = waitLoginToReplay;
       int callCount = 0;
 
       queryReplayer.ReplayQuery = (TimedQuery query, CancellationToken token) => {
@@ -201,24 +203,24 @@ namespace Kuzzle.Tests.Offline.Query {
         return Task.CompletedTask;
       };
 
-      Assert.True(queryReplayer.Enqueue(JObject.Parse("{controller: 'foo', action: 'bar'}")));
-      Assert.True(queryReplayer.Enqueue(JObject.Parse("{controller: 'bar', action: 'foor'}")));
-      Assert.True(queryReplayer.Enqueue(JObject.Parse("{controller: 'foobar', action: 'foobar'}")));
-      Assert.True(queryReplayer.Enqueue(JObject.Parse("{controller: 'barfoo', action: 'foobar'}")));
-      Assert.True(queryReplayer.Enqueue(JObject.Parse("{controller: 'foobar', action: 'barfoo'}")));
-      Assert.True(queryReplayer.Enqueue(JObject.Parse("{controller: 'barfoo', action: 'barfoo'}")));
+      Assert.Equal(!waitLoginToReplay, queryReplayer.Enqueue(JObject.Parse("{controller: 'foo', action: 'bar'}")));
+      Assert.Equal(!waitLoginToReplay, queryReplayer.Enqueue(JObject.Parse("{controller: 'bar', action: 'foor'}")));
+      Assert.Equal(!waitLoginToReplay, queryReplayer.Enqueue(JObject.Parse("{controller: 'foobar', action: 'foobar'}")));
+      Assert.Equal(!waitLoginToReplay, queryReplayer.Enqueue(JObject.Parse("{controller: 'barfoo', action: 'foobar'}")));
+      Assert.Equal(!waitLoginToReplay, queryReplayer.Enqueue(JObject.Parse("{controller: 'foobar', action: 'barfoo'}")));
+      Assert.Equal(!waitLoginToReplay, queryReplayer.Enqueue(JObject.Parse("{controller: 'barfoo', action: 'barfoo'}")));
 
-      Assert.Equal(6, queryReplayer.Count);
+      Assert.Equal(waitLoginToReplay ? 0 : 6, queryReplayer.Count);
 
       Assert.IsType<CancellationTokenSource>(queryReplayer.ReplayQueries(resetWaitLogin));
 
       if (resetWaitLogin) {
         Assert.False(queryReplayer.WaitLoginToReplay);
       } else {
-        Assert.True(queryReplayer.WaitLoginToReplay);
+        Assert.Equal(waitLoginToReplay, queryReplayer.WaitLoginToReplay);
       }
 
-      Assert.Equal(6, callCount);
+      Assert.Equal(waitLoginToReplay ? 0 : 6, callCount);
     }
   }
 }

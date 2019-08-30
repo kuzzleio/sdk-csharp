@@ -169,6 +169,7 @@ namespace KuzzleSdk.API.Controllers {
         { "controller", "auth" },
         { "action", "logout" }
       });
+      api.EventHandler.DispatchUserLoggedOut();
     }
 
     /// <summary>

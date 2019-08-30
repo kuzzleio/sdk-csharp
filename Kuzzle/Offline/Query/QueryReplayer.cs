@@ -61,7 +61,7 @@ namespace KuzzleSdk {
     /// Return true if successful
     /// </summary>
     public bool Enqueue(JObject query) {
-      if (Lock) return false;
+      if (Lock || WaitLoginToReplay) return false;
 
       lock (queue) {
         if (queue.Count < offlineManager.MaxQueueSize || offlineManager.MaxQueueSize < 0) {
@@ -88,6 +88,9 @@ namespace KuzzleSdk {
       return false;
     }
 
+    /// <summary>
+    /// Return how many queries are in the queue
+    /// </summary>
     public int Count {
       get { return queue.Count; }
     }
@@ -97,8 +100,10 @@ namespace KuzzleSdk {
     /// </summary>
     public JObject Dequeue() {
       lock (queue) {
-        if (queue.Count == 0)
-          throw new InvalidOperationException("Cannot dequeue an Empty queue");
+        if (queue.Count == 0) {
+          return null;
+        }
+
         JObject query = queue[0].Query;
         queue.RemoveAt(0);
 
@@ -125,6 +130,11 @@ namespace KuzzleSdk {
           }
         }
         queue.RemoveAll((obj) => predicate(obj.Query));
+        if (queue.Count == 0) {
+          Lock = false;
+          currentlyReplaying = false;
+          WaitLoginToReplay = false;
+        }
       }
     }
 
@@ -138,7 +148,9 @@ namespace KuzzleSdk {
           Predicate<TimedQuery> timedQueryPredicate = timedQuery => predicate(timedQuery.Query);
           int itemsRemoved = queue.RemoveAll(timedQueryPredicate);
           if (queue.Count == 0 && currentlyReplaying) {
+            Lock = false;
             currentlyReplaying = false;
+            WaitLoginToReplay = false;
             kuzzle.GetEventHandler().DispatchQueueRecovered();
           }
           return itemsRemoved;
@@ -153,6 +165,9 @@ namespace KuzzleSdk {
     public void Clear() {
       lock (queue) {
         queue.Clear();
+        Lock = false;
+        currentlyReplaying = false;
+        WaitLoginToReplay = false;
       }
     }
 

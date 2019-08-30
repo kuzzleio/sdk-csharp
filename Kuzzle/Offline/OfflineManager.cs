@@ -23,6 +23,7 @@ namespace KuzzleSdk.API.Offline {
     internal abstract IQueryReplayer QueryReplayer { get; set; }
 
     internal abstract void OnUserLoggedIn(object sender, UserLoggedInEvent e);
+    internal abstract void OnUserLoggedOut();
     internal abstract Task Recover();
 
   }
@@ -95,6 +96,7 @@ namespace KuzzleSdk.API.Offline {
       this.kuzzle = kuzzle;
       InitComponents();
       this.kuzzle.GetEventHandler().UserLoggedIn += this.OnUserLoggedIn;
+      this.kuzzle.GetEventHandler().UserLoggedOut += this.OnUserLoggedOut;
     }
 
     internal virtual void InitComponents() {
@@ -130,25 +132,33 @@ namespace KuzzleSdk.API.Offline {
 
       if (await TokenVerifier.IsTokenValid()) {
         QueryReplayer.ReplayQueries();
-        QueryReplayer.Lock = false;
         SubscriptionRecoverer.RenewSubscriptions();
         return;
       }
 
       if (QueryReplayer.Lock) {
         QueryReplayer.ReplayQueries((obj) =>
-        obj["controller"] != null
-        && obj["action"] != null
-        && obj["controller"].ToString() == "auth"
-        && obj["action"].ToString() == "login", false);
+        obj["controller"]?.ToString() == "auth"
+        && (obj["action"].ToString() == "login"
+          || obj["action"].ToString() == "logout"), false);
       }
 
+    }
+
+    internal override void OnUserLoggedOut() {
+      if (AutoRecover
+          && QueryReplayer.WaitLoginToReplay
+        ) {
+        QueryReplayer.RejectAllQueries(new UnauthorizeException("Request submitted by another user"));
+        QueryReplayer.Lock = false;
+        QueryReplayer.WaitLoginToReplay = false;
+      }
     }
 
     /// <summary>
     /// This is used to verify if the user that has logged in
     /// is the same that before, if not this will Reject every query in the Queue
-    /// and clear all subscriptions, otherwise this will replay the Queue if she is waiting.
+    /// and clear all subscriptions, otherwise this will replay the Queue if it is waiting.
     /// </summary>
     internal override void OnUserLoggedIn(object sender, UserLoggedInEvent e) {
 
@@ -156,7 +166,7 @@ namespace KuzzleSdk.API.Offline {
 
         if (AutoRecover
            && QueryReplayer.WaitLoginToReplay) {
-          QueryReplayer.RejectAllQueries(new UnauthorizeException("Unauthorized", 0));
+          QueryReplayer.RejectAllQueries(new UnauthorizeException("Request submitted by another user"));
           QueryReplayer.Lock = false;
           QueryReplayer.WaitLoginToReplay = false;
         }

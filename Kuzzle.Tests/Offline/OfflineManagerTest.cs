@@ -123,7 +123,7 @@ namespace Kuzzle.Tests.Offline {
         testableOfflineManager.mockedQueryReplayer.Verify(obj => obj.ReplayQueries(true), Times.Never);
       } else {
         testableOfflineManager.mockedQueryReplayer.Verify(obj => obj.ReplayQueries(true), Times.Once);
-        Assert.False(testableOfflineManager.QueryReplayer.Lock);
+        Assert.False(testableOfflineManager.QueryReplayer.WaitLoginToReplay);
         testableOfflineManager.mockedSubscriptionRecoverer.Verify(obj => obj.RenewSubscriptions(), Times.Once);
       }
     }
