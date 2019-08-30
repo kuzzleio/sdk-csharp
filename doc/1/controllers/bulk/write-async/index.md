@@ -2,7 +2,7 @@
 code: true
 type: page
 title: WriteAsync
-description: Creates or replace a document directly into the storage engine.
+description: Create or replace a document directly into the storage engine.
 ---
 
 # WriteAsync
@@ -49,4 +49,3 @@ Return a JObject with the following properties:
 ## Usage
 
 <<< ./snippets/write-async.cs
-

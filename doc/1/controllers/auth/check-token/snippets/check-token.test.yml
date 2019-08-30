@@ -1,0 +1,7 @@
+name: Auth#CheckTokenAsync
+description: Checks a JWT Token's validity.
+hooks:
+  before: curl -X POST kuzzle:7512/users/foo/_create -H "Content-Type:application/json" --data '{"content":{"profileIds":["default"]},"credentials":{"local":{"username":"foo","password":"bar"}}}'
+  after: curl -X DELETE kuzzle:7512/users/foo
+template: default
+expected: ^{"valid":(true|false),"expiresAt":[0-9]+}$

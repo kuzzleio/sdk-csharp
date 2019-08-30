@@ -16,5 +16,5 @@ runners:
     build:
       cmd: dotnet build /mnt/Kuzzle/Kuzzle.csproj && mv /mnt/Kuzzle/bin/Debug/netstandard2.0/Kuzzle.dll /var/snippets/csharp/.
     run:
-      cmd: dotnet script {{ snippet.source }} 
-      before: timeout 600 bash -c 'until curl -f -s -o /dev/null http://kuzzle:7512/_now; do sleep 1; done'
+      cmd: dotnet script {{ snippet.source }}
+      before: timeout 600 bash -c 'until curl -f -s -o /dev/null http://kuzzle:7512/_now; do sleep 1; done' 

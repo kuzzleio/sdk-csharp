@@ -22,10 +22,16 @@ namespace KuzzleSdk.API {
       /// </summary>
       [JsonProperty(PropertyName = "message")]
       public string Message;
+
+      /// <summary>
+      /// Error message
+      /// </summary>
+      [JsonProperty(PropertyName = "stack")]
+      public string Stack;
     }
 
     /// <summary>
-    /// Response factory, creating a Response instance from a 
+    /// Response factory, creating a Response instance from a
     /// serialized JSON string
     /// </summary>
     /// <returns>Response class instance</returns>
@@ -35,7 +41,7 @@ namespace KuzzleSdk.API {
     }
 
     // The C# compiler complains about this variable not being used and being
-    // always null, which is not the case since it's correctly populated by 
+    // always null, which is not the case since it's correctly populated by
     // deserializing a raw JSON object.
 #pragma warning disable CS0649
     [JsonProperty(PropertyName = "room")]

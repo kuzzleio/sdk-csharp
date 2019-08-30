@@ -2,7 +2,7 @@
 code: true
 type: page
 title: MWriteAsync
-description: Creates or replace multiple documents directly into the storage engine.
+description: Create or replace multiple documents directly into the storage engine.
 ---
 
 # MWriteAsync
@@ -51,4 +51,3 @@ A `JObject` containing a `hits` array which represent the list of created docume
 ## Usage
 
 <<< ./snippets/mwrite-async.cs
-

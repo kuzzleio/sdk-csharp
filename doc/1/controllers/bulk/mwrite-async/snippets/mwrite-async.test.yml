@@ -1,5 +1,5 @@
 name: Bulk#MWriteAsync
-description: Creates or replace multiple documents directly into the storage engine.
+description: Create or replace multiple documents directly into the storage engine.
 hooks:
   before: |
     curl -X POST kuzzle:7512/nyc-open-data/_create
