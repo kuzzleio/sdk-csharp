@@ -2,11 +2,7 @@
 code: true
 type: page
 title: MWriteAsync
-<<<<<<< HEAD
-description: Create or replace multiple documents directly into the storage engine.
-=======
 description: Creates or replaces multiple documents directly into the storage engine.
->>>>>>> 10079808388ec99003f2aa872df17f6766b0bb84
 ---
 
 # MWriteAsync
