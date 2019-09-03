@@ -123,7 +123,7 @@ namespace KuzzleSdk.Protocol {
         while (socket.State == WebSocketState.Open) {
           var payload = sendQueue.Take(sendCancellationToken.Token);
           var buffer = Encoding.UTF8.GetBytes(payload.ToString());
-           try {
+          try {
             await socket.SendAsync(
               new ArraySegment<byte>(buffer),
               WebSocketMessageType.Text,
@@ -144,8 +144,8 @@ namespace KuzzleSdk.Protocol {
       Task.Run(async () => {
         WebSocketReceiveResult wsResult;
         StringBuilder messageBuilder = new StringBuilder(receiveBufferSize * 2);
-          while (socket.State == WebSocketState.Open) {
-            string message;
+        while (socket.State == WebSocketState.Open) {
+          string message;
 
           do {
             try {
@@ -169,14 +169,14 @@ namespace KuzzleSdk.Protocol {
           } while (!wsResult.EndOfMessage);
 
           if (messageBuilder.Length > 0) {
-              message = messageBuilder.ToString();
-              messageBuilder.Clear();
-            }
-
-            if (!string.IsNullOrEmpty(message)) {
-              DispatchResponse(message);
-            }
+            message = messageBuilder.ToString();
+            messageBuilder.Clear();
           }
+
+          if (!string.IsNullOrEmpty(message)) {
+            DispatchResponse(message);
+          }
+        }
       }, CancellationToken.None);
     }
 
@@ -192,12 +192,7 @@ namespace KuzzleSdk.Protocol {
         return;
       }
 
-      socket.Abort();
-      socket = null;
-      receiveCancellationToken?.Cancel();
-      receiveCancellationToken = null;
-      sendCancellationToken?.Cancel();
-      sendCancellationToken = null;
+      ResetState();
       reconnectCancellationToken = new CancellationTokenSource();
 
       State = ProtocolState.Reconnecting;
@@ -220,20 +215,24 @@ namespace KuzzleSdk.Protocol {
       CloseState(false);
     }
 
+    private void ResetState() {
+      socket.Abort();
+      socket = null;
+      receiveCancellationToken?.Cancel();
+      receiveCancellationToken = null;
+      sendCancellationToken?.Cancel();
+      sendCancellationToken = null;
+    }
+
     private void CloseState(bool tryReconnect) {
       if (State != ProtocolState.Closed) {
         if (tryReconnect) {
           Thread thread = new Thread(Reconnect);
           thread.Start();
         } else {
-          socket.Abort();
-          socket = null;
+          ResetState();
           State = ProtocolState.Closed;
           DispatchStateChange(State);
-          receiveCancellationToken?.Cancel();
-          receiveCancellationToken = null;
-          sendCancellationToken?.Cancel();
-          sendCancellationToken = null;
         }
       }
     }

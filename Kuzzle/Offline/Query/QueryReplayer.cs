@@ -49,7 +49,7 @@ namespace KuzzleSdk {
     /// Constructor of the QueryReplayer class.
     /// </summary>
     internal QueryReplayer(IOfflineManager offlineManager, IKuzzle kuzzle) {
-      queue = new List<TimedQuery>();
+      this.queue = new List<TimedQuery>();
       this.offlineManager = offlineManager;
       this.kuzzle = kuzzle;
       this.cancellationTokenSource = new CancellationTokenSource();
@@ -61,12 +61,12 @@ namespace KuzzleSdk {
     /// Return true if successful
     /// </summary>
     public bool Enqueue(JObject query) {
-      if (Lock) return false;
+      if (Lock || WaitLoginToReplay) return false;
 
       lock (queue) {
         if (queue.Count < offlineManager.MaxQueueSize || offlineManager.MaxQueueSize < 0) {
-
           if (queue.Count == 0) {
+            stopWatch.Reset();
             stopWatch.Start();
             queue.Add(new TimedQuery(query, 0));
           } else {
@@ -75,7 +75,6 @@ namespace KuzzleSdk {
             elapsedTime = Math.Min(elapsedTime, offlineManager.MaxRequestDelay);
             queue.Add(new TimedQuery(query, previous.Time + elapsedTime));
           }
-
           if (query["controller"]?.ToString() == "auth"
               && (query["action"]?.ToString() == "login"
                 || query["action"]?.ToString() == "logout")
@@ -89,6 +88,9 @@ namespace KuzzleSdk {
       return false;
     }
 
+    /// <summary>
+    /// Return how many queries are in the queue
+    /// </summary>
     public int Count {
       get { return queue.Count; }
     }
@@ -98,8 +100,10 @@ namespace KuzzleSdk {
     /// </summary>
     public JObject Dequeue() {
       lock (queue) {
-        if (queue.Count == 0)
-          throw new InvalidOperationException("Cannot dequeue an Empty queue");
+        if (queue.Count == 0) {
+          return null;
+        }
+
         JObject query = queue[0].Query;
         queue.RemoveAt(0);
 
@@ -120,13 +124,17 @@ namespace KuzzleSdk {
     /// </summary>
     public void RejectQueries(Predicate<JObject> predicate, Exception exception) {
       lock (queue) {
-        for (int i = 0; i < queue.Count; i++) {
-          TimedQuery timedQuery = queue[i];
+        foreach (TimedQuery timedQuery in queue) {
           if (predicate(timedQuery.Query)) {
             kuzzle.GetRequestById(timedQuery.Query["requestId"]?.ToString())?.SetException(exception);
           }
         }
         queue.RemoveAll((obj) => predicate(obj.Query));
+        if (queue.Count == 0) {
+          Lock = false;
+          currentlyReplaying = false;
+          WaitLoginToReplay = false;
+        }
       }
     }
 
@@ -140,7 +148,9 @@ namespace KuzzleSdk {
           Predicate<TimedQuery> timedQueryPredicate = timedQuery => predicate(timedQuery.Query);
           int itemsRemoved = queue.RemoveAll(timedQueryPredicate);
           if (queue.Count == 0 && currentlyReplaying) {
+            Lock = false;
             currentlyReplaying = false;
+            WaitLoginToReplay = false;
             kuzzle.GetEventHandler().DispatchQueueRecovered();
           }
           return itemsRemoved;
@@ -155,6 +165,9 @@ namespace KuzzleSdk {
     public void Clear() {
       lock (queue) {
         queue.Clear();
+        Lock = false;
+        currentlyReplaying = false;
+        WaitLoginToReplay = false;
       }
     }
 
@@ -170,19 +183,19 @@ namespace KuzzleSdk {
     /// </summary>
     internal Task ReplayOneQuery(TimedQuery timedQuery, CancellationToken cancellationToken) {
       if (offlineManager.MaxRequestDelay == 0) {
-        if (offlineManager.QueueFilter == null || offlineManager.QueueFilter(timedQuery.Query)) {
-          offlineManager.GetNetworkProtocol().Send(timedQuery.Query);
+        if (offlineManager.QueueFilter(timedQuery.Query)) {
+          offlineManager.NetworkProtocol.Send(timedQuery.Query);
         }
         return null;
       }
 
       return Task.Run(async () => {
-          if (offlineManager.QueueFilter == null || offlineManager.QueueFilter(timedQuery.Query)) {
+          if (offlineManager.QueueFilter(timedQuery.Query)) {
             cancellationToken.ThrowIfCancellationRequested();
             await Task.Delay((Int32)timedQuery.Time, cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             timedQuery.Query["jwt"] = kuzzle.AuthenticationToken;
-            offlineManager.GetNetworkProtocol().Send(timedQuery.Query);
+            offlineManager.NetworkProtocol.Send(timedQuery.Query);
           }
         }, cancellationToken);
       }
@@ -206,9 +219,9 @@ namespace KuzzleSdk {
         if (queue.Count > 0) {
           currentlyReplaying = true;
       
-          for (int i = 0; i < queue.Count; i++) {
-            if (predicate(queue[i].Query)) {
-              ReplayQuery(queue[i], cancellationTokenSource.Token);
+          foreach (TimedQuery timedQuery in queue) {
+            if (predicate(timedQuery.Query)) {
+              ReplayQuery(timedQuery, cancellationTokenSource.Token);
             }
           }
 

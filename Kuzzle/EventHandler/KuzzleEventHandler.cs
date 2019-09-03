@@ -16,6 +16,7 @@ namespace KuzzleSdk.EventHandler {
 
     private static readonly object subscriptionEventKey = new object();       // Internal
     private static readonly object userLoggedInEventKey = new object();       // Internal
+    private static readonly object userLoggedOutEventKey = new object();      // Internal
     private static readonly object reconnectedEventKey = new object();        // Public
     private static readonly object queueRecoveredEventKey = new object();     // Public
     private static readonly object unhandledResponseEventKey = new object();  // Public
@@ -134,6 +135,21 @@ namespace KuzzleSdk.EventHandler {
       kuzzle.AuthenticationToken = null;
       Action tokenExpired = (Action)eventHandlerList[tokenExpiredEventKey];
       tokenExpired?.Invoke();
+    }
+
+    public override event Action UserLoggedOut {
+      add {
+        eventHandlerList.AddHandler(userLoggedOutEventKey, value);
+      }
+
+      remove {
+        eventHandlerList.RemoveHandler(userLoggedOutEventKey, value);
+      }
+    }
+
+    internal override void DispatchUserLoggedOut() {
+      Action userLoggedOut = (Action)eventHandlerList[userLoggedOutEventKey];
+      userLoggedOut?.Invoke();
     }
   }
 }
