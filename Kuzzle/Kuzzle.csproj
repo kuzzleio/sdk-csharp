@@ -32,7 +32,6 @@
   <ItemGroup>
     <Compile Remove="API\Options\DocumentOptions.cs" />
     <Compile Remove="Offline\Handlers\ConnectionHandler.cs" />
-    <Compile Remove="EventHandler\Events\UserLoggedInEvent %28copy%29.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Offline\Subscription\" />
