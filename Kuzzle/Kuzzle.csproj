@@ -32,11 +32,14 @@
   <ItemGroup>
     <Compile Remove="API\Options\DocumentOptions.cs" />
     <Compile Remove="Offline\Handlers\ConnectionHandler.cs" />
+    <Compile Remove="Enums\CollectionController\DynamicProperty.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Offline\Subscription\" />
     <Folder Include="EventHandler\" />
     <Folder Include="EventHandler\Events\SubscriptionEvents\" />
+    <Folder Include="Enums\" />
+    <Folder Include="Enums\CollectionController\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

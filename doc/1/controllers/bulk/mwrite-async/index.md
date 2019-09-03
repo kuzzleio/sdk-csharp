@@ -2,7 +2,7 @@
 code: true
 type: page
 title: MWriteAsync
-description: Create or replace multiple documents directly into the storage engine.
+description: Creates or replaces multiple documents directly into the storage engine.
 ---
 
 # MWriteAsync
@@ -42,7 +42,7 @@ public async Task<JObject> MWriteAsync(
 A `JObject` containing a `hits` array which represent the list of created documents, in the same order than the one provided in the query.
 
 | Property   | Type               | Description                                     |
-| ---------- | ------------------ | ----------------------------------------------- |
+|------------|--------------------|-------------------------------------------------|
 | `_id`      | <pre>string</pre>  | Created document unique identifier.             |
 | `_source`  | <pre>JObject</pre> | Document content.                               |
 | `_version` | <pre>int</pre>     | Version number of the document                  |

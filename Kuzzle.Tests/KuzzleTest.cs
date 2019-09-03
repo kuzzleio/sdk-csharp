@@ -165,7 +165,8 @@ namespace Kuzzle.Tests {
         { "room", requestId },
         { "status", 401 },
         { "error", new JObject {
-          { "message", "Token expired"}
+          { "message", "Token expired"},
+          { "stack", "line 42: error" }
         }}
       };
       _kuzzle.requests[requestId] = responseTask;
@@ -180,6 +181,7 @@ namespace Kuzzle.Tests {
       Assert.True(eventDispatched);
       Assert.Equal(401, ex.Status);
       Assert.Equal("Token expired", ex.Message);
+      Assert.Equal("line 42: error", ex.Stack);
     }
 
     [Fact]

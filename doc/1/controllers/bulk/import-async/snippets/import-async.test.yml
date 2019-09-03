@@ -1,4 +1,4 @@
-name: bulk#ImportAsync
+name: Bulk#ImportAsync
 description: Creates, updates or deletes large amounts of documents as fast as possible.
 hooks:
   before: |

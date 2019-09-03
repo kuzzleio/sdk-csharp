@@ -1,5 +1,8 @@
 try {
-    JObject response = await kuzzle.Bulk.MWriteAsync("nyc-open-data", "yellow-taxi", JArray.Parse("[{_id: 'foo', body: {}}]"));
+    JObject response = await kuzzle.Bulk.MWriteAsync(
+        "nyc-open-data",
+        "yellow-taxi",
+        JArray.Parse("[{_id: 'foo', body: {}}]"));
     Console.WriteLine(response.ToString(Formatting.None));
     /*
     {
@@ -23,6 +26,6 @@ try {
         "total": 1
     }
     */
-} catch (Exception e) {
+} catch (KuzzleException e) {
     Console.WriteLine(e);
 }

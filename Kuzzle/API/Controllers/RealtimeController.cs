@@ -139,7 +139,10 @@ namespace KuzzleSdk.API.Controllers {
     /// the message content.
     /// </summary>
     public async Task PublishAsync(
-        string index, string collection, JObject message) {
+      string index,
+      string collection,
+      JObject message
+    ) {
       await api.QueryAsync(new JObject {
         { "controller", "realtime" },
         { "action", "publish" },
