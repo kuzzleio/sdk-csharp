@@ -2,7 +2,7 @@
 code: true
 type: page
 title: Properties
-desription: Properties for Offline Tools
+description: Properties for Offline Tools
 ---
 
 # OfflineManager class properties
