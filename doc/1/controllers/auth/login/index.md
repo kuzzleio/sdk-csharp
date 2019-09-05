@@ -22,11 +22,11 @@ public async Task<JObject> LoginAsync(
 
 <br/>
 
-| Argument      | Type               | Description                          |
-|---------------|--------------------|--------------------------------------|
-| `strategy`    | <pre>string</pre>  | Strategy to use                      |
-| `credentials` | <pre>JObject</pre> | JObject representing the credentials |
-| `expiresIn`   | <pre>TimeSpan?</pre>   | Token duration  |
+| Argument      | Type                 | Description                          |
+|---------------|----------------------|--------------------------------------|
+| `strategy`    | <pre>string</pre>    | Strategy to use                      |
+| `credentials` | <pre>JObject</pre>   | JObject representing the credentials |
+| `expiresIn`   | <pre>TimeSpan?</pre> | Token duration                       |
 
 #### strategy
 

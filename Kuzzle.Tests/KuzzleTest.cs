@@ -8,6 +8,8 @@ using System;
 using System.Threading.Tasks;
 using Moq;
 using System.Threading;
+using KuzzleSdk.API.Offline;
+using KuzzleSdk.EventHandler;
 
 namespace Kuzzle.Tests {
   public class KuzzleTest {
@@ -20,20 +22,6 @@ namespace Kuzzle.Tests {
     }
 
     [Fact]
-    public void DispatchTokenExpiredTest() {
-      _kuzzle.AuthenticationToken = "token";
-      bool eventDispatched = false;
-      _kuzzle.TokenExpired += delegate () {
-        eventDispatched = true;
-      };
-
-      _kuzzle.DispatchTokenExpired();
-
-      Assert.Null(_kuzzle.AuthenticationToken);
-      Assert.True(eventDispatched);
-    }
-
-    [Fact]
     public void KuzzleConstructorTest() {
       KuzzleSdk.Kuzzle kuzzle2 = new KuzzleSdk.Kuzzle(_protocol.Object);
 
@@ -43,6 +31,8 @@ namespace Kuzzle.Tests {
       Assert.IsType<IndexController>(_kuzzle.Index);
       Assert.IsType<RealtimeController>(_kuzzle.Realtime);
       Assert.IsType<ServerController>(_kuzzle.Server);
+      Assert.IsType<OfflineManager>(_kuzzle.Offline);
+      Assert.IsType<KuzzleEventHandler>(_kuzzle.EventHandler);
       Assert.NotEqual(_kuzzle.InstanceId, kuzzle2.InstanceId);
     }
 
@@ -164,7 +154,7 @@ namespace Kuzzle.Tests {
     [Fact]
     public async void ResponseListenerTokenExpiredTest() {
       bool eventDispatched = false;
-      _kuzzle.TokenExpired += delegate () {
+      _kuzzle.EventHandler.TokenExpired += delegate() {
         eventDispatched = true;
       };
       TaskCompletionSource<Response> responseTask =
@@ -197,7 +187,7 @@ namespace Kuzzle.Tests {
     [Fact]
     public void ResponseListenerUnhandledTest() {
       bool eventDispatched = false;
-      _kuzzle.UnhandledResponse += delegate (object sender, Response response) {
+      _kuzzle.EventHandler.UnhandledResponse += delegate(object sender, Response response) {
         eventDispatched = true;
 
         Assert.Equal("i am the result", response.Result);

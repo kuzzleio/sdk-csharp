@@ -105,7 +105,7 @@ namespace Kuzzle.Tests.API.Controllers {
 
       await _realtimeController.SubscribeAsync(index, collection, filters, notificationHandlerMock.Object);
 
-      //Then we test that Notification Handler is not called after the unsubscription. 
+      //Then we test that Notification Handler is not called after the unsubscription.
       _api.SetResult(new JObject {{
                 "result",  new JObject {{ "roomId", roomId }}
                 }}
@@ -118,45 +118,48 @@ namespace Kuzzle.Tests.API.Controllers {
                 {"body", new JObject {{ "roomId", roomId}}}
             });
 
-      Response notif = Response.FromString("{room: 'a_channel'}");
-      _api.Mock.Raise(m => m.UnhandledResponse += null, this, notif);
-      notificationHandlerMock.Verify(m => m.Invoke(notif), Times.Never);
-    }
+            Response notif = Response.FromString("{room: 'a_channel'}");
+            _api.Mock.Raise(m => m.EventHandler.UnhandledResponse += null, this, notif);
+            notificationHandlerMock.Verify(m => m.Invoke(notif), Times.Never);
+        }
 
-    [Fact]
-    public void NotificationHandlerTokenExpiredTest() {
-      _api.Mock.Raise(m => m.UnhandledResponse += null, this, Response.FromString(@"{type: 'TokenExpired'}"));
+        [Fact]
+        public void NotificationHandlerTokenExpiredTest()
+        {
+            _api.Mock.Raise(m => m.EventHandler.UnhandledResponse += null, this, Response.FromString(@"{type: 'TokenExpired'}"));
 
-      _api.Mock.Verify(m => m.DispatchTokenExpired(), Times.Once());
-    }
+            _api.Mock.Verify(m => m.EventHandler.DispatchTokenExpired(), Times.Once());
+        }
 
-    [Fact]
-    public async void NotificationHandlerTest() {
-      //First we subscribe to a collection
-      string index = "an_index";
-      string collection = "a_collection";
-      JObject filters = new JObject { { "studio", "pixar" } };
-      _api.SetResult(new JObject { {
+        [Fact]
+        public async void NotificationHandlerTest()
+        {
+            //First we subscribe to a collection
+            string index = "an_index";
+            string collection = "a_collection";
+            JObject filters = new JObject { { "studio", "pixar" } };
+            _api.SetResult(new JObject { {
                 "result", new JObject {
                     { "roomId", "A113"},
                     { "channel", "a_channel"} }
                 } }
-      );
-      Mock<RealtimeController.NotificationHandler> notificationHandlerMock = new Mock<RealtimeController.NotificationHandler>();
-      await _realtimeController.SubscribeAsync(index, collection, filters, notificationHandlerMock.Object);
+            );
+            Mock<RealtimeController.NotificationHandler> notificationHandlerMock = new Mock<RealtimeController.NotificationHandler>();
+            await _realtimeController.SubscribeAsync(index, collection, filters, notificationHandlerMock.Object);
 
-      //Then we trigger a notification
-      Response notif = Response.FromString("{room: 'a_channel'}");
-      _api.Mock.Raise(m => m.UnhandledResponse += null, this, notif);
+            //Then we trigger a notification
+            Response notif = Response.FromString("{room: 'a_channel'}");
+            _api.Mock.Raise(m => m.EventHandler.UnhandledResponse += null, this, notif);
 
-      //Then we can check that the handler has been called
-      notificationHandlerMock.Verify(m => m.Invoke(notif), Times.AtLeastOnce);
-    }
+            //Then we can check that the handler has been called
+            notificationHandlerMock.Verify(m => m.Invoke(notif), Times.AtLeastOnce);
+        }
 
-    public static IEnumerable<object[]> SubscribeOptionsData() {
-      yield return new object[] { null };
-      yield return new object[] { new SubscribeOptions() };
-      yield return new object[] {
+        public static IEnumerable<object[]> SubscribeOptionsData()
+        {
+            yield return new object[] { null };
+            yield return new object[] { new SubscribeOptions() };
+            yield return new object[] {
                 JsonConvert.DeserializeObject<SubscribeOptions>(@"{
                     scope: 'all',
                     users: 'all',

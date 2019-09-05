@@ -3,10 +3,16 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.API.Controllers {
+
+  internal interface IAuthController {
+    Task<JObject> CheckTokenAsync(string token);
+    Task<JObject> RefreshTokenAsync(TimeSpan? expiresIn = null);
+  }
+
   /// <summary>
   /// Implements the "auth" Kuzzle API controller
   /// </summary>
-  public sealed class AuthController : BaseController {
+  public sealed class AuthController : BaseController, IAuthController {
     internal AuthController(IKuzzleApi api) : base(api) { }
 
     /// <summary>
@@ -25,6 +31,10 @@ namespace KuzzleSdk.API.Controllers {
         });
 
       return (JObject)response.Result;
+    }
+
+    async Task<JObject> IAuthController.CheckTokenAsync(string token) {
+      return await (CheckTokenAsync(token));
     }
 
     /// <summary>
@@ -144,6 +154,9 @@ namespace KuzzleSdk.API.Controllers {
 
       api.AuthenticationToken = (string)response.Result["jwt"];
 
+      if (response.Result["_id"] != null)
+        api.EventHandler.DispatchUserLoggedIn(response.Result["_id"].ToString());
+
       return (JObject)response.Result;
     }
 
@@ -156,6 +169,7 @@ namespace KuzzleSdk.API.Controllers {
         { "controller", "auth" },
         { "action", "logout" }
       });
+      api.EventHandler.DispatchUserLoggedOut();
     }
 
     /// <summary>
