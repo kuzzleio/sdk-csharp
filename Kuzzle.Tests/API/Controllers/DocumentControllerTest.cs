@@ -79,10 +79,9 @@ namespace Kuzzle.Tests.API.Controllers {
         { "index", "foo" },
         { "collection", "bar" },
         { "body", content },
-        { "_id", id }
+        { "_id", id },
+        {"waitForRefresh", refresh},
       };
-
-      if (refresh) expected.Add("refresh", "wait_for");
 
       _api.Verify(expected);
 
@@ -111,10 +110,9 @@ namespace Kuzzle.Tests.API.Controllers {
         { "index", "foo" },
         { "collection", "bar" },
         { "body", content },
-        { "_id", "fooid" }
+        { "_id", "fooid" },
+        {"waitForRefresh", refresh},
       };
-
-      if (refresh) expected.Add("refresh", "wait_for");
 
       _api.Verify(expected);
 
@@ -135,10 +133,9 @@ namespace Kuzzle.Tests.API.Controllers {
         { "action", "delete" },
         { "index", "foo" },
         { "collection", "bar" },
-        { "_id", "fooid" }
+        { "_id", "fooid" },
+        {"waitForRefresh", refresh},
       };
-
-      if (refresh) expected.Add("refresh", "wait_for");
 
       _api.Verify(expected);
     }
@@ -149,7 +146,7 @@ namespace Kuzzle.Tests.API.Controllers {
       MemberType = typeof(MockGenerators))
     ]
     public async void DeleteByQueryAsyncTest(JObject filters) {
-      _api.SetResult("{ result: { hits: [1, 2, 3] } }");
+      _api.SetResult("{ result: { ids: [1, 2, 3] } }");
 
       JArray result = await _documentController.DeleteByQueryAsync(
         "foo", "bar", filters);
@@ -206,12 +203,11 @@ namespace Kuzzle.Tests.API.Controllers {
         { "action", "mCreate" },
         { "index", "foo" },
         { "collection", "bar" },
+        {"waitForRefresh", refresh},
       };
 
       expected.Add("body", new JObject());
       ((JObject)expected["body"]).Add("documents", documents);
-
-      if (refresh) expected.Add("refresh", "wait_for");
 
       _api.Verify(expected);
 
@@ -240,12 +236,11 @@ namespace Kuzzle.Tests.API.Controllers {
         { "action", "mCreateOrReplace" },
         { "index", "foo" },
         { "collection", "bar" },
+        {"waitForRefresh", refresh},
       };
 
       expected.Add("body", new JObject());
       ((JObject)expected["body"]).Add("documents", documents);
-
-      if (refresh) expected.Add("refresh", "wait_for");
 
       _api.Verify(expected);
 
@@ -261,9 +256,9 @@ namespace Kuzzle.Tests.API.Controllers {
     public async void MDeleteAsync(bool refresh) {
       _api.SetResult("{ result: ['foo', 'bar', 'baz'] }");
 
-      var ids = new JArray { "foo", "bar", "baz" };
+      var ids = new string[] { "foo", "bar", "baz" };
 
-      JArray result = await _documentController.MDeleteAsync(
+      string[] result = await _documentController.MDeleteAsync(
         "foo",
         "bar",
         ids,
@@ -274,19 +269,15 @@ namespace Kuzzle.Tests.API.Controllers {
         { "action", "mDelete" },
         { "index", "foo" },
         { "collection", "bar" },
+        {"waitForRefresh", refresh},
       };
 
       expected.Add("body", new JObject());
-      ((JObject)expected["body"]).Add("ids", ids);
-
-      if (refresh) expected.Add("refresh", "wait_for");
+      ((JObject)expected["body"]).Add("ids", new JArray(ids));
 
       _api.Verify(expected);
 
-      Assert.Equal(
-        new JArray { "foo", "bar", "baz" },
-        result,
-        new JTokenEqualityComparer());
+      Assert.Equal(ids, result);
     }
 
     [Fact]
@@ -334,12 +325,11 @@ namespace Kuzzle.Tests.API.Controllers {
         { "action", "mReplace" },
         { "index", "foo" },
         { "collection", "bar" },
+        {"waitForRefresh", refresh},
       };
 
       expected.Add("body", new JObject());
       ((JObject)expected["body"]).Add("documents", documents);
-
-      if (refresh) expected.Add("refresh", "wait_for");
 
       _api.Verify(expected);
 
@@ -382,12 +372,11 @@ namespace Kuzzle.Tests.API.Controllers {
         { "action", "mUpdate" },
         { "index", "foo" },
         { "collection", "bar" },
+        {"waitForRefresh", refresh},
       };
 
       expected.Add("body", new JObject());
       ((JObject)expected["body"]).Add("documents", documents);
-
-      if (refresh) expected.Add("refresh", "wait_for");
 
       expected.Add("retryOnConflict", retries ?? 0);
 
@@ -420,10 +409,9 @@ namespace Kuzzle.Tests.API.Controllers {
         { "index", "foo" },
         { "collection", "bar" },
         { "body", content },
-        { "_id", "fooid" }
+        { "_id", "fooid" },
+        {"waitForRefresh", refresh},
       };
-
-      if (refresh) expected.Add("refresh", "wait_for");
 
       _api.Verify(expected);
 
@@ -441,7 +429,7 @@ namespace Kuzzle.Tests.API.Controllers {
       _api.SetResult(@"{
         result: {
           scrollId: 'scrollId',
-          hits: ['foo', 'bar', 'baz'], 
+          hits: ['foo', 'bar', 'baz'],
           total: 42,
           aggregations: { foo: 'bar' }
         }
@@ -515,10 +503,9 @@ namespace Kuzzle.Tests.API.Controllers {
         { "index", "foo" },
         { "collection", "bar" },
         { "_id", "id" },
-        { "body", changes }
+        { "body", changes },
+        {"waitForRefresh", refresh},
       };
-
-      if (refresh) expected.Add("refresh", "wait_for");
 
       expected.Add("retryOnConflict", retries ?? 0);
 

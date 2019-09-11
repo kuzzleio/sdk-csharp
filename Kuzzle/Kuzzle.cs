@@ -8,6 +8,8 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using KuzzleSdk.API.Offline;
+using KuzzleSdk.EventHandler;
 
 [assembly: InternalsVisibleTo("Kuzzle.Tests")]
 
@@ -24,6 +26,8 @@ namespace KuzzleSdk {
     /// </summary>
     /// <value>The authentication token.</value>
     string AuthenticationToken { get; set; }
+
+    AbstractKuzzleEventHandler EventHandler { get; }
 
     /// <summary>
     /// Gets the instance identifier.
@@ -42,28 +46,23 @@ namespace KuzzleSdk {
     /// </summary>
     /// <returns>The query response.</returns>
     /// <param name="query">Kuzzle API query</param>
-    Task<Response> QueryAsync(JObject query);
-
-    /// <summary>
-    /// Dispatches a TokenExpired event.
-    /// </summary>
-    void DispatchTokenExpired();
-
-    /// <summary>
-    /// Occurs when an unhandled response is received.
-    /// </summary>
-    event EventHandler<Response> UnhandledResponse;
-
-    /// <summary>
-    /// Occurs when the authentication token has expired
-    /// </summary>
-    event Action TokenExpired;
+    ConfiguredTaskAwaitable<Response> QueryAsync(JObject query);
   }
+
+  internal interface IKuzzle {
+    string AuthenticationToken { get; set; }
+
+    IAuthController GetAuth();
+    IRealtimeController GetRealtime();
+    AbstractKuzzleEventHandler GetEventHandler();
+
+    TaskCompletionSource<Response> GetRequestById(string requestId);
+    }
 
   /// <summary>
   /// Main entry point for this SDK.
   /// </summary>
-  public sealed class Kuzzle : IKuzzleApi {
+  public sealed class Kuzzle : IKuzzleApi, IKuzzle {
     private AbstractProtocol networkProtocol;
 
     internal readonly Dictionary<string, TaskCompletionSource<Response>>
@@ -81,20 +80,6 @@ namespace KuzzleSdk {
     /// </summary>
     public string InstanceId { get; }
 
-    // Emitter for all responses not directly linked to a user request
-    // (i.e. all real-time notifications)
-    public event EventHandler<Response> UnhandledResponse;
-
-    /// <summary>
-    /// Token expiration event
-    /// </summary>
-    public event Action TokenExpired;
-
-    public void DispatchTokenExpired() {
-      AuthenticationToken = null;
-      TokenExpired?.Invoke();
-    }
-
     /// <summary>
     /// Exposes actions from the "auth" Kuzzle API controller
     /// </summary>
@@ -109,7 +94,7 @@ namespace KuzzleSdk {
     /// Exposes actions from the "document" Kuzzle API controller
     /// </summary>
     public DocumentController Document { get; private set; }
-  
+
     /// <summary>
     /// Exposes actions from the "index" Kuzzle API controller
     /// </summary>
@@ -126,9 +111,73 @@ namespace KuzzleSdk {
     public ServerController Server { get; private set; }
 
     /// <summary>
+    /// Exposes actions from the "bulk" Kuzzle API controller
+    /// </summary>
+    public BulkController Bulk { get; private set; }
+
+    /// <summary>
     /// Exposes actions from the "admin" Kuzzle API controller
     /// </summary>
     public AdminController Admin { get; private set; }
+
+    /// <summary>
+    /// Exposes the event handler
+    /// </summary>
+    public AbstractKuzzleEventHandler EventHandler { get; private set; }
+
+    /// <summary>
+    /// Exposes actions from the OfflineManager
+    /// </summary>
+    public OfflineManager Offline { get; private set; }
+
+    /// <summary>
+    /// The maximum amount of elements that the queue can contains.
+    /// If set to -1, the size is unlimited.
+    /// </summary>
+    public int MaxQueueSize {
+      get { return Offline.MaxQueueSize; }
+      set { Offline.MaxQueueSize = value; }
+    }
+
+    /// <summary>
+    /// The minimum duration of a Token after refresh.
+    /// If set to -1 the SDK does not refresh the token automaticaly.
+    /// </summary>
+    public int RefreshedTokenDuration {
+      get { return Offline.RefreshedTokenDuration; }
+      set { Offline.RefreshedTokenDuration = value; }
+    }
+
+    /// <summary>
+    /// The minimum duration of a Token before being automaticaly refreshed.
+    /// If set to -1 the SDK does not refresh the token automaticaly.
+    /// </summary>
+    public int MinTokenDuration {
+      get { return Offline.MinTokenDuration; }
+      set { Offline.MinTokenDuration = value; }
+    }
+
+    /// <summary>
+    /// The maximum delay between two requests to be replayed
+    /// </summary>
+    public int MaxRequestDelay {
+      get { return Offline.MaxRequestDelay; }
+      set { Offline.MaxRequestDelay = value; }
+    }
+
+    public Func<JObject, bool> QueueFilter {
+      get { return Offline.QueueFilter; }
+      set { Offline.QueueFilter = value; }
+    }
+
+    /// <summary>
+    /// Queue requests when network is down,
+    /// and automatically replay them when the SDK successfully reconnects.
+    /// </summary>
+    public bool AutoRecover {
+      get { return Offline.AutoRecover; }
+      set { Offline.AutoRecover = value; }
+    }
 
     /// <summary>
     /// Authentication token
@@ -163,6 +212,7 @@ namespace KuzzleSdk {
       }
     }
 
+
     /// <summary>
     /// Handles the ResponseEvent event from the network protocol
     /// </summary>
@@ -174,7 +224,7 @@ namespace KuzzleSdk {
       if (requests.ContainsKey(response.Room)) {
         if (response.Error != null) {
           if (response.Error.Message == "Token expired") {
-            DispatchTokenExpired();
+            EventHandler.DispatchTokenExpired();
           }
 
           requests[response.RequestId].SetException(
@@ -186,8 +236,11 @@ namespace KuzzleSdk {
         lock (requests) {
           requests.Remove(response.RequestId);
         }
+
+        Offline?.QueryReplayer?.Remove((obj) => obj["requestId"].ToString() == response.RequestId);
+
       } else {
-        UnhandledResponse?.Invoke(this, response);
+        EventHandler.DispatchUnhandledResponse(response);
       }
     }
 
@@ -204,14 +257,24 @@ namespace KuzzleSdk {
       }
     }
 
+
     /// <summary>
     /// Initialize a new instance of the <see cref="T:Kuzzle.Kuzzle"/> class.
     /// </summary>
     /// <param name="networkProtocol">Network protocol.</param>
-    public Kuzzle(AbstractProtocol networkProtocol) {
+    public Kuzzle(
+      AbstractProtocol networkProtocol,
+      int refreshedTokenDuration = 3600000,
+      int minTokenDuration = 3600000,
+      int maxQueueSize = -1,
+      int maxRequestDelay = 1000,
+      Func<JObject, bool> queueFiler = null
+    ) {
       NetworkProtocol = networkProtocol;
       NetworkProtocol.ResponseEvent += ResponsesListener;
       NetworkProtocol.StateChanged += StateChangeListener;
+
+      EventHandler = new KuzzleEventHandler(this);
 
       // Initializes the controllers
       Auth = new AuthController(this);
@@ -220,7 +283,16 @@ namespace KuzzleSdk {
       Index = new IndexController(this);
       Realtime = new RealtimeController(this);
       Server = new ServerController(this);
+      Bulk = new BulkController(this);
       Admin = new AdminController(this);
+
+      Offline = new OfflineManager(networkProtocol, this) {
+        RefreshedTokenDuration = refreshedTokenDuration,
+        MinTokenDuration = minTokenDuration,
+        MaxQueueSize = maxQueueSize,
+        MaxRequestDelay = maxRequestDelay,
+        QueueFilter = queueFiler
+      };
 
       // Initializes instance unique properties
       Version = typeof(Kuzzle)
@@ -256,19 +328,30 @@ namespace KuzzleSdk {
       NetworkProtocol.Disconnect();
     }
 
+    TaskCompletionSource<Response> IKuzzle.GetRequestById(string requestId) {
+      return requests[requestId];
+    }
+
     /// <summary>
     /// Sends an API request to Kuzzle and returns the corresponding API
     /// response.
     /// </summary>
     /// <returns>API response</returns>
     /// <param name="query">Kuzzle API query</param>
-    public Task<Response> QueryAsync(JObject query) {
+    public ConfiguredTaskAwaitable<Response> QueryAsync(JObject query) {
       if (query == null) {
         throw new Exceptions.InternalException("You must provide a query", 400);
       }
 
-      if (NetworkProtocol.State != ProtocolState.Open) {
+      if (NetworkProtocol.State == ProtocolState.Closed) {
         throw new Exceptions.NotConnectedException();
+      }
+
+      if (query["waitForRefresh"] != null) {
+        if (query["waitForRefresh"].ToObject<bool>()) {
+          query.Add("refresh", "wait_for");
+        }
+        query.Remove("waitForRefresh");
       }
 
       if (AuthenticationToken != null) {
@@ -287,13 +370,29 @@ namespace KuzzleSdk {
       query["volatile"]["sdkVersion"] = Version;
       query["volatile"]["sdkInstanceId"] = InstanceId;
 
-      NetworkProtocol.Send(query);
+      if (NetworkProtocol.State == ProtocolState.Open) {
+        NetworkProtocol.Send(query);
+      } else if (NetworkProtocol.State == ProtocolState.Reconnecting) {
+        Offline.QueryReplayer.Enqueue(query);
+      }
 
       lock (requests) {
         requests[requestId] = new TaskCompletionSource<Response>();
       }
 
-      return requests[requestId].Task;
+      return requests[requestId].Task.ConfigureAwait(false);
+    }
+
+    IAuthController IKuzzle.GetAuth() {
+      return Auth;
+    }
+
+    IRealtimeController IKuzzle.GetRealtime() {
+      return Realtime;
+    }
+
+    AbstractKuzzleEventHandler IKuzzle.GetEventHandler() {
+      return EventHandler;
     }
   }
 }

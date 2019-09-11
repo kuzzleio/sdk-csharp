@@ -3,10 +3,16 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.API.Controllers {
+
+  internal interface IAuthController {
+    Task<JObject> CheckTokenAsync(string token);
+    Task<JObject> RefreshTokenAsync(TimeSpan? expiresIn = null);
+  }
+
   /// <summary>
   /// Implements the "auth" Kuzzle API controller
   /// </summary>
-  public sealed class AuthController : BaseController {
+  public sealed class AuthController : BaseController, IAuthController {
     internal AuthController(IKuzzleApi api) : base(api) { }
 
     /// <summary>
@@ -27,6 +33,10 @@ namespace KuzzleSdk.API.Controllers {
       return (JObject)response.Result;
     }
 
+    async Task<JObject> IAuthController.CheckTokenAsync(string token) {
+      return await (CheckTokenAsync(token));
+    }
+
     /// <summary>
     /// Creates new credentials for the current user.
     /// </summary>
@@ -45,7 +55,7 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     /// <summary>
-    /// Checks that the current authenticated user has credentials for the 
+    /// Checks that the current authenticated user has credentials for the
     /// specified authentication strategy.
     /// </summary>
     public async Task<bool> CredentialsExistAsync(string strategy) {
@@ -61,9 +71,9 @@ namespace KuzzleSdk.API.Controllers {
     /// <summary>
     /// Deletes credentials associated to the current user.
     ///
-    /// If the credentials that generated the current authentication token are 
-    /// removed, the user will remain logged in until they log out or their 
-    /// session expire. After that, they will no longer be able to log in with 
+    /// If the credentials that generated the current authentication token are
+    /// removed, the user will remain logged in until they log out or their
+    /// session expire. After that, they will no longer be able to log in with
     /// the deleted credentials.
     /// </summary>
     public async Task DeleteMyCredentialsAsync(string strategy) {
@@ -88,7 +98,7 @@ namespace KuzzleSdk.API.Controllers {
 
     /// <summary>
     /// Returns credentials information for the currently logged in user.
-    /// The returned data depends on the given authentication strategy, and 
+    /// The returned data depends on the given authentication strategy, and
     /// should never include any sensitive information.
     /// </summary>
     public async Task<JObject> GetMyCredentialsAsync(string strategy) {
@@ -102,7 +112,7 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     /// <summary>
-    /// Returns the exhaustive list of granted or denied rights for the 
+    /// Returns the exhaustive list of granted or denied rights for the
     /// current user.
     /// </summary>
     public async Task<JArray> GetMyRightsAsync() {
@@ -132,17 +142,20 @@ namespace KuzzleSdk.API.Controllers {
     public async Task<JObject> LoginAsync(
       string strategy,
       JObject credentials,
-      string expiresIn = null
+      TimeSpan? expiresIn = null
     ) {
       Response response = await api.QueryAsync(new JObject {
         { "controller", "auth" },
         { "action", "login" },
         { "strategy", strategy },
         { "body", credentials },
-        { "expiresIn", expiresIn }
+        { "expiresIn", expiresIn?.TotalMilliseconds }
       });
 
       api.AuthenticationToken = (string)response.Result["jwt"];
+
+      if (response.Result["_id"] != null)
+        api.EventHandler.DispatchUserLoggedIn(response.Result["_id"].ToString());
 
       return (JObject)response.Result;
     }
@@ -156,16 +169,17 @@ namespace KuzzleSdk.API.Controllers {
         { "controller", "auth" },
         { "action", "logout" }
       });
+      api.EventHandler.DispatchUserLoggedOut();
     }
 
     /// <summary>
     /// Refreshes an authentication token.
     /// </summary>
-    public async Task<JObject> RefreshTokenAsync(string expiresIn = null) {
+    public async Task<JObject> RefreshTokenAsync(TimeSpan? expiresIn = null) {
       Response response = await api.QueryAsync(new JObject {
         { "controller", "auth" },
         { "action", "refreshToken" },
-        { "expiresIn", expiresIn }
+        { "expiresIn", expiresIn?.TotalMilliseconds }
       });
 
       api.AuthenticationToken = (string)response.Result["jwt"];
@@ -191,7 +205,7 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     /// <summary>
-    /// Updates the currently logged in user information (the list of 
+    /// Updates the currently logged in user information (the list of
     /// associated profiles cannot be updated)
     /// </summary>
     public async Task<JObject> UpdateSelfAsync(JObject content) {
@@ -205,7 +219,7 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     /// <summary>
-    /// Validates the provided credentials against a specified authentication 
+    /// Validates the provided credentials against a specified authentication
     /// strategy.
     /// This route neither creates nor modifies credentials.
     /// </summary>

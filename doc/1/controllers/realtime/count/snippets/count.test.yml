@@ -1,0 +1,7 @@
+name: Realtime#CountAsync
+description: Counts subscribers for a subscription room.
+hooks:
+  before:
+  after:
+template: default
+expected: Currently 1 active subscription

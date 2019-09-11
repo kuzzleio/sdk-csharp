@@ -1,7 +1,6 @@
 ﻿using Xunit;
 using KuzzleSdk.API.Controllers;
 using Newtonsoft.Json.Linq;
-using KuzzleSdk.Utils;
 
 namespace Kuzzle.Tests.API.Controllers {
   public class AdminControllerTest {
@@ -42,6 +41,7 @@ namespace Kuzzle.Tests.API.Controllers {
       JObject verifyQuery = new JObject {
         {"controller", "admin"},
         {"action", "loadFixtures"},
+        {"waitForRefresh", waitForRefresh},
         {"body", new JObject {
           {"index-name", new JObject{
             {"foo", new JArray {
@@ -51,8 +51,6 @@ namespace Kuzzle.Tests.API.Controllers {
           }}
         }}
       };
-
-      QueryUtils.HandleRefreshOption(verifyQuery, waitForRefresh);
 
       _api.Verify(verifyQuery);
 
@@ -72,6 +70,7 @@ namespace Kuzzle.Tests.API.Controllers {
       JObject verifyQuery = new JObject {
         {"controller", "admin"},
         {"action", "loadMappings"},
+        {"waitForRefresh", waitForRefresh},
         {"body", new JObject {
           {"index-name", new JObject{
             {"foo", new JObject {
@@ -83,8 +82,6 @@ namespace Kuzzle.Tests.API.Controllers {
           }}
         }}
       };
-
-      QueryUtils.HandleRefreshOption(verifyQuery, waitForRefresh);
 
       _api.Verify(verifyQuery);
 
@@ -104,6 +101,7 @@ namespace Kuzzle.Tests.API.Controllers {
       JObject verifyQuery = new JObject {
         {"controller", "admin"},
         {"action", "loadSecurities"},
+        {"waitForRefresh", waitForRefresh},
         {"body", new JObject {
           {"roles", new JObject{
             {"foobar", new JObject {
@@ -113,8 +111,6 @@ namespace Kuzzle.Tests.API.Controllers {
           }}
         }}
       };
-
-      QueryUtils.HandleRefreshOption(verifyQuery, waitForRefresh);
 
       _api.Verify(verifyQuery);
 

@@ -8,6 +8,8 @@ using System;
 using System.Threading.Tasks;
 using Moq;
 using System.Threading;
+using KuzzleSdk.API.Offline;
+using KuzzleSdk.EventHandler;
 
 namespace Kuzzle.Tests {
   public class KuzzleTest {
@@ -20,20 +22,6 @@ namespace Kuzzle.Tests {
     }
 
     [Fact]
-    public void DispatchTokenExpiredTest() {
-      _kuzzle.AuthenticationToken = "token";
-      bool eventDispatched = false;
-      _kuzzle.TokenExpired += delegate () {
-        eventDispatched = true;
-      };
-
-      _kuzzle.DispatchTokenExpired();
-
-      Assert.Null(_kuzzle.AuthenticationToken);
-      Assert.True(eventDispatched);
-    }
-
-    [Fact]
     public void KuzzleConstructorTest() {
       KuzzleSdk.Kuzzle kuzzle2 = new KuzzleSdk.Kuzzle(_protocol.Object);
 
@@ -43,6 +31,8 @@ namespace Kuzzle.Tests {
       Assert.IsType<IndexController>(_kuzzle.Index);
       Assert.IsType<RealtimeController>(_kuzzle.Realtime);
       Assert.IsType<ServerController>(_kuzzle.Server);
+      Assert.IsType<OfflineManager>(_kuzzle.Offline);
+      Assert.IsType<KuzzleEventHandler>(_kuzzle.EventHandler);
       Assert.NotEqual(_kuzzle.InstanceId, kuzzle2.InstanceId);
     }
 
@@ -82,6 +72,34 @@ namespace Kuzzle.Tests {
       await Assert.ThrowsAsync<InternalException>(async () => {
         await _kuzzle.QueryAsync(request);
       });
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void QueryAsyncHandleWaitForRefreshOptionTest(bool refresh) {
+      JObject request = new JObject {
+        { "waitForRefresh", refresh}
+      };
+      _protocol.Setup(protocol => protocol.Send(It.IsAny<JObject>()));
+
+      _kuzzle.QueryAsync(request);
+
+      _protocol.Verify(
+        protocol => protocol.Send(It.Is<JObject>(o => testRefreshOption(o, refresh))));
+
+      Assert.Single(_kuzzle.requests);
+    }
+
+    private bool testRefreshOption(JObject query, bool refresh) {
+      Assert.Null(query["waitForRefresh"]);
+      if (refresh) {
+        Assert.NotNull(query["refresh"]);
+        Assert.Equal("wait_for", query["refresh"]);
+      } else {
+        Assert.Null(query["refresh"]);
+      }
+      return true;
     }
 
     [Fact]
@@ -136,7 +154,7 @@ namespace Kuzzle.Tests {
     [Fact]
     public async void ResponseListenerTokenExpiredTest() {
       bool eventDispatched = false;
-      _kuzzle.TokenExpired += delegate () {
+      _kuzzle.EventHandler.TokenExpired += delegate() {
         eventDispatched = true;
       };
       TaskCompletionSource<Response> responseTask =
@@ -147,7 +165,8 @@ namespace Kuzzle.Tests {
         { "room", requestId },
         { "status", 401 },
         { "error", new JObject {
-          { "message", "Token expired"}
+          { "message", "Token expired"},
+          { "stack", "line 42: error" }
         }}
       };
       _kuzzle.requests[requestId] = responseTask;
@@ -162,12 +181,13 @@ namespace Kuzzle.Tests {
       Assert.True(eventDispatched);
       Assert.Equal(401, ex.Status);
       Assert.Equal("Token expired", ex.Message);
+      Assert.Equal("line 42: error", ex.Stack);
     }
 
     [Fact]
     public void ResponseListenerUnhandledTest() {
       bool eventDispatched = false;
-      _kuzzle.UnhandledResponse += delegate (object sender, Response response) {
+      _kuzzle.EventHandler.UnhandledResponse += delegate(object sender, Response response) {
         eventDispatched = true;
 
         Assert.Equal("i am the result", response.Result);

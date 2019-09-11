@@ -2,14 +2,25 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using KuzzleSdk.API.Options;
+using KuzzleSdk.EventHandler.Events;
+using KuzzleSdk.EventHandler.Events.SubscriptionEvents;
+using KuzzleSdk.Offline.Subscription;
 using KuzzleSdk.Protocol;
 using Newtonsoft.Json.Linq;
+using static KuzzleSdk.API.Controllers.RealtimeController;
 
 namespace KuzzleSdk.API.Controllers {
+
+  internal interface IRealtimeController {
+    Task<string> SubscribeAndAddToRecoverer(
+        string index, string collection, JObject filters,
+        NotificationHandler handler, SubscribeOptions options = null, bool addToRecoverer = true);
+    }
+
   /// <summary>
   /// Implements the "realtime" Kuzzle API controller
   /// </summary>
-  public sealed class RealtimeController : BaseController {
+  public sealed class RealtimeController : BaseController, IRealtimeController {
     /// <summary>
     /// Delegate to provide to the SubscribeAsync method
     /// </summary>
@@ -25,7 +36,7 @@ namespace KuzzleSdk.API.Controllers {
 
     private void NotificationsListener(object sender, Response notification) {
       if (notification.Type == "TokenExpired") {
-        api.DispatchTokenExpired();
+        api.EventHandler.DispatchTokenExpired();
         return;
       }
 
@@ -46,6 +57,7 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     private void ClearAllSubscriptions() {
+      api.EventHandler.DispatchSubscription(new SubscriptionClearEvent());
       rooms.Clear();
       channels.Clear();
     }
@@ -81,6 +93,11 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     private void DelNotificationHandlers(string room) {
+
+      api.EventHandler.DispatchSubscription(
+        new SubscriptionRemoveEvent((obj) => obj.RoomId == room)
+      );
+
       foreach (string channel in rooms[room]) {
         channels.Remove(channel);
       }
@@ -89,9 +106,9 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     internal RealtimeController(IKuzzleApi api) : base(api) {
-      api.UnhandledResponse += NotificationsListener;
+      api.EventHandler.UnhandledResponse += NotificationsListener;
       api.NetworkProtocol.StateChanged += StateChangeListener;
-      api.TokenExpired += TokenExpiredListener;
+      api.EventHandler.TokenExpired += TokenExpiredListener;
     }
 
     /// <summary>
@@ -100,7 +117,7 @@ namespace KuzzleSdk.API.Controllers {
     /// is reclaimed by garbage collection.
     /// </summary>
     ~RealtimeController() {
-      api.UnhandledResponse -= NotificationsListener;
+      api.EventHandler.UnhandledResponse -= NotificationsListener;
       api.NetworkProtocol.StateChanged -= StateChangeListener;
     }
 
@@ -122,7 +139,10 @@ namespace KuzzleSdk.API.Controllers {
     /// the message content.
     /// </summary>
     public async Task PublishAsync(
-        string index, string collection, JObject message) {
+      string index,
+      string collection,
+      JObject message
+    ) {
       await api.QueryAsync(new JObject {
         { "controller", "realtime" },
         { "action", "publish" },
@@ -140,6 +160,26 @@ namespace KuzzleSdk.API.Controllers {
     public async Task<string> SubscribeAsync(
         string index, string collection, JObject filters,
         NotificationHandler handler, SubscribeOptions options = null) {
+      string roomId = await SubscribeAndAddToSubscriptionRecoverer(index, collection, filters, handler, options, true);
+      return roomId;
+    }
+
+    /// <summary>
+    /// Removes a subscription.
+    /// </summary>
+    public async Task UnsubscribeAsync(string roomId) {
+      await api.QueryAsync(new JObject {
+        { "controller", "realtime" },
+        { "action", "unsubscribe" },
+        { "body", new JObject{ { "roomId", roomId } } }
+      });
+
+      DelNotificationHandlers(roomId);
+    }
+
+    private async Task<string> SubscribeAndAddToSubscriptionRecoverer(
+        string index, string collection, JObject filters,
+        NotificationHandler handler, SubscribeOptions options = null, bool addToRecoverer = true) {
       var request = new JObject {
         { "controller", "realtime" },
         { "action", "subscribe" },
@@ -160,20 +200,35 @@ namespace KuzzleSdk.API.Controllers {
         handler,
         options ?? new SubscribeOptions());
 
+      if (addToRecoverer) {
+        api.EventHandler.DispatchSubscription(new SubscriptionAddEvent(
+          new Subscription(
+            index,
+            collection,
+            filters,
+            handler,
+            (string)response.Result["roomId"],
+            (string)response.Result["channel"],
+            options
+          )
+        ));
+      }
+
       return (string)response.Result["roomId"];
     }
 
     /// <summary>
-    /// Removes a subscription.
+    /// Subscribes by providing a set of filters: messages, document changes 
+    /// and, optionally, user events matching the provided filters will 
+    /// generate real-time notifications, sent to you in real-time by Kuzzle.
+    /// and add the Subscription to the SubscriptionRecoverer for Offline Mode
     /// </summary>
-    public async Task UnsubscribeAsync(string roomId) {
-      await api.QueryAsync(new JObject {
-        { "controller", "realtime" },
-        { "action", "unsubscribe" },
-        { "body", new JObject{ { "roomId", roomId } } }
-      });
-
-      DelNotificationHandlers(roomId);
+    /// <param name="addToRecoverer">If set to <c>true</c> add to recoverer.</param>
+    async Task<string> IRealtimeController.SubscribeAndAddToRecoverer(
+        string index, string collection, JObject filters,
+        NotificationHandler handler, SubscribeOptions options, bool addToRecoverer) {
+      return await SubscribeAndAddToSubscriptionRecoverer(index, collection, filters, handler, options, addToRecoverer);
     }
+
   }
 }
