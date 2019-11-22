@@ -56,7 +56,7 @@ jobs:
 
     - stage: Deployments
       name: NuGet
-      if: tag IS present AND branch =~ /^master|[0-9]+-stable$/
+      if: tag IS present AND branch =~ /^(master|[0-9]+-stable)$/
       language: csharp
       solution: sdk-csharp.sln
       sudo: required
@@ -78,6 +78,7 @@ jobs:
         script: bash deploy.sh
         on:
           all_branches: true
+          condition: $TRAVIS_BRANCH =~ ^(master|*-stable)$
 
     - stage: Deployment Doc Dev
       name: Deploy next-docs.kuzzle.io
