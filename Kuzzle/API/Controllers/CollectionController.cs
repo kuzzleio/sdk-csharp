@@ -230,7 +230,7 @@ namespace KuzzleSdk.API.Controllers {
       /// <summary>
     /// Forces an immediate reindexation of the provided collection.
     /// </summary>
-    public async Task<JObject> RefreshAsync(string index, string collection) {
+    public async Task RefreshAsync(string index, string collection) {
       await api.QueryAsync(new JObject {
         { "controller", "collection" },
         { "action", "refresh" },
