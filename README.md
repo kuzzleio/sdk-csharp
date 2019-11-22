@@ -3,7 +3,7 @@
 [![Join the chat at https://gitter.im/kuzzleio/kuzzle](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/kuzzleio/kuzzle?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
-Official Kuzzle C# SDK - ALPHA VERSION
+# Official Kuzzle C# SDK
 
 ## About Kuzzle
 
@@ -25,7 +25,7 @@ Our teams will be able to meet your needs in terms of expertise and multi-techno
 
 ## SDK Documentation
 
-The complete SDK documentation is available [here](http://docs.kuzzle.io/sdk-reference/)
+The complete SDK documentation is available [here](https://docs.kuzzle.io/sdk/csharp/1/)
 
 ## Protocol used
 
