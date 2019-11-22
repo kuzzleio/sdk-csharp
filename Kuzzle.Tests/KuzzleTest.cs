@@ -123,7 +123,7 @@ namespace Kuzzle.Tests {
       Assert.Equal("testAction", request["action"]);
       Assert.Equal("jwt auth token", request["jwt"]);
       Assert.Equal(request["volatile"], new JObject {
-        { "sdkVersion", _kuzzle.Version },
+        { "sdkName", _kuzzle.SdkName },
         { "sdkInstanceId", _kuzzle.InstanceId }
       }, new JTokenEqualityComparer());
 

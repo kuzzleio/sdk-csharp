@@ -36,6 +36,12 @@ namespace KuzzleSdk {
     string InstanceId { get; }
 
     /// <summary>
+    /// Gets the SDK name.
+    /// </summary>
+    /// <value>The SDK name identifier.</value>
+    string SdkName { get; }
+
+    /// <summary>
     /// Gets the network protocol.
     /// </summary>
     /// <value>The network protocol.</value>
@@ -79,6 +85,11 @@ namespace KuzzleSdk {
     /// Instance unique identifier.
     /// </summary>
     public string InstanceId { get; }
+
+    /// <summary>
+    /// SDK name.
+    /// </summary>
+    public string SdkName { get; }
 
     /// <summary>
     /// Exposes actions from the "auth" Kuzzle API controller
@@ -301,7 +312,10 @@ namespace KuzzleSdk {
         .GetName()
         .Version
         .ToString();
+
       InstanceId = Guid.NewGuid().ToString();
+
+      SdkName = $"csharp@{Version}";
     }
 
     /// <summary>
@@ -367,7 +381,7 @@ namespace KuzzleSdk {
         throw new Exceptions.InternalException("Volatile data must be a JObject", 400);
       }
 
-      query["volatile"]["sdkVersion"] = Version;
+      query["volatile"]["sdkName"] = SdkName;
       query["volatile"]["sdkInstanceId"] = InstanceId;
 
       if (NetworkProtocol.State == ProtocolState.Open) {
