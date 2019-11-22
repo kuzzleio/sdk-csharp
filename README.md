@@ -46,7 +46,7 @@ Our teams will be able to meet your needs in terms of expertise and multi-techno
 
 ### Getting started :point_right:
 
-  - [Standalone](https://docs.kuzzle.io/sdk/csharp/1/getting-started/standalone/)
+  - [Standalone](https://docs.kuzzle.io/sdk/csharp/2/getting-started/standalone/)
 
 ### Installation
 

@@ -2,8 +2,8 @@
 
 set -eu
 
-DOC_VERSION=1
-DOC_PATH=/sdk/csharp/1
+DOC_VERSION=2
+DOC_PATH=/sdk/csharp/2
 
 # Used by vuepress
 export DOC_DIR=$DOC_VERSION
