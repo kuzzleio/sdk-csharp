@@ -76,6 +76,9 @@ jobs:
         email: support@kuzzle.io
         provider: script
         script: bash deploy.sh
+        on:
+          all_branches: true
+          condition: $TRAVIS_BRANCH =~ ^(master|*-stable)$
 
     - stage: Deployment Doc Dev
       name: Deploy next-docs.kuzzle.io
