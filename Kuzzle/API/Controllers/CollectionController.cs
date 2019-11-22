@@ -11,7 +11,7 @@ namespace KuzzleSdk.API.Controllers {
     internal CollectionController(IKuzzleApi api) : base(api) { }
 
     /// <summary>
-    /// Creates a new collection in Kuzzle via the persistence engine, in the 
+    /// Creates a new collection in Kuzzle via the persistence engine, in the
     /// provided index.
     /// </summary>
     public async Task CreateAsync(
@@ -74,7 +74,7 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     /// <summary>
-    /// Returns the validation specifications associated to the given index and 
+    /// Returns the validation specifications associated to the given index and
     /// collection.
     /// </summary>
     public async Task<JObject> GetSpecificationsAsync(
@@ -91,7 +91,7 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     /// <summary>
-    /// Returns the list of collections associated to a provided index. 
+    /// Returns the list of collections associated to a provided index.
     /// The returned list is sorted in alphanumerical order.
     /// </summary>
     public async Task<JObject> ListAsync(
@@ -148,7 +148,7 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     /// <summary>
-    /// Empties a collection by removing all its documents, while keeping any 
+    /// Empties a collection by removing all its documents, while keeping any
     /// associated mapping.
     /// </summary>
     public async Task TruncateAsync(
@@ -226,5 +226,18 @@ namespace KuzzleSdk.API.Controllers {
 
       return (bool)response.Result["valid"];
     }
+
+      /// <summary>
+    /// Forces an immediate reindexation of the provided collection.
+    /// </summary>
+    public async Task<JObject> RefreshAsync(string index, string collection) {
+      await api.QueryAsync(new JObject {
+        { "controller", "collection" },
+        { "action", "refresh" },
+        { "index", index },
+        { "collection", collection }
+      });
+    }
+
   }
 }

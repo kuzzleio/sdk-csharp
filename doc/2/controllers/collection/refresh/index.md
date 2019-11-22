@@ -7,7 +7,7 @@ description: Force Elasticsearch search index update.
 
 # RefreshAsync
 
-Forces an immediate [reindexation](https://www.elastic.co/guide/en/elasticsearch/reference/5.6/docs-refresh.html) of the provided index.
+Forces an immediate [reindexation](https://www.elastic.co/guide/en/elasticsearch/reference/5.6/docs-refresh.html) of the provided collection.
 
 When writing or deleting documents in Kuzzle, the update needs to be indexed before being available in search results.
 
@@ -22,12 +22,13 @@ From the [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticse
 ## Arguments
 
 ```cs
-Task RefreshAsync(string index);
+Task RefreshAsync(string index, string collection);
 ```
 
 | Argument | Type              | Description |
 |----------|-------------------|-------------|
 | `index`  | <pre>string</pre> | Index name  |
+| `collection`  | <pre>string</pre> | Collection name  |
 
 ## Usage
 

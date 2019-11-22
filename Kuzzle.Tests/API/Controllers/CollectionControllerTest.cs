@@ -307,5 +307,20 @@ namespace Kuzzle.Tests.API.Controllers {
 
       Assert.Equal(response, result);
     }
+
+    [Fact]
+    public async void RefreshAsyncTest() {
+      _api.SetResult(@"{result: null}");
+
+      await _collectionController.RefreshAsync("foo", "bar");
+
+      _api.Verify(new JObject {
+        { "controller", "collection" },
+        { "action", "refresh" },
+        { "index", "foo" },
+        { "collection", "bar" },
+      });
+    }
+
   }
 }
