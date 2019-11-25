@@ -7,7 +7,7 @@ hooks:
     curl -XPUT kuzzle:7512/nyc-open-data/yellow-taxi
     curl -H "Content-type: application/json" -d '{}' kuzzle:7512/nyc-open-data/yellow-taxi/some-id/_create
     curl -H "Content-type: application/json" -d '{}' kuzzle:7512/nyc-open-data/yellow-taxi/some-other-id/_create
-    curl -XPOST kuzzle:7512/nyc-open-data/_refresh
+    curl -XPOST kuzzle:7512/nyc-open-data/yellow-taxi/_refresh
   after: |
     curl -XDELETE kuzzle:7512/nyc-open-data
 template: default

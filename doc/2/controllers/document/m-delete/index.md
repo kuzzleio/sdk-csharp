@@ -9,12 +9,10 @@ description: Deletes multiple documents.
 
 Deletes multiple documents.
 
-Throws a partial error (error code 206) if one or more document deletions fail.
-
 ## Arguments
 
 ```csharp
-public async Task<string[]> MDeleteAsync(
+public async Task<JObject> MDeleteAsync(
   string index, 
   string collection, 
   string[] ids, 
@@ -33,7 +31,16 @@ public async Task<string[]> MDeleteAsync(
 
 ## Return
 
-An array of strings containing the deleted document IDs.
+Returns a JObject containing 2 arrays: `successes` and `errors`
+
+The `successes` array contain the successfuly deleted document IDs.
+
+Each deletion error is an object of the `errors` array with the following properties:
+
+| Name      | Type              | Description                                            |
+| --------- | ----------------- | ------------------------------------------------------ |
+| `id`  | <pre>String</pre> | Document ID                                      |
+| `reason`  | <pre>String</pre> | Human readable reason |
 
 ## Exceptions
 

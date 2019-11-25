@@ -9,8 +9,6 @@ description: Updates documents.
 
 Updates multiple documents.
 
-Returns a partial error (error code 206) if one or more documents cannot be updated.
-
 Conflicts may occur if the same document gets updated multiple times within a short timespan in a database cluster.
 
 You can set the `retryOnConflict` optional argument (with a retry count), to tell Kuzzle to retry the failing updates the specified amount of times before rejecting the request with an error.
@@ -48,16 +46,23 @@ Each document has the following properties:
 
 ## Return
 
-A JArray representing the replaced documents.  
+Returns a JObject containing 2 arrays: `successes` and `errors`
 
-Each document has the following properties:
+Each updated document is an object of the `successes` array with the following properties:
 
-| Property  | Type              | Description                                            |
+| Name      | Type              | Description                                            |
 | --------- | ----------------- | ------------------------------------------------------ |
-| `_id`      | <pre>string</pre> | ID of the newly created document                       |
+| `_id`      | <pre>string</pre> | Document ID                     |
 | `_version` | <pre>int</pre> | Version of the document in the persistent data storage |
-| `_source`  | <pre>JObject</pre> | JObject representing the created document          |
-| `result`    | <pre>string</pre> | Set to `updated`.                    |
+| `_source`  | <pre>JObject</pre> | Document content                                       |
+
+Each errored document is an object of the `errors` array with the following properties:
+
+| Name      | Type              | Description                                            |
+| --------- | ----------------- | ------------------------------------------------------ |
+| `document`  | <pre>JObject</pre> | Document that cause the error                                       |
+| `status` | <pre>int</pre> | HTTP error status |
+| `reason`  | <pre>string</pre> | Human readable reason |
 
 ## Exceptions
 

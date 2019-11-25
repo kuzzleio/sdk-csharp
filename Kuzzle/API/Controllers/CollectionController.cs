@@ -70,7 +70,7 @@ namespace KuzzleSdk.API.Controllers {
         { "collection", collection }
       });
 
-      return (JObject)response.Result[index]["mappings"][collection];
+      return (JObject)response.Result;
     }
 
     /// <summary>
@@ -188,20 +188,6 @@ namespace KuzzleSdk.API.Controllers {
 
       Response response = null;
 
-      if (specifications[index] != null
-        && specifications[index].HasValues
-        && specifications[index][collection] != null
-        && specifications[index][collection].HasValues
-      ) {
-          response = await api.QueryAsync(new JObject {
-            { "controller", "collection" },
-            { "action", "updateSpecifications" },
-            { "body", specifications }
-          });
-
-        return (JObject)response.Result[index][collection];
-      }
-
       response = await api.QueryAsync(new JObject {
         { "controller", "collection" },
         { "action", "updateSpecifications" },
@@ -217,10 +203,14 @@ namespace KuzzleSdk.API.Controllers {
     /// Validates the provided specifications.
     /// </summary>
     public async Task<bool> ValidateSpecificationsAsync(
+        string index,
+        string collection,
         JObject specifications) {
       Response response = await api.QueryAsync(new JObject {
         { "controller", "collection" },
         { "action", "validateSpecifications" },
+        { "index", index },
+        { "collection", collection },
         { "body", specifications }
       });
 

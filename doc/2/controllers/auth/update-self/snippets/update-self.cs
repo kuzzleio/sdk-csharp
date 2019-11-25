@@ -20,12 +20,6 @@ try {
         "updater": null
       },
       "age": 42
-    },
-    "_meta": {
-      "author": "-1",
-      "createdAt": 1564566023173,
-      "updatedAt": null,
-      "updater": null
     }
   }
   */

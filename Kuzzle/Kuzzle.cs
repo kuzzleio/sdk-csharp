@@ -306,6 +306,7 @@ namespace KuzzleSdk {
       };
 
       // Initializes instance unique properties
+      // Version = "2.0.0";
       Version = typeof(Kuzzle)
         .GetTypeInfo()
         .Assembly

@@ -14,7 +14,7 @@ try {
       "nyc-open-data",
       "yellow-taxi",
       bulkData);
-    Console.WriteLine(response.ToString());
+    Console.WriteLine(response.ToString(Formatting.None));
 
     /*
     {

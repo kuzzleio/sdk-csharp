@@ -155,7 +155,7 @@ namespace KuzzleSdk.API.Controllers {
     /// Throws a partial error (error code 206) if one or more documents
     /// creations fail.
     /// </summary>
-    public async Task<JArray> MCreateAsync(
+    public async Task<JObject> MCreateAsync(
       string index,
       string collection,
       JArray documents,
@@ -172,7 +172,7 @@ namespace KuzzleSdk.API.Controllers {
 
       Response response = await api.QueryAsync(request);
 
-      return (JArray)response.Result["hits"];
+      return (JObject)response.Result;
     }
 
     /// <summary>
@@ -180,7 +180,7 @@ namespace KuzzleSdk.API.Controllers {
     /// Throws a partial error (error code 206) if one or more documents
     /// creations/replacements fail.
     /// </summary>
-    public async Task<JArray> MCreateOrReplaceAsync(
+    public async Task<JObject> MCreateOrReplaceAsync(
       string index,
       string collection,
       JArray documents,
@@ -197,7 +197,7 @@ namespace KuzzleSdk.API.Controllers {
 
       Response response = await api.QueryAsync(request);
 
-      return (JArray)response.Result["hits"];
+      return (JObject)response.Result;
     }
 
     /// <summary>
@@ -205,7 +205,7 @@ namespace KuzzleSdk.API.Controllers {
     /// Throws a partial error(error code 206) if one or more document
     /// deletions fail.
     /// </summary>
-    public async Task<string[]> MDeleteAsync(
+    public async Task<JObject> MDeleteAsync(
       string index,
       string collection,
       string[] ids,
@@ -222,7 +222,7 @@ namespace KuzzleSdk.API.Controllers {
 
       Response response = await api.QueryAsync(request);
 
-      return response.Result.ToObject<string[]>();
+      return (JObject)response.Result;
     }
 
     /// <summary>
@@ -230,7 +230,7 @@ namespace KuzzleSdk.API.Controllers {
     /// Throws a partial error(error code 206) if one or more document can not
     /// be retrieved.
     /// </summary>
-    public async Task<JArray> MGetAsync(
+    public async Task<JObject> MGetAsync(
       string index,
       string collection,
       JArray ids
@@ -245,7 +245,7 @@ namespace KuzzleSdk.API.Controllers {
 
       Response response = await api.QueryAsync(request);
 
-      return (JArray)response.Result["hits"];
+      return (JObject)response.Result;
     }
 
     /// <summary>
@@ -253,7 +253,7 @@ namespace KuzzleSdk.API.Controllers {
     /// Throws a partial error(error code 206) if one or more document can not
     /// be replaced.
     /// </summary>
-    public async Task<JArray> MReplaceAsync(
+    public async Task<JObject> MReplaceAsync(
       string index,
       string collection,
       JArray documents,
@@ -270,7 +270,7 @@ namespace KuzzleSdk.API.Controllers {
 
       Response response = await api.QueryAsync(request);
 
-      return (JArray)response.Result["hits"];
+      return (JObject)response.Result;
     }
 
     /// <summary>
@@ -278,7 +278,7 @@ namespace KuzzleSdk.API.Controllers {
     /// Throws a partial error(error code 206) if one or more document can not
     /// be replaced.
     /// </summary>
-    public async Task<JArray> MUpdateAsync(
+    public async Task<JObject> MUpdateAsync(
       string index,
       string collection,
       JArray documents,
@@ -297,7 +297,7 @@ namespace KuzzleSdk.API.Controllers {
 
       Response response = await api.QueryAsync(request);
 
-      return (JArray)response.Result["hits"];
+      return (JObject)response.Result;
     }
 
     /// <summary>
