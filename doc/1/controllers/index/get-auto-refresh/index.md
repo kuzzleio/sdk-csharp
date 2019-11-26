@@ -21,7 +21,7 @@ we recommend that you avoid using it in production or at least carefully monitor
 
 ## Arguments
 
-```cs
+```csharp
 Task<bool> GetAutoRefreshAsync(string index);
 ```
 

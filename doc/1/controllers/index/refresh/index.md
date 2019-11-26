@@ -21,7 +21,7 @@ From the [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticse
 
 ## Arguments
 
-```cs
+```csharp
 Task RefreshAsync(string index);
 ```
 

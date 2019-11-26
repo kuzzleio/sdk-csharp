@@ -11,7 +11,7 @@ Gets the complete list of indexes handled by Kuzzle.
 
 ## Arguments
 
-```cs
+```csharp
 Task<JArray> ListAsync();
 ```
 
