@@ -19,7 +19,7 @@ When processing a large number of documents (i.e. more than 1000), it is advised
 ## Arguments
 
 ```csharp
-public async Task<SearchResults> SearchAsync(
+public async Task<SearchResult> SearchAsync(
     string index, 
     string collection, 
     JObject query,
@@ -47,7 +47,7 @@ An empty body matches all documents in the queried collection.
 
 ## Return
 
-Returns a [SearchResult](/sdk/csharp/2/core-classes/search-result/introduction) instance.
+Returns a [SearchResult](/sdk/csharp/2/core-classes/search-result) instance.
 
 ## Exceptions
 

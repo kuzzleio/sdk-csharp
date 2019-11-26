@@ -442,7 +442,7 @@ namespace Kuzzle.Tests.API.Controllers {
         sort: [1, 2, 3]
       }");
 
-      SearchResults result = await _documentController.SearchAsync(
+      SearchResult result = await _documentController.SearchAsync(
         "foo", "bar", filters, opts);
 
       var expected = new JObject {

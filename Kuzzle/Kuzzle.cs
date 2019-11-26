@@ -196,16 +196,6 @@ namespace KuzzleSdk {
     public string AuthenticationToken { get; set; }
 
     /// <summary>
-    /// Authentication token (deprecated, use AuthenticationToken instead)
-    /// </summary>
-    [Obsolete(
-      "The Jwt property is deprecated, use AuthencationToken instead", false)]
-    string Jwt {
-      get { return AuthenticationToken; }
-      set { AuthenticationToken = value; }
-    }
-
-    /// <summary>
     /// Network Protocol
     /// </summary>
     public AbstractProtocol NetworkProtocol {
@@ -279,7 +269,7 @@ namespace KuzzleSdk {
       int minTokenDuration = 3600000,
       int maxQueueSize = -1,
       int maxRequestDelay = 1000,
-      Func<JObject, bool> queueFiler = null
+      Func<JObject, bool> queueFilter = null
     ) {
       NetworkProtocol = networkProtocol;
       NetworkProtocol.ResponseEvent += ResponsesListener;
@@ -302,7 +292,7 @@ namespace KuzzleSdk {
         MinTokenDuration = minTokenDuration,
         MaxQueueSize = maxQueueSize,
         MaxRequestDelay = maxRequestDelay,
-        QueueFilter = queueFiler
+        QueueFilter = queueFilter
       };
 
       // Initializes instance unique properties

@@ -2,12 +2,12 @@
 code: true
 type: page
 title: CheckTokenAsync
-description: Checks a JWT Token's validity.
+description: Checks an authentication Token's validity.
 ---
 
 # CheckTokenAsync
 
-Checks a JWT Token's validity.
+Checks an  authentication token's validity.
 
 ## Arguments
 
@@ -17,7 +17,7 @@ public async Task<JObject> CheckTokenAsync(string token);
 
 | Argument | Type              | Description |
 |----------|-------------------|-------------|
-| `token`  | <pre>string</pre> | JWT token   |
+| `token`  | <pre>string</pre> | authentication token   |
 
 ## Return
 

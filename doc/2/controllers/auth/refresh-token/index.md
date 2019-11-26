@@ -32,11 +32,11 @@ A JObject with the following properties:
 | Property    | Type              | Description                                                                              |
 |-------------|-------------------|------------------------------------------------------------------------------------------|
 | `_id`       | <pre>string</pre> | User's `kuid`                                                                            |
-| `jwt`       | <pre>string</pre> | Encrypted JSON Web Token, that must then be sent in the requests headers or in the query |
+| `jwt`       | <pre>string</pre> | Encrypted authentication token, that must then be sent in the requests headers or in the query |
 | `expiresAt` | <pre>Int64</pre>  | Token expiration date, in Epoch-millis (UTC)                                             |
 | `ttl`       | <pre>Int64</pre>  | Token time to live, in milliseconds                                                      |
 
-Once `auth:refreshToken` has been called, the returned JWT is stored by the SDK and used for all the subsequent API call, ensuring they are properly authenticated.
+Once `auth:refreshToken` has been called, the returned authentication token is stored by the SDK and used for all the subsequent API call, ensuring they are properly authenticated.
 
 ## Usage
 

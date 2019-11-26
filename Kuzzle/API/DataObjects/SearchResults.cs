@@ -6,9 +6,9 @@ namespace KuzzleSdk.API.DataObjects {
   /// <summary>
   /// Easy to use wrapper for Kuzzle API search results
   /// </summary>
-  public class SearchResults {
+  public class SearchResult {
     /// <summary>
-    /// Kuzzle instance 
+    /// Kuzzle instance
     /// </summary>
     protected readonly IKuzzleApi api;
 
@@ -52,7 +52,7 @@ namespace KuzzleSdk.API.DataObjects {
     /// </summary>
     public string ScrollId { get; private set; }
 
-    internal SearchResults(
+    internal SearchResult(
         IKuzzleApi api, JObject request, SearchOptions options,
         Response response, int previouslyFetched = 0) {
       this.api = api;
@@ -86,14 +86,16 @@ namespace KuzzleSdk.API.DataObjects {
 
         if (value.Type == JTokenType.String) {
           key = (string)value;
-        } else {
+        }
+        else {
           key = (string)((JObject)value).First;
         }
 
         if (key == "_uid") {
           searchAfter.Add((string)request["collection"] + "#"
             + (string)lastItem["_id"]);
-        } else {
+        }
+        else {
           searchAfter.Add(lastItem["_source"].SelectToken(key));
         }
       }
@@ -102,23 +104,25 @@ namespace KuzzleSdk.API.DataObjects {
     }
 
     /// <summary>
-    /// Returns a new SearchResult object which contain the subsequent results 
+    /// Returns a new SearchResult object which contain the subsequent results
     /// of the search.
     /// </summary>
-    public async Task<SearchResults> NextAsync() {
+    public async Task<SearchResult> NextAsync() {
       if (Fetched >= Total) return null;
 
       JObject nextRequest = null;
 
       if (ScrollId != null) {
         nextRequest = GetScrollRequest();
-      } else if (
+      }
+      else if (
         options.Size != null &&
         request["body"]["sort"] != null &&
         request["body"]["sort"].Type != JTokenType.Null
       ) {
         nextRequest = GetSearchAfterRequest();
-      } else if (options.Size != null) {
+      }
+      else if (options.Size != null) {
         if (options.From != null && options.From > Total) {
           return null;
         }
@@ -135,7 +139,7 @@ namespace KuzzleSdk.API.DataObjects {
 
       Response response = await api.QueryAsync(nextRequest);
 
-      return new SearchResults(api, nextRequest, options, response, Fetched);
+      return new SearchResult(api, nextRequest, options, response, Fetched);
     }
   }
 }

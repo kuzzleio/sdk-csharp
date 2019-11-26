@@ -129,7 +129,7 @@ namespace KuzzleSdk.API.Controllers {
     /// <summary>
     /// Searches collection specifications.
     /// </summary>
-    public async Task<DataObjects.SearchResults> SearchSpecificationsAsync(
+    public async Task<DataObjects.SearchResult> SearchSpecificationsAsync(
         JObject filters,
         Options.SearchOptions options = null) {
       var request = new JObject {
@@ -144,7 +144,7 @@ namespace KuzzleSdk.API.Controllers {
 
       Response response = await api.QueryAsync(request);
 
-      return new DataObjects.SearchResults(api, request, options, response);
+      return new DataObjects.SearchResult(api, request, options, response);
     }
 
     /// <summary>

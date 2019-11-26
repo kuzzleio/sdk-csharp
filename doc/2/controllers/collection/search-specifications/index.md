@@ -20,7 +20,7 @@ When processing a large number of items (i.e. more than 1000), it is advised to 
 ## Arguments
 
 ```csharp
-public async Task<DataObjects.SearchResults> SearchSpecificationsAsync(
+public async Task<DataObjects.SearchResult> SearchSpecificationsAsync(
         JObject filters,
         Options.SearchOptions options = null);
 ```

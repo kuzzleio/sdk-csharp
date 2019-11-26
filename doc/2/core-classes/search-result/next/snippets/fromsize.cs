@@ -1,6 +1,6 @@
 JArray documents = new JArray();
 
-for (int i = 0; i < 10; i++) {
+for (int i = 0; i < 100; i++) {
   JObject documentBody = new JObject {
     { "category", "suv" }
   };
@@ -22,7 +22,7 @@ await kuzzle.Document.MCreateAsync(
 SearchOptions options = new SearchOptions();
 options.From = 1;
 options.Size = 5;
-SearchResults results = await kuzzle.Document.Search(
+SearchResult results = await kuzzle.Document.SearchAsync(
   "nyc-open-data",
   "yellow-taxi",
   JObject.Parse(@"{ query: { match: { category: 'suv' } } }"),
@@ -31,9 +31,9 @@ SearchResults results = await kuzzle.Document.Search(
 // Fetch the matched items by advancing through the result pages
 JArray matched = new JArray();
 
-while (results) {
+while (results != null) {
   matched.Merge(results.Hits);
-  results = await results.Next();
+  results = await results.NextAsync();
 }
 
 Console.WriteLine(matched[0]);
@@ -48,4 +48,4 @@ Console.WriteLine(matched[0]);
           createdAt: 1570093133057 },
         category: 'suv' } }
 */
-Console.WriteLine($"Successfully retrieved ${matched.Count} documents")
+Console.WriteLine($"Successfully retrieved {matched.Count} documents")
