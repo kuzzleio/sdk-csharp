@@ -46,7 +46,7 @@ An array of `JObject`. Each object describes a document to create or replace, by
 
 Returns a `JObject` containing 2 arrays: `successes` and `errors`
 
-Each created or replaced document is an object of the `successes` array with the following properties:
+Successful document imports are returned in the `successes` array as objects with the following properties:
 
 | Name      | Type              | Description                                            |
 | --------- | ----------------- | ------------------------------------------------------ |
@@ -55,11 +55,11 @@ Each created or replaced document is an object of the `successes` array with the
 | `_source`  | <pre>JObject</pre> | Document content                                       |
 | `created`  | <pre>bool</pre> | True if the document was created |
 
-Each errored document is an object of the `errors` array with the following properties:
+Failed document imports are returned in the `errors` array as objects with the following properties:
 
 | Name      | Type              | Description                                            |
 | --------- | ----------------- | ------------------------------------------------------ |
-| `document`  | <pre>JObject</pre> | Document that cause the error                                       |
+| `document`  | <pre>JObject</pre> | Failed document                                      |
 | `status` | <pre>int</pre> | HTTP error status |
 | `reason`  | <pre>String</pre> | Human readable reason |
 

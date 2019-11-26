@@ -31,7 +31,7 @@ public async Task<JArray> MGetAsync(
 
 Returns a JObject containing 2 arrays: `successes` and `errors`
 
-The `successes` array contain the list of retrieved documents.
+The `successes` array contains the list of retrieved documents.
 
 Each document have with following properties:
 
@@ -41,7 +41,7 @@ Each document have with following properties:
 | `_version` | <pre>int</pre> | Version of the document in the persistent data storage |
 | `_source`  | <pre>JObject</pre> | Document content                                       |
 
-The `errors` array contain the IDs of not found documents.
+The `errors` array contains the document IDs which couldn't be retrieved.
 
 ## Exceptions
 

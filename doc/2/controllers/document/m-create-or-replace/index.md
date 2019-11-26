@@ -40,9 +40,9 @@ Each document has the following properties:
 
 ## Return
 
-Returns a `JObject` containing 2 arrays: `successes` and `errors`
+Returns a `JObject` object with 2 array properties: `successes` and `errors`
 
-Each created document is an object of the `successes` array with the following properties:
+Successful document creations/replacements are returned in the `successes` array as objects with the following properties:
 
 | Name      | Type              | Description                                            |
 | --------- | ----------------- | ------------------------------------------------------ |
@@ -51,11 +51,11 @@ Each created document is an object of the `successes` array with the following p
 | `_source`  | <pre>JObject</pre> | Document content                                       |
 | `result`    | <pre>String</pre> | Set to `created` or `replaced`.                    |
 
-Each errored document is an object of the `errors` array with the following properties:
+Failed document imports are returned in the `errors` array as objects with the following properties:
 
 | Name      | Type              | Description                                            |
 | --------- | ----------------- | ------------------------------------------------------ |
-| `document`  | <pre>JObject</pre> | Document that cause the error                                       |
+| `document`  | <pre>JObject</pre> | Failed document                                       |
 | `status` | <pre>int</pre> | HTTP error status |
 | `reason`  | <pre>String</pre> | Human readable reason |
 

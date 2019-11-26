@@ -43,7 +43,7 @@ Each document has the following properties:
 
 Returns a `JObject` containing 2 arrays: `successes` and `errors`
 
-Each created document is an object of the `successes` array with the following properties:
+Successful document creations are returned in the `successes` array as objects with the following properties:
 
 | Name      | Type              | Description                                            |
 | --------- | ----------------- | ------------------------------------------------------ |
@@ -51,7 +51,7 @@ Each created document is an object of the `successes` array with the following p
 | `_version` | <pre>int</pre> | Version of the document in the persistent data storage |
 | `_source`  | <pre>JObject</pre> | Document content                                       |
 
-Each errored document is an object of the `errors` array with the following properties:
+Failed document imports are returned in the `errors` array as objects with the following properties:
 
 | Name      | Type              | Description                                            |
 | --------- | ----------------- | ------------------------------------------------------ |
