@@ -11,7 +11,7 @@ Creates a new index in Kuzzle
 
 ## Arguments
 
-```cs
+```csharp
 Task CreateAsync(string index);
 ```
 

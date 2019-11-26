@@ -9,8 +9,6 @@ description: Gets multiple documents from kuzzle.
 
 Gets multiple documents.
 
-Throws a partial error (error code 206) if one or more document can not be retrieved.
-
 ## Arguments
 
 ```csharp
@@ -31,14 +29,19 @@ public async Task<JArray> MGetAsync(
 
 ## Return
 
-A JArray containing the retrieved documents.
+Returns a JObject containing 2 arrays: `successes` and `errors`
 
-Each document has the following properties:
+The `successes` array contain the list of retrieved documents.
 
-| Property   | Type              | Description      |
-| ---------- | ----------------- | ---------------- |
-| `_id`     | <pre>string</pre> | Document ID      |
-| `_source` | <pre>JObject</pre> | Document content |
+Each document have with following properties:
+
+| Name      | Type              | Description                                            |
+| --------- | ----------------- | ------------------------------------------------------ |
+| `_id`      | <pre>String</pre> | Document ID                    |
+| `_version` | <pre>int</pre> | Version of the document in the persistent data storage |
+| `_source`  | <pre>JObject</pre> | Document content                                       |
+
+The `errors` array contain the IDs of not found documents.
 
 ## Exceptions
 

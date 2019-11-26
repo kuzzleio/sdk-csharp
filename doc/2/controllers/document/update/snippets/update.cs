@@ -14,11 +14,8 @@ try {
   Console.WriteLine(response.ToString(Formatting.None));
   /*
   {
-    "_index": "nyc-open-data",
-    "_type": "yellow-taxi",
     "_id": "some-id",
-    "_version": 2,
-    "result": "updated"
+    "_version": 2
   }
   */
   Console.WriteLine("Document successfully updated");

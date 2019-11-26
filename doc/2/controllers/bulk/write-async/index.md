@@ -44,7 +44,6 @@ Return a JObject with the following properties:
 | `_id`      | <pre>string</pre>  | Created document unique identifier.             |
 | `_source`  | <pre>JObject</pre> | Document content.                               |
 | `_version` | <pre>int</pre>     | Version number of the document                  |
-| `created`  | <pre>bool</pre>    | A boolean telling whether a document is created |
 
 ## Usage
 

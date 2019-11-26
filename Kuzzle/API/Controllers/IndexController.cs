@@ -44,19 +44,6 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     /// <summary>
-    /// Gets the autoRefresh flag value for the given index.
-    /// </summary>
-    public async Task<bool> GetAutoRefreshAsync(string index) {
-      Response response = await api.QueryAsync(new JObject {
-        { "controller", "index" },
-        { "action", "getAutoRefresh" },
-        { "index", index },
-      });
-
-      return (bool)response.Result;
-    }
-
-    /// <summary>
     /// Lists indexes from the Kuzzle persistence engine.
     /// </summary>
     public async Task<JArray> ListAsync() {
@@ -81,41 +68,6 @@ namespace KuzzleSdk.API.Controllers {
       Response response = await api.QueryAsync(request);
 
       return (JArray)response.Result["deleted"];
-    }
-
-    /// <summary>
-    /// Forces an immediate reindexation of the provided index.
-    /// </summary>
-    public async Task<JObject> RefreshAsync(string index) {
-      Response response = await api.QueryAsync(new JObject {
-        { "controller", "index" },
-        { "action", "refresh" },
-        { "index", index },
-      });
-
-      return (JObject)response.Result["_shards"];
-    }
-
-    /// <summary>
-    /// Forces an immediate reindexation of Kuzzle internal storage.
-    /// </summary>
-    public async Task RefreshInternalAsync() {
-      await api.QueryAsync(new JObject {
-        { "controller", "index" },
-        { "action", "refreshInternal" },
-      });
-    }
-
-    /// <summary>
-    /// Changes the autoRefresh configuration of the given index.
-    /// </summary>
-    public async Task SetAutoRefreshAsync(string index, bool autoRefresh) {
-      await api.QueryAsync(new JObject {
-        { "controller", "index" },
-        { "action", "setAutoRefresh" }, 
-        { "index", index },
-        { "body", new JObject { { "autoRefresh", autoRefresh } } }
-      });
     }
   }
 }

@@ -188,11 +188,11 @@ namespace Kuzzle.Tests.API.Controllers {
     [InlineData(true)]
     [InlineData(false)]
     public async void MCreateAsync(bool refresh) {
-      _api.SetResult("{ result: { hits: [1, 2, 3] } }");
+      _api.SetResult("{ result: { successes: [1, 2, 3], errors: [] } }");
 
       var documents = new JArray { "foo", "bar", "baz" };
 
-      JArray result = await _documentController.MCreateAsync(
+      JObject result = await _documentController.MCreateAsync(
         "foo",
         "bar",
         documents,
@@ -212,7 +212,7 @@ namespace Kuzzle.Tests.API.Controllers {
       _api.Verify(expected);
 
       Assert.Equal(
-        new JArray { 1, 2, 3 },
+        JObject.Parse("{ successes: [1, 2, 3], errors: [] }"),
         result,
         new JTokenEqualityComparer());
     }
@@ -221,11 +221,11 @@ namespace Kuzzle.Tests.API.Controllers {
     [InlineData(true)]
     [InlineData(false)]
     public async void MCreateOrReplaceAsync(bool refresh) {
-      _api.SetResult("{ result: { hits: [1, 2, 3] } }");
+      _api.SetResult("{ result: { successes: [1, 2, 3], errors: [] } }");
 
       var documents = new JArray { "foo", "bar", "baz" };
 
-      JArray result = await _documentController.MCreateOrReplaceAsync(
+      JObject result = await _documentController.MCreateOrReplaceAsync(
         "foo",
         "bar",
         documents,
@@ -245,7 +245,7 @@ namespace Kuzzle.Tests.API.Controllers {
       _api.Verify(expected);
 
       Assert.Equal(
-        new JArray { 1, 2, 3 },
+        JObject.Parse("{ successes: [1, 2, 3], errors: [] }"),
         result,
         new JTokenEqualityComparer());
     }
@@ -254,11 +254,11 @@ namespace Kuzzle.Tests.API.Controllers {
     [InlineData(true)]
     [InlineData(false)]
     public async void MDeleteAsync(bool refresh) {
-      _api.SetResult("{ result: ['foo', 'bar', 'baz'] }");
+      _api.SetResult("{ result: { successes: [1, 2, 3], errors: [] } }");
 
       var ids = new string[] { "foo", "bar", "baz" };
 
-      string[] result = await _documentController.MDeleteAsync(
+     JObject result = await _documentController.MDeleteAsync(
         "foo",
         "bar",
         ids,
@@ -277,16 +277,19 @@ namespace Kuzzle.Tests.API.Controllers {
 
       _api.Verify(expected);
 
-      Assert.Equal(ids, result);
+      Assert.Equal(
+        JObject.Parse("{ successes: [1, 2, 3], errors: [] }"),
+        result,
+        new JTokenEqualityComparer());
     }
 
     [Fact]
     public async void MGetAsyncTest() {
-      _api.SetResult("{ result: { hits: ['foo', 'bar', 'baz'] } }");
+      _api.SetResult("{ result: { successes: ['foo', 'bar', 'baz'], errors: [] } }");
 
       var ids = new JArray { "foo", "bar", "baz" };
 
-      JArray result = await _documentController.MGetAsync(
+      JObject result = await _documentController.MGetAsync(
         "foo", "bar", ids);
 
       var expected = new JObject {
@@ -301,7 +304,7 @@ namespace Kuzzle.Tests.API.Controllers {
 
       _api.Verify(expected);
       Assert.Equal(
-        new JArray { "foo", "bar", "baz" },
+        JObject.Parse("{ successes: ['foo', 'bar', 'baz'], errors: [] }"),
         result,
         new JTokenEqualityComparer());
     }
@@ -310,11 +313,11 @@ namespace Kuzzle.Tests.API.Controllers {
     [InlineData(true)]
     [InlineData(false)]
     public async void MReplaceAsync(bool refresh) {
-      _api.SetResult("{ result: { hits: [1, 2, 3] } }");
+      _api.SetResult("{ result: { successes: [1, 2, 3], errors: [] } }");
 
       var documents = new JArray { "foo", "bar", "baz" };
 
-      JArray result = await _documentController.MReplaceAsync(
+      JObject result = await _documentController.MReplaceAsync(
         "foo",
         "bar",
         documents,
@@ -334,7 +337,7 @@ namespace Kuzzle.Tests.API.Controllers {
       _api.Verify(expected);
 
       Assert.Equal(
-        new JArray { 1, 2, 3 },
+        JObject.Parse("{ successes: [1, 2, 3], errors: [] }"),
         result,
         new JTokenEqualityComparer());
     }
@@ -346,11 +349,11 @@ namespace Kuzzle.Tests.API.Controllers {
         MemberType = typeof(DocumentControllerGenerators))
     ]
     public async void MUpdateAsyncTest(bool refresh, int? retries) {
-      _api.SetResult("{ result: { hits: [1, 2, 3] } }");
+      _api.SetResult("{ result: { successes: [1, 2, 3], errors: [] } }");
 
       var documents = new JArray { "foo", "bar", "baz" };
 
-      JArray result;
+      JObject result;
 
       if (retries == null) {
         result = await _documentController.MUpdateAsync(
@@ -381,9 +384,8 @@ namespace Kuzzle.Tests.API.Controllers {
       expected.Add("retryOnConflict", retries ?? 0);
 
       _api.Verify(expected);
-
       Assert.Equal(
-        new JArray { 1, 2, 3 },
+        JObject.Parse("{ 'successes': [1, 2, 3], 'errors': [] }"),
         result,
         new JTokenEqualityComparer());
     }

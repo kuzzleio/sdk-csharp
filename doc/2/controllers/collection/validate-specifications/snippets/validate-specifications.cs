@@ -11,8 +11,9 @@ try {
 
   bool validation_response =
     await kuzzle.Collection.ValidateSpecificationsAsync(
-      specifications
-    );
+      "nyc-open-data",
+      "yellow-taxi",
+      specifications);
 
   Console.WriteLine("Success");
 } catch (Exception e) {

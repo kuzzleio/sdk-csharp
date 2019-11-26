@@ -11,7 +11,7 @@ Deletes an entire index from Kuzzle.
 
 ## Arguments
 
-```cs
+```csharp
 Task DeleteAsync(string index);
 ```
 

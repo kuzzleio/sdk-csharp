@@ -12,44 +12,37 @@ try {
     ]
   ");
 
-  JArray response = await kuzzle.Document.MReplaceAsync(
+  JObject response = await kuzzle.Document.MReplaceAsync(
     "nyc-open-data",
     "yellow-taxi",
     documents);
 
   Console.WriteLine(response.ToString());
     /*
-      {  hits:
-        [ { _id: 'some-id',
-          _source:
-            { _kuzzle_info:
-              { active: true,
-                author: '-1',
-                updater: null,
-                updatedAt: null,
-                deletedAt: null,
-                createdAt: 1538639586995 },
-              capacity: 4 },
+    { successes:
+      [ { _id: 'some-id',
           _version: 2,
-          result: 'replaced',
-          status: 200 },
-        { _id: 'some-other-id',
-          _source:
-            { _kuzzle_info:
-              { active: true,
-                author: '-1',
-                updater: null,
-                updatedAt: null,
-                deletedAt: null,
-                createdAt: 1538639586995 },
-              capacity: 4 },
+          _source: {
+            _kuzzle_info:
+            { author: '-1',
+              updater: null,
+              updatedAt: null,
+              createdAt: 1538639586995 },
+            capacity: 4 }
+      },
+      [ { _id: 'some-other-id',
           _version: 2,
-          result: 'replaced',
-          status: 200 } ],
-      total: 2 }
+          _source: {
+            _kuzzle_info:
+            { author: '-1',
+              updater: null,
+              updatedAt: null,
+              createdAt: 1538639586995 },
+            capacity: 4 } ],
+      errors: [] }
   */
 
-  Console.WriteLine($"Successfully replaced {response.Count} documents");
+  Console.WriteLine($"Successfully replaced {((JArray)response["successes"]).Count} documents");
 } catch (KuzzleException e) {
   Console.Error.WriteLine(e);
 }

@@ -15,7 +15,7 @@ try {
         ""category"": ""limousine""
       }"));
   }
-  await kuzzle.Index.RefreshAsync("nyc-open-data");
+  await kuzzle.Collection.RefreshAsync("nyc-open-data", "yellow-taxi");
 
   SearchOptions options = new SearchOptions();
   options.From = 0;

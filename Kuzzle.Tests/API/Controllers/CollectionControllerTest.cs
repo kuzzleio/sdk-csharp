@@ -78,13 +78,7 @@ namespace Kuzzle.Tests.API.Controllers {
     public async void GetMappingAsyncTest() {
       var expected = JObject.Parse(@"
       {
-        foo: {
-          mappings: {
-            bar: {
-              some: 'mappings'
-            }
-          }
-        }
+        some: 'mappings'
       }");
 
       _api.SetResult(new JObject { { "result", expected } });
@@ -100,7 +94,7 @@ namespace Kuzzle.Tests.API.Controllers {
       });
 
       Assert.Equal(
-        expected["foo"]["mappings"]["bar"],
+        expected,
         mappings,
         new JTokenEqualityComparer());
     }
@@ -297,15 +291,33 @@ namespace Kuzzle.Tests.API.Controllers {
       var payload = new JObject { { "foo", "bar" } };
 
       bool result =
-        await _collectionController.ValidateSpecificationsAsync(payload);
+        await _collectionController.ValidateSpecificationsAsync(
+          "foo", "bar", payload);
 
       _api.Verify(new JObject {
         { "controller", "collection" },
         { "action", "validateSpecifications" },
+        { "index", "foo" },
+        { "collection", "bar" },
         { "body", payload }
       });
 
       Assert.Equal(response, result);
     }
+
+    [Fact]
+    public async void RefreshAsyncTest() {
+      _api.SetResult(@"{result: null}");
+
+      await _collectionController.RefreshAsync("foo", "bar");
+
+      _api.Verify(new JObject {
+        { "controller", "collection" },
+        { "action", "refresh" },
+        { "index", "foo" },
+        { "collection", "bar" },
+      });
+    }
+
   }
 }
