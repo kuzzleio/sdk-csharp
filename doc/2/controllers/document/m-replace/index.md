@@ -9,12 +9,10 @@ description: Replaces documents.
 
 Replaces multiple documents.
 
-Throws a partial error (error code 206) if one or more documents cannot be replaced.
-
 ## Arguments
 
 ```csharp
-public async Task<JArray> MReplaceAsync(
+public async Task<JObject> MReplaceAsync(
   string index,
   string collection,
   JArray documents,
@@ -42,16 +40,23 @@ Array of documents, each one with the following expected properties:
 
 ## Return
 
-A JArray representing the replaced documents.  
+Returns a JObject containing 2 arrays: `successes` and `errors`
 
-Each document has the following properties:
+Successful document replacements are returned in the `successes` array as objects with the following properties:
 
-| Property  | Type              | Description                                            |
+| Name      | Type              | Description                                            |
 | --------- | ----------------- | ------------------------------------------------------ |
-| `_id`      | <pre>string</pre> | ID of the newly created document                       |
+| `_id`      | <pre>string</pre> | Document ID                     |
 | `_version` | <pre>int</pre> | Version of the document in the persistent data storage |
-| `_source`  | <pre>JObject</pre> | JObject representing the created document          |
-| `result`    | <pre>string</pre> | Set to `replaced`.                    |
+| `_source`  | <pre>JObject</pre> | Document content                                       |
+
+Failed replacements are returned in the `errors` array as objects with the following properties:
+
+| Name      | Type              | Description                                            |
+| --------- | ----------------- | ------------------------------------------------------ |
+| `document`  | <pre>JObject</pre> | Failed replacement                                      |
+| `status` | <pre>int</pre> | HTTP error status |
+| `reason`  | <pre>string</pre> | Human readable reason |
 
 ## Exceptions
 

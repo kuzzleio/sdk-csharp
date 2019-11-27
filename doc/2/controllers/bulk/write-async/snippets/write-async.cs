@@ -4,9 +4,7 @@ try {
         author: '<kuid>',
         createdAt: 1481816934209,
         updatedAt: null,
-        updater: null,
-        active: true,
-        deletedAt: null
+        updater: null
       }
     }");
     JObject response = await kuzzle.Bulk.WriteAsync(
@@ -16,27 +14,16 @@ try {
     Console.WriteLine(response.ToString(Formatting.None));
     /*
     {
-        "_index": "nyc-open-data",
-        "_type": "yellow-taxi",
-        "_id": "AWxHzUJ4wXgLgoMjxZ3S",
-        "_version": 1,
-        "result": "created",
-        "_shards": {
-            "total": 2,
-            "successful": 1,
-            "failed": 0
-        },
-        "created": true,
-        "_source": {
-            "kuzzle_info": {
-            "author": "<kuid>",
-            "createdAt": 1481816934209,
-            "updatedAt": null,
-            "updater": null,
-            "active": true,
-            "deletedAt": null
-            }
+      "_id": "AWxHzUJ4wXgLgoMjxZ3S",
+      "_version": 1,
+      "_source": {
+        "kuzzle_info": {
+          "author": "<kuid>",
+          "createdAt": 1481816934209,
+          "updatedAt": null,
+          "updater": null
         }
+      }
     }
     */
 } catch (KuzzleException e) {

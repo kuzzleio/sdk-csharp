@@ -9,12 +9,10 @@ description: Creates or replaces documents in kuzzle.
 
 Creates or replaces multiple documents.
 
-Throws a partial error (error code 206) if one or more document creations/replacements fail.
-
 ## Arguments
 
 ```csharp
-public async Task<JArray> MCreateOrReplaceAsync(
+public async Task<JObject> MCreateOrReplaceAsync(
   string index, 
   string collection, 
   JArray documents, 
@@ -42,16 +40,24 @@ Each document has the following properties:
 
 ## Return
 
-A JArray representing the created documents.  
+Returns a `JObject` object with 2 array properties: `successes` and `errors`
 
-Each document has the following properties:
+Successful document creations/replacements are returned in the `successes` array as objects with the following properties:
 
-| Property  | Type              | Description                                            |
+| Name      | Type              | Description                                            |
 | --------- | ----------------- | ------------------------------------------------------ |
-| `_id`      | <pre>string</pre> | ID of the newly created document                       |
+| `_id`      | <pre>String</pre> | Document ID                     |
 | `_version` | <pre>int</pre> | Version of the document in the persistent data storage |
-| `_source`  | <pre>JObject</pre> | JObject representing the created document          |
-| `result`    | <pre>string</pre> | Set to `created` or `replaced`.                    |
+| `_source`  | <pre>JObject</pre> | Document content                                       |
+| `result`    | <pre>String</pre> | Set to `created` or `replaced`.                    |
+
+Failed document imports are returned in the `errors` array as objects with the following properties:
+
+| Name      | Type              | Description                                            |
+| --------- | ----------------- | ------------------------------------------------------ |
+| `document`  | <pre>JObject</pre> | Failed document                                       |
+| `status` | <pre>int</pre> | HTTP error status |
+| `reason`  | <pre>String</pre> | Human readable reason |
 
 ## Exceptions
 

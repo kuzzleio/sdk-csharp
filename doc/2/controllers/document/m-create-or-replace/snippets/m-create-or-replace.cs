@@ -10,51 +10,46 @@ JArray documents = JArray.Parse(@"[
 ]");
 
 try {
-  JArray response = await kuzzle.Document.MCreateOrReplaceAsync(
+  JObject response = await kuzzle.Document.MCreateOrReplaceAsync(
     "nyc-open-data",
     "yellow-taxi",
     documents);
 
   Console.WriteLine(response.ToString());
   /*
-  [
-    {
-      "_id":"some-id",
-      "_source":{
-        "_kuzzle_info":{
-          "active":true,
-          "author":"-1",
-          "updater":null,
-          "updatedAt":null,
-          "deletedAt":null,
-          "createdAt":1538552685790
+  {
+    "successes": [
+      {
+        "_id":"some-id",
+        "_source":{
+            "_kuzzle_info":{
+              "active":true,
+              "author":"-1",
+              "updater":null,
+              "updatedAt":null
+            },
+            "capacity":4
         },
-        "capacity":4
+        "_version":1
       },
-      "_version":1,
-      "result":"created",
-      "status":201
-    },
-    {
-      "_id":"some-other-id",
-      "_source":{
-        "_kuzzle_info":{
-          "active":true,
-          "author":"-1",
-          "updater":null,
-          "updatedAt":null,
-          "deletedAt":null,
-          "createdAt":1538552685790
+      {
+        "_id":"some-other-id",
+        "_source":{
+            "_kuzzle_info":{
+              "active":true,
+              "author":"-1",
+              "updater":null,
+              "updatedAt":null
+            },
+            "capacity":"4"
         },
-        "capacity":4
-      },
-      "_version":1,
-      "result":"created",
-      "status":201
-    }
-  ]
+        "_version":1
+      }
+    ],
+    "errors": []
+  }
   */
-  Console.WriteLine($"Successfully created {response.Count} documents");
+  Console.WriteLine($"Successfully created {((JArray)response["successes"]).Count} documents");
 } catch (KuzzleException e) {
   Console.Error.WriteLine(e);
 }

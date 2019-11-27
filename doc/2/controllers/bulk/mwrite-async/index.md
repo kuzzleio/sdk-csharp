@@ -8,10 +8,9 @@ description: Creates or replaces multiple documents directly into the storage en
 # MWriteAsync
 
 This is a low level route intended to bypass Kuzzle actions on document creation, notably:
-
-- check document validity
-- add kuzzle metadata
-- trigger realtime notifications (unless asked otherwise)
+  - check [document validity](/core/2/guides/essentials/data-validation),
+  - add [kuzzle metadata](/core/2/guides/essentials/document-metadata),
+  - trigger [realtime notifications](/core/2/guides/essentials/real-time) (unless asked otherwise)
 
 ## Arguments
 
@@ -28,7 +27,13 @@ public async Task<JObject> MWriteAsync(
 |--------------|-------------------|----------------------------------------------------------------------------------------------------------------------------------|
 | `index`      | <pre>string</pre> | Index name                                                                                                                       |
 | `collection` | <pre>string</pre> | Collection name                                                                                                                  |
-| `documents`  | <pre>JArray</pre> | An array of JObject. Each JObject describes a document to create or replace, by exposing the following properties: `_id`, `body` |
+| `documents`  | <pre>JArray</pre> | An array of JObject representing the documents|
+
+### documents
+
+An array of `JObject`. Each object describes a document to create or replace, by exposing the following properties:
+  - `_id`: document unique identifier (optional)
+  - `body`: document content
 
 ### Options
 
@@ -39,14 +44,24 @@ public async Task<JObject> MWriteAsync(
 
 ## Return
 
-A `JObject` containing a `hits` array which represent the list of created documents, in the same order than the one provided in the query.
+Returns a `JObject` containing 2 arrays: `successes` and `errors`
 
-| Property   | Type               | Description                                     |
-|------------|--------------------|-------------------------------------------------|
-| `_id`      | <pre>string</pre>  | Created document unique identifier.             |
-| `_source`  | <pre>JObject</pre> | Document content.                               |
-| `_version` | <pre>int</pre>     | Version number of the document                  |
-| `created`  | <pre>bool</pre>    | A boolean telling whether a document is created |
+Successful document imports are returned in the `successes` array as objects with the following properties:
+
+| Name      | Type              | Description                                            |
+| --------- | ----------------- | ------------------------------------------------------ |
+| `_id`      | <pre>String</pre> | Document ID                     |
+| `_version` | <pre>int</pre> | Version of the document in the persistent data storage |
+| `_source`  | <pre>JObject</pre> | Document content                                       |
+| `created`  | <pre>bool</pre> | True if the document was created |
+
+Failed document imports are returned in the `errors` array as objects with the following properties:
+
+| Name      | Type              | Description                                            |
+| --------- | ----------------- | ------------------------------------------------------ |
+| `document`  | <pre>JObject</pre> | Failed document                                      |
+| `status` | <pre>int</pre> | HTTP error status |
+| `reason`  | <pre>String</pre> | Human readable reason |
 
 ## Usage
 

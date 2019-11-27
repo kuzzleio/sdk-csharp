@@ -11,7 +11,7 @@ Deletes multiple indexes.
 
 ## Arguments
 
-```cs
+```csharp
 Task<JArray> MDeleteAsync(JArray indexes);
 ```
 

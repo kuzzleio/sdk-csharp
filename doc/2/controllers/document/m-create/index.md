@@ -9,12 +9,10 @@ description: Creates multiple documents in kuzzle.
 
 Creates multiple documents.
 
-Throws a partial error (error code 206) if one or more documents creations fail.
-
 ## Arguments
 
 ```csharp
-public async Task<JArray> MCreateAsync(
+public async Task<JObject> MCreateAsync(
   string index,
   string collection,
   JArray documents,
@@ -43,16 +41,23 @@ Each document has the following properties:
 
 ## Return
 
-A JArray representing the created documents.  
+Returns a `JObject` containing 2 arrays: `successes` and `errors`
 
-Each document has the following properties:
+Successful document creations are returned in the `successes` array as objects with the following properties:
 
-| Property  | Type              | Description                                            |
+| Name      | Type              | Description                                            |
 | --------- | ----------------- | ------------------------------------------------------ |
-| `_id`      | <pre>string</pre> | ID of the newly created document                       |
+| `_id`      | <pre>String</pre> | Document ID                     |
 | `_version` | <pre>int</pre> | Version of the document in the persistent data storage |
-| `_source`  | <pre>JObject</pre> | JObject representing the created document          |
-| `result`    | <pre>string</pre> | Set to `created` in case of success                    |
+| `_source`  | <pre>JObject</pre> | Document content                                       |
+
+Failed document imports are returned in the `errors` array as objects with the following properties:
+
+| Name      | Type              | Description                                            |
+| --------- | ----------------- | ------------------------------------------------------ |
+| `document`  | <pre>JObject</pre> | Failed document                                      |
+| `status` | <pre>int</pre> | HTTP error status |
+| `reason`  | <pre>String</pre> | Human readable reason |
 
 ## Exceptions
 

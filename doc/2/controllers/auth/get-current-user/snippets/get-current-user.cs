@@ -18,13 +18,7 @@ try {
         "updatedAt": null,
         "updater": null
       }
-    },
-    "_meta": {
-      "author": "-1",
-      "createdAt": 1564563030235,
-      "updatedAt": null,
-      "updater": null
-    },
+    }
     "strategies": [
       "local"
     ]

@@ -15,11 +15,16 @@ If the validation specifications are not formatted correctly, a detailed error m
 ## Arguments
 
 ```csharp
-public async Task<bool> ValidateSpecificationsAsync(JObject specifications);
+public async Task<bool> ValidateSpecificationsAsync(
+        string index,
+        string collection,
+        JObject specifications);
 ```
 
 | Argument         | Type               | Description                                           |
 |------------------|--------------------|-------------------------------------------------------|
+| `index`          | <pre>string</pre>  | Index name                   |
+| `collection`     | <pre>string</pre>  | Collection name              |
 | `specifications` | <pre>JObject</pre> | JObject representating the specifications to validate |
 
 ### specifications
