@@ -20,6 +20,7 @@ public Kuzzle(
   int minTokenDuration = 3600000,
   int maxQueueSize = -1,
   int maxRequestDelay = 1000,
+  bool autoRecover = false,
   Func<JObject, bool> queueFilter = null
 )
 ```
@@ -33,8 +34,8 @@ public Kuzzle(
 | `minTokenDuration` | <pre>int</pre> | Minimum duration of a Token before being automaticaly refreshed (If set to -1 the SDK does not refresh the token automaticaly) | yes |
 | `maxQueueSize` | <pre>int</pre> | Maximum amount of elements that the queue can contains (If set to -1, the size is unlimited) | yes |
 | `maxRequestDelay` | <pre>int</pre> | Maximum delay between two requests to be replayed | yes |
-| `queueFilter` | <pre>Func<JObject, bool></pre> | Function to filter the request queue before replaying requests. | yes |
-  |
+| `queueFilter` | <pre>Func<JObject, bool></pre> | Function to filter the request queue before replaying requests | yes |
+| `autoRecover` | <pre>bool</pre> | Queue requests when network is down and automatically replay them when the SDK successfully reconnects | yes |
 
 ## networkProtocol
 

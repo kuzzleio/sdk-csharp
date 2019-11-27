@@ -28,17 +28,17 @@ using KuzzleSdk;
 
 ## Properties
 
-| Property | Type | Description | writable |
+| Property | Type<br/>(default) | Description | writable |
 |--- |--- |--- | --- |
-| `AuthenticationToken` | <pre>string</pre> | Search | Authentication token used for API requests |
+| `AuthenticationToken` | <pre>string</pre><br/>(`null`) | Authentication token used for API requests | yes |
+| `AutoRecover` | <pre>bool</pre><br/>(`false`) | Queue requests when network is down and automatically replay them when the SDK successfully reconnects | yes |
 | `InstanceId` | <pre>string</pre> | SDK instance unique identifier (send in the `Volatile` data) | no |
+| `MaxQueueSize` | <pre>int</pre><br/>(`-1`) | Maximum amount of elements that the queue can contains (If set to -1, the size is unlimited) | yes |
+| `MaxRequestDelay` | <pre>int</pre><br/>(`1000`) | Maximum delay between two requests to be replayed | yes |
+| `MinTokenDuration` | <pre>int</pre><br/>(`3600000`) | Minimum duration of a Token before being automaticaly refreshed (If set to -1 the SDK does not refresh the token automaticaly) | yes |
+| `QueueFilter` | <pre>Func<JObject, bool></pre><br/>(`null`) | Function to filter the request queue before replaying requests. | yes |
+| `RefreshedTokenDuration` | <pre>int</pre><br/>(`3600000`) | Minimum duration of a Token after refresh (If set to -1 the SDK does not refresh the token automaticaly) | yes |
 | `SdkName` | <pre>string</pre> | SDK name with version number | no |
-| `MaxQueueSize` | <pre>int</pre> | Maximum amount of elements that the queue can contains (If set to -1, the size is unlimited) | yes |
-| `RefreshedTokenDuration` | <pre>int</pre> | Minimum duration of a Token after refresh (If set to -1 the SDK does not refresh the token automaticaly) | yes |
-| `MinTokenDuration` | <pre>int</pre> | Minimum duration of a Token before being automaticaly refreshed (If set to -1 the SDK does not refresh the token automaticaly) | yes |
-| `MaxRequestDelay` | <pre>int</pre> | Maximum delay between two requests to be replayed | yes |
-| `QueueFilter` | <pre>Func<JObject, bool></pre> | Function to filter the request queue before replaying requests. | yes |
-| `AutoRecover` | <pre>bool</pre> | Queue requests when network is down and automatically replay them when the SDK successfully reconnects | yes |
 
 
 ## Network protocol

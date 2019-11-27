@@ -12,6 +12,7 @@ using Newtonsoft.Json.Linq;
 using KuzzleSdk.Exceptions;
 using KuzzleSdk.API.Options;
 using KuzzleSdk.API.DataObjects;
+using KuzzleSdk.API;
 
 WebSocket socket = new WebSocket(new Uri("ws://kuzzle:7512"));
 KuzzleSdk.Kuzzle kuzzle = new KuzzleSdk.Kuzzle(socket);

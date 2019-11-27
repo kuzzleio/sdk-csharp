@@ -15,20 +15,19 @@ This is a low-level method, exposed to allow advanced SDK users to bypass high-l
 
 ## Arguments
 
-```js
-query(request, [options]);
+```csharp
+public ConfiguredTaskAwaitable<Response> QueryAsync(JObject query)
 ```
 
 <br/>
 
 | Argument  | Type              | Description            |
 | --------- | ----------------- | ---------------------- |
-| `request` | <pre>object</pre> | API request    |
-| `options` | <pre>object</pre> | Optional query options |
+| `query` | <pre>JObject</pre> | API request    |
 
-### request
+### query
 
-All properties necessary for the Kuzzle API can be added in the request object.
+All properties necessary for the Kuzzle API can be added in the query object.
 The following properties are the most common.
 
 | Property     | Type              | Description                              |
@@ -41,18 +40,10 @@ The following properties are the most common.
 | `_id`        | <pre>string</pre> | id for this action                       |
 | `volatile`   | <pre>object</pre> | Additional information to send to Kuzzle |
 
-### options
+## Returns
 
-Additional query options
-
-| Property   | Type<br/>(default)              | Description                       |
-| ---------- | ------------------------------- | --------------------------------- |
-| `queuable` | <pre>boolean</pre><br/>(`true`) | Make this request queuable or not |
-
-## Resolves
-
-Resolve to the raw Kuzzle API response. See the [API Documentation](/core/2/api).
+Returns a [Response](/sdk/csharp/2/core-classes/response) object which represent a raw Kuzzle API response. See the [API Documentation](/core/2/api).
 
 ## Usage
 
-<<< ./snippets/query.js
+<<< ./snippets/query.cs

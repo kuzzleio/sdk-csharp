@@ -269,6 +269,7 @@ namespace KuzzleSdk {
       int minTokenDuration = 3600000,
       int maxQueueSize = -1,
       int maxRequestDelay = 1000,
+      bool autoRecover = false,
       Func<JObject, bool> queueFilter = null
     ) {
       NetworkProtocol = networkProtocol;
@@ -292,7 +293,8 @@ namespace KuzzleSdk {
         MinTokenDuration = minTokenDuration,
         MaxQueueSize = maxQueueSize,
         MaxRequestDelay = maxRequestDelay,
-        QueueFilter = queueFilter
+        QueueFilter = queueFilter,
+        AutoRecover = autoRecover
       };
 
       // Initializes instance unique properties

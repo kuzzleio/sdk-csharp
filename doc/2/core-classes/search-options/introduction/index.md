@@ -3,7 +3,7 @@ code: false
 type: page
 title: SearchOptions
 description: SearchOptions class
-order: 200
+order: 100
 ---
 
 # SearchOptions
