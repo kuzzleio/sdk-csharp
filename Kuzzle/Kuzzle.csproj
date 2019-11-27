@@ -11,8 +11,8 @@
     <Description>Official C# SDK for Kuzzle</Description>
     <RootNamespace>KuzzleSdk</RootNamespace>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <ReleaseVersion>2.0.0</ReleaseVersion>
-    <PackageVersion>2.0.0</PackageVersion>
+    <ReleaseVersion>2.0.1</ReleaseVersion>
+    <PackageVersion>2.0.1</PackageVersion>
     <PackOnBuild>false</PackOnBuild>
   </PropertyGroup>
 
