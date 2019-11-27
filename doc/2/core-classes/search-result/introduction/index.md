@@ -1,8 +1,8 @@
 ---
 code: false
 type: page
-title: SearchResult
-description: SearchResult class
+title: Introduction
+description: SearchResult class description and properties
 order: 100
 ---
 
@@ -11,8 +11,8 @@ order: 100
 This class represents a paginated search result.  
 
 It can be returned by the following methods:
- - [Document.SearchAsync](sdk/csharp/2/controllers/document/search)
- - [Collection.SearchSpecificationsAsync](sdk/csharp/2/controllers/collection/search-specifications)
+ - [Document.SearchAsync](/sdk/csharp/2/controllers/document/search)
+ - [Collection.SearchSpecificationsAsync](/sdk/csharp/2/controllers/collection/search-specifications)
 
 ## Namespace
 

@@ -1,8 +1,8 @@
 ---
 code: false
 type: page
-title: WebSocket
-description: Websocket protocol implementation
+title: Introduction
+description: WebSocket protocol implementation description and properties
 order: 0
 ---
 

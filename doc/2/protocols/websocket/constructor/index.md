@@ -1,7 +1,7 @@
 ---
 code: true
 type: page
-title: constructor
+title: Constructor
 description: Creates a new WebSocket protocol
 order: 50
 ---

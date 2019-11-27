@@ -34,11 +34,11 @@ The following properties are the most common.
 | ------------ | ----------------- | ---------------------------------------- |
 | `controller` | <pre>string</pre> | Controller name (mandatory)              |
 | `action`     | <pre>string</pre> | Action name (mandatory)                  |
-| `body`       | <pre>object</pre> | Query body for this action               |
+| `body`       | <pre>JObject</pre> | Query body for this action               |
 | `index`      | <pre>string</pre> | Index name for this action               |
 | `collection` | <pre>string</pre> | Collection name for this action          |
 | `_id`        | <pre>string</pre> | id for this action                       |
-| `volatile`   | <pre>object</pre> | Additional information to send to Kuzzle |
+| `volatile`   | <pre>JObject</pre> | Additional information to send to Kuzzle |
 
 ## Returns
 

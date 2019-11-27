@@ -1,19 +1,19 @@
 ---
 code: true
 type: page
-title: Next
+title: NextAsync
 description: SearchResult Next method
 order: 200
 ---
 
-# Next
+# NextAsync
 
 Advances through the search results and returns the next page of items.
 
 ## Arguments
 
 ```js
-Next();
+public async Task<SearchResult> NextAsync()
 ```
 
 ## Resolve
@@ -40,7 +40,7 @@ For that reason, this method is guaranteed to return consistent results, even if
 
 This is the most consistent way to paginate results, however, this comes at a higher computing cost for the server.
 
-<<< ./snippets/scroll.js
+<<< ./snippets/scroll.cs
 
 ### Strategy: sort / size
 
@@ -61,4 +61,4 @@ Because this method does not freeze the search results between two calls, there 
 It's the fastest pagination method available, but also the less consistent, and it is not possible to retrieve more than 10000 items using it.  
 Above that limit, any call to `next` throws an Exception.
 
-<<< ./snippets/fromsize.js
+<<< ./snippets/fromsize.cs

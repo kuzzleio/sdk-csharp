@@ -1,7 +1,7 @@
 ---
 code: false
 type: page
-title: Kuzzle Constructor 
+title: Constructor 
 description: Creates a new Kuzzle object connected to the backend
 order: 100
 ---

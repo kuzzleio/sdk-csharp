@@ -7,7 +7,8 @@ description: Connects the SDK to Kuzzle
 
 # ConnectAsync
 
-Connects to Kuzzle using the subsequent protocol `ConnectAsync` method.
+Connects to Kuzzle using the subsequent protocol `ConnectAsync` method. 
+
 Subsequent call have no effect if the SDK is already connected.
 
 ## Arguments

@@ -1,8 +1,8 @@
 ---
 code: false
 type: page
-title: Kuzzle
-description: Kuzzle class
+title: Introduction
+description: Kuzzle class description and properties
 order: 0
 ---
 
