@@ -15,16 +15,16 @@ namespace Kuzzle.Tests.API.Controllers {
     [Fact]
     public async void CreateAsyncTest() {
       _api.SetResult(@"
-        { 
+        {
           result: {
-            acknowledged: true, 
+            acknowledged: true,
             shards_acknowledged: true
           }
         }
       ");
 
       await _indexController.CreateAsync("foo");
-      
+
       _api.Verify(new JObject {
         { "controller", "index" },
         { "action", "create" },
@@ -38,7 +38,7 @@ namespace Kuzzle.Tests.API.Controllers {
         {
           result: {
             acknowledged: true
-          } 
+          }
         }
       ");
 
@@ -58,7 +58,7 @@ namespace Kuzzle.Tests.API.Controllers {
       _api.SetResult(new JObject { { "result" , result } } );
 
       Assert.Equal(
-        result, 
+        result,
         await _indexController.ExistsAsync("foo")
       );
 
@@ -69,34 +69,16 @@ namespace Kuzzle.Tests.API.Controllers {
       });
     }
 
-    [Theory]
-    [InlineData(true)]
-    [InlineData(false)]
-    public async void GetAutoRefreshAsyncTest(bool result) {
-      _api.SetResult(new JObject { { "result" , result } } );
-
-      Assert.Equal(
-        result, 
-        await _indexController.GetAutoRefreshAsync("foo")
-      );
-
-      _api.Verify(new JObject {
-        { "controller", "index" },
-        { "action", "getAutoRefresh" },
-        { "index", "foo" }
-      });
-    }
-
     [Fact]
     public async void ListAsyncTest() {
       var indexes = new JArray { "foo", "bar", "zoo" };
-      _api.SetResult(new JObject { 
-        { "result" , new JObject { { "indexes", indexes } } } 
+      _api.SetResult(new JObject {
+        { "result" , new JObject { { "indexes", indexes } } }
       });
 
       Assert.Equal(
         indexes,
-        await _indexController.ListAsync(), 
+        await _indexController.ListAsync(),
         new JTokenEqualityComparer()
       );
 
@@ -110,82 +92,19 @@ namespace Kuzzle.Tests.API.Controllers {
     public async void MDeleteAsyncTest() {
       var indexes = new JArray { "foo", "bar", "zoo" };
       _api.SetResult(new JObject {
-        { "result" , new JObject { { "deleted", indexes } } } 
+        { "result" , new JObject { { "deleted", indexes } } }
       });
 
       Assert.Equal(
-        indexes, 
-        await _indexController.MDeleteAsync(indexes), 
+        indexes,
+        await _indexController.MDeleteAsync(indexes),
         new JTokenEqualityComparer()
       );
 
       _api.Verify(new JObject {
-        { "controller", "index" }, 
+        { "controller", "index" },
         { "action", "mDelete" },
         { "body", new JObject { { "indexes", indexes } } }
-      });
-    }
-
-    [Fact]
-    public async void RefreshAsyncTest() {
-      _api.SetResult(@"
-        {
-          result: {
-            _shards: {
-              failed: 0,
-              successful: 5,
-              total: 10
-            }
-          }
-        }
-      ");
-
-      Assert.Equal(new JObject {
-        { "failed", 0 },
-        { "successful", 5 },
-        { "total", 10 }
-      }, await _indexController.RefreshAsync("foo"));
-
-      _api.Verify(new JObject {
-        { "controller", "index" },
-        { "action", "refresh" },
-        { "index", "foo" }
-      });
-    }
-
-    [Fact]
-    public async void RefreshInternalAsyncTest() {
-      _api.SetResult(@"
-        {
-          result: {
-            acknowledged: true 
-          }
-        }
-      ");
-
-      await _indexController.RefreshInternalAsync();
-
-      _api.Verify(new JObject {
-        { "controller", "index" },
-        { "action", "refreshInternal" },
-      });
-    }
-
-    [Theory]
-    [InlineData(true)]
-    [InlineData(false)]
-    public async void SetAutoRefreshAsyncTest(bool autoRefresh) {
-      _api.SetResult(new JObject { 
-        { "result" , new JObject { { "response", autoRefresh } } } 
-      });
-
-      await _indexController.SetAutoRefreshAsync("foo", autoRefresh);
-
-      _api.Verify(new JObject {
-        { "controller", "index" },
-        { "action", "setAutoRefresh" }, 
-        { "index", "foo" },
-        { "body", new JObject { { "autoRefresh", autoRefresh } } }
       });
     }
   }

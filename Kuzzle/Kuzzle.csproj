@@ -10,9 +10,9 @@
     <PackageProjectUrl>https://github.com/kuzzleio/sdk-csharp</PackageProjectUrl>
     <Description>Official C# SDK for Kuzzle</Description>
     <RootNamespace>KuzzleSdk</RootNamespace>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <ReleaseVersion>1.0.0</ReleaseVersion>
-    <PackageVersion>1.0.0</PackageVersion>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <ReleaseVersion>2.0.0</ReleaseVersion>
+    <PackageVersion>2.0.0</PackageVersion>
     <PackOnBuild>false</PackOnBuild>
   </PropertyGroup>
 
