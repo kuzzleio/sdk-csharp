@@ -21,7 +21,7 @@ we recommend that you avoid using it in production or at least carefully monitor
 
 ## Arguments
 
-```cs
+```csharp
 Task SetAutoRefreshAsync(string index , boolean autoRefresh);
 ```
 

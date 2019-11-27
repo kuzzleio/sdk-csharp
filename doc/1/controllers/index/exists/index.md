@@ -11,7 +11,7 @@ Checks if the given index exists in Kuzzle.
 
 ## Arguments
 
-```cs
+```csharp
 Task<bool> ExistsAsync(string index);
 ```
 
