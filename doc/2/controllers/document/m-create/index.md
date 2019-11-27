@@ -55,7 +55,7 @@ Failed document imports are returned in the `errors` array as objects with the f
 
 | Name      | Type              | Description                                            |
 | --------- | ----------------- | ------------------------------------------------------ |
-| `document`  | <pre>JObject</pre> | Document that cause the error                                       |
+| `document`  | <pre>JObject</pre> | Failed document                                      |
 | `status` | <pre>int</pre> | HTTP error status |
 | `reason`  | <pre>String</pre> | Human readable reason |
 
