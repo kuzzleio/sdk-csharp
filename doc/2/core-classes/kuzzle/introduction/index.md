@@ -1,7 +1,7 @@
 ---
 code: false
 type: page
-title: Introduction
+title: Kuzzle
 description: Kuzzle class description and properties
 order: 0
 ---
@@ -32,6 +32,8 @@ using KuzzleSdk;
 |--- |--- |--- | --- |
 | `AuthenticationToken` | <pre>string</pre><br/>(`null`) | Authentication token used for API requests | yes |
 | `AutoRecover` | <pre>bool</pre><br/>(`false`) | Queue requests when network is down and automatically replay them when the SDK successfully reconnects | yes |
+| `EventHandler` | <pre>EventHandler</pre> | [KuzzleEventHandler](/sdk/csharp/2/core-classes/kuzzle-event-handler) instance used for event management | no |
+
 | `InstanceId` | <pre>string</pre> | SDK instance unique identifier (send in the `Volatile` data) | no |
 | `MaxQueueSize` | <pre>int</pre><br/>(`-1`) | Maximum amount of elements that the queue can contains (If set to -1, the size is unlimited) | yes |
 | `MaxRequestDelay` | <pre>int</pre><br/>(`1000`) | Maximum delay between two requests to be replayed | yes |

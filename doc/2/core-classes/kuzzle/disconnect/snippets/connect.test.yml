@@ -1,0 +1,8 @@
+---
+name: kuzzle#Disconnect
+description: Disconnects the SDK to Kuzzle
+hooks:
+  before:
+  after:
+template: without-connect
+expected: Successfully disconnected
