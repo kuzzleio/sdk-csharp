@@ -6,7 +6,7 @@ namespace KuzzleSdk.API.DataObjects {
   /// <summary>
   /// Easy to use wrapper for Kuzzle API search results
   /// </summary>
-  public class SearchResult {
+  public class SearchResults {
     /// <summary>
     /// Kuzzle instance
     /// </summary>
@@ -23,7 +23,7 @@ namespace KuzzleSdk.API.DataObjects {
     protected readonly JObject request;
 
     /// <summary>
-    /// To be overloaded by specialized SearchResult children
+    /// To be overloaded by specialized SearchResults children
     /// </summary>
     protected readonly string scrollAction = "scroll";
 
@@ -52,7 +52,7 @@ namespace KuzzleSdk.API.DataObjects {
     /// </summary>
     public string ScrollId { get; private set; }
 
-    internal SearchResult(
+    internal SearchResults(
         IKuzzleApi api, JObject request, SearchOptions options,
         Response response, int previouslyFetched = 0) {
       this.api = api;
@@ -104,10 +104,10 @@ namespace KuzzleSdk.API.DataObjects {
     }
 
     /// <summary>
-    /// Returns a new SearchResult object which contain the subsequent results
+    /// Returns a new SearchResults object which contain the subsequent results
     /// of the search.
     /// </summary>
-    public async Task<SearchResult> NextAsync() {
+    public async Task<SearchResults> NextAsync() {
       if (Fetched >= Total) return null;
 
       JObject nextRequest = null;
@@ -139,7 +139,7 @@ namespace KuzzleSdk.API.DataObjects {
 
       Response response = await api.QueryAsync(nextRequest);
 
-      return new SearchResult(api, nextRequest, options, response, Fetched);
+      return new SearchResults(api, nextRequest, options, response, Fetched);
     }
   }
 }

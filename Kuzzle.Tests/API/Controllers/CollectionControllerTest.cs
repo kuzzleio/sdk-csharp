@@ -187,7 +187,7 @@ namespace Kuzzle.Tests.API.Controllers {
 
       var filters = new JObject { { "foo", "bar" } };
 
-      SearchResult result =
+      SearchResults result =
         await _collectionController.SearchSpecificationsAsync(filters, opts);
 
       var expected = new JObject {

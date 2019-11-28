@@ -328,7 +328,7 @@ namespace KuzzleSdk.API.Controllers {
     /// <summary>
     /// Searches documents.
     /// </summary>
-    public async Task<SearchResult> SearchAsync(
+    public async Task<SearchResults> SearchAsync(
       string index, string collection, JObject query,
       SearchOptions options = null
     ) {
@@ -345,7 +345,7 @@ namespace KuzzleSdk.API.Controllers {
       }
 
       Response response = await api.QueryAsync(request);
-      return new SearchResult(api, request, options, response);
+      return new SearchResults(api, request, options, response);
     }
 
     /// <summary>
