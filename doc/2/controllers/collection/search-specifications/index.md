@@ -40,11 +40,11 @@ public async Task<DataObjects.SearchResults> SearchSpecificationsAsync(
 
 ## Return
 
-Returns a [kuzzleio::SearchResults](/sdk/csharp/2/core-classes/search-results).
+Returns a [SearchResults](/sdk/csharp/2/core-classes/search-results).
 
 ## Exceptions
 
-Throws a `kuzzleio::KuzzleException` if there is an error. See how to [handle errors](/sdk/csharp/2/essentials/error-handling).
+Throws a `KuzzleException` if there is an error. See how to [handle errors](/sdk/csharp/2/essentials/error-handling).
 
 ## Usage
 

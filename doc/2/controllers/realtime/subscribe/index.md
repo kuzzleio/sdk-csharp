@@ -16,7 +16,7 @@ public async Task<string> SubscribeAsync(
         string index,
         string collection,
         JObject filters,
-        NotificationHandler listener,
+        NotificationHandler handler,
         SubscribeOptions options = null);
 ```
 
@@ -25,13 +25,13 @@ public async Task<string> SubscribeAsync(
 | `index`      | <pre>string</pre>                       | Index name                                                                                                     |
 | `collection` | <pre>string</pre>                       | Collection name                                                                                                |
 | `filters`    | <pre>JObject</pre>                      | JObject representing a set of filters following [Koncorde syntax](/core/2/guides/cookbooks/realtime-api/terms) |
-| `listener`   | <pre>NotificationHandler</pre>          | Listener function to handle notifications                                                                      |
+| `handler`   | <pre>NotificationHandler</pre>          | Handler function to handle notifications                                                                      |
 | `options`    | <pre>SubscribeOptions</pre><br>(`null`) | Subscription options                                                                                           |
 
-### listener
+### handled
 
-Listener function that will be called each time a new notification is received.
-The listener will receive a [Response](/sdk/csharp/2/essentials/realtime-notifications) as only argument.
+Handler function that will be called each time a new notification is received.
+The hanlder will receive a [Response](/sdk/csharp/2/essentials/realtime-notifications) as only argument.
 
 ### options
 
