@@ -3,7 +3,7 @@ try {
   options.From = 0;
   options.Size = 2;
 
-  SearchResult response = await kuzzle.Collection.SearchSpecificationsAsync(
+  SearchResults response = await kuzzle.Collection.SearchSpecificationsAsync(
     JObject.Parse(@"{
       query: {
         match_all: {}

@@ -21,7 +21,7 @@ try {
   options.From = 0;
   options.Size = 2;
 
-  SearchResult result = await kuzzle.Document.SearchAsync(
+  SearchResults result = await kuzzle.Document.SearchAsync(
     "nyc-open-data",
     "yellow-taxi",
     JObject.Parse(@"{

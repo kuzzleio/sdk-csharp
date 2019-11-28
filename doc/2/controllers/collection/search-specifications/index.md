@@ -13,14 +13,14 @@ There is a limit to how many items can be returned by a single search query.
 That limit is by default set at 10000, and you can't get over it even with the from and size pagination options.
 
 :::info
-When processing a large number of items (i.e. more than 1000), it is advised to paginate the results using [SearchResult.next](/sdk/csharp/2/core-classes/search-result/next) rather than increasing the size parameter.
+When processing a large number of items (i.e. more than 1000), it is advised to paginate the results using [SearchResults.next](/sdk/csharp/2/core-classes/search-results/next) rather than increasing the size parameter.
 :::
 
 
 ## Arguments
 
 ```csharp
-public async Task<DataObjects.SearchResult> SearchSpecificationsAsync(
+public async Task<DataObjects.SearchResults> SearchSpecificationsAsync(
         JObject filters,
         Options.SearchOptions options = null);
 ```
@@ -40,7 +40,7 @@ public async Task<DataObjects.SearchResult> SearchSpecificationsAsync(
 
 ## Return
 
-Returns a [kuzzleio::SearchResult](/sdk/csharp/2/core-classes/search-result).
+Returns a [kuzzleio::SearchResults](/sdk/csharp/2/core-classes/search-results).
 
 ## Exceptions
 

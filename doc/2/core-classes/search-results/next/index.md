@@ -2,7 +2,7 @@
 code: true
 type: page
 title: NextAsync
-description: SearchResult Next method
+description: SearchResults Next method
 order: 200
 ---
 
@@ -13,12 +13,12 @@ Advances through the search results and returns the next page of items.
 ## Arguments
 
 ```js
-public async Task<SearchResult> NextAsync()
+public async Task<SearchResults> NextAsync()
 ```
 
 ## Resolve
 
-Resolves to a `SearchResult` object, or to `null` if no more pages are available.
+Resolves to a `SearchResults` object, or to `null` if no more pages are available.
 
 ## Throw
 

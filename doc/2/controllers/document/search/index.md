@@ -13,13 +13,13 @@ There is a limit to how many documents can be returned by a single search query.
 That limit is by default set at 10000 documents, and you can't get over it even with the from and size pagination options.
 
 :::info
-When processing a large number of documents (i.e. more than 1000), it is advised to paginate the results using [SearchResult.Next](/sdk/csharp/2/core-classes/search-result/next) rather than increasing the size parameter.
+When processing a large number of documents (i.e. more than 1000), it is advised to paginate the results using [SearchResults.Next](/sdk/csharp/2/core-classes/search-results/next) rather than increasing the size parameter.
 :::
 
 ## Arguments
 
 ```csharp
-public async Task<SearchResult> SearchAsync(
+public async Task<SearchResults> SearchAsync(
     string index, 
     string collection, 
     JObject query,
@@ -47,7 +47,7 @@ An empty body matches all documents in the queried collection.
 
 ## Return
 
-Returns a [SearchResult](/sdk/csharp/2/core-classes/search-result) instance.
+Returns a [SearchResults](/sdk/csharp/2/core-classes/search-results) instance.
 
 ## Exceptions
 

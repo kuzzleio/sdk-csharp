@@ -2,11 +2,11 @@
 code: false
 type: page
 title: Introduction
-description: SearchResult class description and properties
+description: SearchResults class description and properties
 order: 100
 ---
 
-# SearchResult
+# SearchResults
 
 This class represents a paginated search result.  
 

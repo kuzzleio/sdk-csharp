@@ -22,7 +22,7 @@ await kuzzle.Document.MCreateAsync(
 SearchOptions options = new SearchOptions();
 options.From = 1;
 options.Size = 5;
-SearchResult results = await kuzzle.Document.SearchAsync(
+SearchResults results = await kuzzle.Document.SearchAsync(
   "nyc-open-data",
   "yellow-taxi",
   JObject.Parse(@"{ query: { match: { category: 'suv' } } }"),
