@@ -50,7 +50,7 @@ kuzzle.EventHandler.Reconnected += () => {
 
 ## TokenExpired
 
-Occur when the SDK sends a request and the current token has expired.
+Occurs when the SDK sends a request and the current token has expired.
 
 ### Handler Arguments
 
