@@ -98,7 +98,7 @@ Handler(KuzzleEventHandler sender, UserLoggedInEvent user);
 | Name | Type               | Description                       |
 | ---- | ------------------ | --------------------------------- |
 | `sender` | <pre>KuzzleEventHandler</pre> | KuzzleEventHandler instance |
-| `user` | <pre>UserLoggedInEvent</pre>  | Contain the `kuid` of the logged in user     |
+| `user` | <pre>UserLoggedInEvent</pre>  | Contains the `kuid` of the logged in user     |
 
 ```csharp
 kuzzle.EventHandler.UserLoggedIn += (object sender, UserLoggedInEvent user) => {
