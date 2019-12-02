@@ -42,15 +42,15 @@ When the SDK successfully reconnects to Kuzzle, the following actions are perfor
   - the SDK starts to replay the content of the offline queue.
 
 ::: info
-You can set the [Kuzzle.MinTokenDuration](/sdk/csharp/2/core-classes/kuzzle/properties) property to adjust the time limit within which the SDK consider the current authentication token as too old and refresh it.
+You can set the [Kuzzle.MinTokenDuration](/sdk/csharp/2/core-classes/kuzzle/introduction#properties) property to adjust the time limit within which the SDK consider the current authentication token as too old and refresh it.
 :::
 
 ::: info
-It's possible to provide a predicate to filter the queue before the SDK play it by setting the [Kuzzle.QueueFilter](/sdk/csharp/2/core-classes/kuzzle/properties) property.
+It's possible to provide a predicate to filter the queue before the SDK play it by setting the [Kuzzle.QueueFilter](/sdk/csharp/2/core-classes/kuzzle/introduction#properties) property.
 :::
 
 Requests in the offline queue are replayed in the order in which they were recorded, keeping the original time between each request.  
-It is possible to specify a maximum delay between two requests by changing the [Kuzzle.MaxQueueDelay](/sdk/csharp/2/core-classes/kuzzle/properties) property.  
+It is possible to specify a maximum delay between two requests by changing the [Kuzzle.MaxQueueDelay](/sdk/csharp/2/core-classes/kuzzle/introduction#properties) property.  
 
 Each request is removed from the offline queue only after the SDK has actually received a request from Kuzzle to ensure that all requests will be replayed even in the event of a new connection loss.
 
