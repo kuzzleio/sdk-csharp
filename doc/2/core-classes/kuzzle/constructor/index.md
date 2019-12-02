@@ -9,7 +9,7 @@ order: 100
 # Constructor
 
 Use this constructor to create a new instance of the SDK.
-Each instance represent a different connection to a Kuzzle server with specific options.
+Each instance represents a different connection to a Kuzzle server with specific options.
 
 ## Arguments
 
@@ -31,7 +31,7 @@ public Kuzzle(
 | ---------- | ------------------- | --------------------------------- |
 | `networkProtocol` | <pre>AbstractProtocol</pre> | Protocol used by the SDK instance |
 | `refreshedTokenDuration` | <pre>int</pre> | Minimum duration of a Token after refresh (If set to -1 the SDK does not refresh the token automaticaly) | yes |
-| `minTokenDuration` | <pre>int</pre> | Minimum duration of a Token before being automaticaly refreshed (If set to -1 the SDK does not refresh the token automaticaly) | yes |
+| `minTokenDuration` | <pre>int</pre> | Minimum duration of a Token before being automatically refreshed (If set to -1 the SDK does not refresh the token automatically) | yes |
 | `maxQueueSize` | <pre>int</pre> | Maximum amount of elements that the queue can contains (If set to -1, the size is unlimited) | yes |
 | `maxRequestDelay` | <pre>int</pre> | Maximum delay between two requests to be replayed | yes |
 | `queueFilter` | <pre>Func<JObject, bool></pre> | Function to filter the request queue before replaying requests | yes |
