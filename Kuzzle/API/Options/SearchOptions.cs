@@ -55,7 +55,10 @@ namespace KuzzleSdk.API.Options {
       if (src != null) {
         From = src.From;
         Size = src.Size;
-        Sort = string.Copy(src.Sort);
+
+        if (src.Sort != null) {
+          Sort = string.Copy(src.Sort);
+        }
 
         if (src.Scroll != null) {
           Scroll = string.Copy(src.Scroll);

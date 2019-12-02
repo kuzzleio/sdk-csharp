@@ -35,7 +35,7 @@ The hanlder will receive a [Response](/sdk/csharp/2/essentials/realtime-notifica
 
 ### options
 
-A [SubscribeOptions](/sdk/csharp/2/core-classes/subscription-options) object.
+A [SubscribeOptions](/sdk/csharp/2/core-classes/subscribe-options) object.
 
 ## Return
 

@@ -21,10 +21,10 @@ Work in Progress
 Automated queuing allows the SDK to keep requests made when a connection is lost for later replay.  
 
 ::: info
-This option is enabled by default and can be disabled by modifying the [Kuzzle.FailOnNetworkLoss](/sdk/csharp/2/core-classes/kuzzle/properties) property.
+This option is disabled by default and can be enabled by modifying the [Kuzzle.AutoRecover](/sdk/csharp/2/core-classes/kuzzle/introduction#properties) property.
 :::
 
-The queue size is configurable to avoid excessive memory consumption. You can set the [Kuzzle.MaxQueueSize](/sdk/csharp/2/core-classes/kuzzle/properties) property to limit the number of requests that can be stored on the queue.
+The queue size is configurable to avoid excessive memory consumption. You can set the [Kuzzle.MaxQueueSize](/sdk/csharp/2/core-classes/kuzzle/introduction#properties) property to limit the number of requests that can be stored on the queue.
 
 When the SDK lost the connection to Kuzzle, the subsequent requests are stored into the offline queue.  
 
