@@ -35,7 +35,7 @@ Returns a JObject containing 2 arrays: `successes` and `errors`
 
 The `successes` array contain the successfuly deleted document IDs.
 
-Failed deletions are returned in the `errors` array as objects with the following properties:
+Each deletion error is an object of the `errors` array with the following properties:
 
 | Name      | Type              | Description                                            |
 | --------- | ----------------- | ------------------------------------------------------ |

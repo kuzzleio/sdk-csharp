@@ -31,7 +31,7 @@ public async Task<JObject> ImportAsync(
 This API takes a JSON array containing a list of objects working in pairs.
 In each pair, the first object specifies the action to perform (the most common is `create`) and the second specifies the document itself, like in the example below:
 
-```js
+```json
 [
   // Action object
   { "create": { "_id": "id" } },
@@ -58,14 +58,14 @@ A JObject containing 2 arrays:
 | `successes`  | <pre>JArray</pre> | Array of object containing successful document import |
 | `errors` | <pre>JArray</pre>  | Array of object containing failed document import     |
 
-Each item of the `successes` array is an object, with the action name as key, and an  object value the following properties:
+Each item of the `successes` array is an object containing the action name as key and the corresponding object contain the following properties:
 
 | Property | Type                | Description                                         |
 | -------- | ------------------- | --------------------------------------------------- |
 | `_id`   | <pre>string</pre>   | Document unique identifier      |
 | `status`   | <pre>int</pre>   | HTTP status code for that query      |
 
-Each item of the `errors` array is an object, with the action name as key, and an object value with the following properties:
+Each item of the `errors` array is an object containing the action name as key and the corresponding object contain the following properties:
 
 | Property | Type                | Description                                         |
 | -------- | ------------------- | --------------------------------------------------- |
@@ -73,7 +73,7 @@ Each item of the `errors` array is an object, with the action name as key, and a
 | `status`   | <pre>int</pre>   | HTTP status code for that query      |
 | `error`   | <pre>JObject</pre>   | Error object      |
 
-Each `error` object contains the following properties:
+Each `error` object contain the following properties:
 
 | Property | Type                | Description                                         |
 | -------- | ------------------- | --------------------------------------------------- |

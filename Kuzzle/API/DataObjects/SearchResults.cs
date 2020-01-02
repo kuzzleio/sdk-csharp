@@ -8,7 +8,7 @@ namespace KuzzleSdk.API.DataObjects {
   /// </summary>
   public class SearchResults {
     /// <summary>
-    /// Kuzzle instance 
+    /// Kuzzle instance
     /// </summary>
     protected readonly IKuzzleApi api;
 
@@ -23,7 +23,7 @@ namespace KuzzleSdk.API.DataObjects {
     protected readonly JObject request;
 
     /// <summary>
-    /// To be overloaded by specialized SearchResult children
+    /// To be overloaded by specialized SearchResults children
     /// </summary>
     protected readonly string scrollAction = "scroll";
 
@@ -86,14 +86,16 @@ namespace KuzzleSdk.API.DataObjects {
 
         if (value.Type == JTokenType.String) {
           key = (string)value;
-        } else {
+        }
+        else {
           key = (string)((JObject)value).First;
         }
 
         if (key == "_uid") {
           searchAfter.Add((string)request["collection"] + "#"
             + (string)lastItem["_id"]);
-        } else {
+        }
+        else {
           searchAfter.Add(lastItem["_source"].SelectToken(key));
         }
       }
@@ -102,7 +104,7 @@ namespace KuzzleSdk.API.DataObjects {
     }
 
     /// <summary>
-    /// Returns a new SearchResult object which contain the subsequent results 
+    /// Returns a new SearchResults object which contain the subsequent results
     /// of the search.
     /// </summary>
     public async Task<SearchResults> NextAsync() {
@@ -112,13 +114,15 @@ namespace KuzzleSdk.API.DataObjects {
 
       if (ScrollId != null) {
         nextRequest = GetScrollRequest();
-      } else if (
+      }
+      else if (
         options.Size != null &&
         request["body"]["sort"] != null &&
         request["body"]["sort"].Type != JTokenType.Null
       ) {
         nextRequest = GetSearchAfterRequest();
-      } else if (options.Size != null) {
+      }
+      else if (options.Size != null) {
         if (options.From != null && options.From > Total) {
           return null;
         }
