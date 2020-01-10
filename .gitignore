@@ -13,3 +13,4 @@ codecov
 node_modules/
 doc/framework
 frontmatter-errors.json
+node_modules
