@@ -102,7 +102,7 @@ jobs:
 
       install:
         - pip install awscli --upgrade --user
-        - npm install
+        - npm ci
 
       script:
         - npm run doc-prepare
