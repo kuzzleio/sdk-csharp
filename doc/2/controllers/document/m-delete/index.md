@@ -41,7 +41,7 @@ Each deletion error is an object of the `errors` array with the following proper
 | --------- | ----------------- | ------------------------------------------------------ |
 | `id`      | <pre>String</pre> | Document ID                                      |
 | `reason`  | <pre>String</pre> | Human readable reason |
-| `status`  | <pre>Integer</pre> | HTTP status code |
+| `status`  | <pre>int</pre> | HTTP status code |
 
 ## Exceptions
 
