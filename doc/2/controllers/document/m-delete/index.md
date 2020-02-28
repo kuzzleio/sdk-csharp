@@ -33,14 +33,15 @@ public async Task<JObject> MDeleteAsync(
 
 Returns a JObject containing 2 arrays: `successes` and `errors`
 
-The `successes` array contain the successfuly deleted document IDs.
+The `successes` array contains the successfully deleted document IDs.
 
 Each deletion error is an object of the `errors` array with the following properties:
 
 | Name      | Type              | Description                                            |
 | --------- | ----------------- | ------------------------------------------------------ |
-| `id`  | <pre>String</pre> | Document ID                                      |
+| `id`      | <pre>String</pre> | Document ID                                      |
 | `reason`  | <pre>String</pre> | Human readable reason |
+| `status`  | <pre>Integer</pre> | HTTP status code |
 
 ## Exceptions
 
