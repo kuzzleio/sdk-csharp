@@ -22,12 +22,12 @@ public async Task<JObject> MDeleteAsync(
 
 <br/>
 
-| Argument     | Type                                      | Description                    |
-| ------------ | ----------------------------------------- | ------------------------------ |
-| `index`      | <pre>string</pre>             | Index name                     |
-| `collection` | <pre>string</pre>             | Collection name                |
-| `ids`        | <pre>string[]</pre> | IDs of the documents to delete |
-| `waitForRefresh`   | <pre>bool</pre><br/>(`false`)       | If `true`, waits for the change to be reflected for `search` (up to 1s)           |
+| Argument           | Type                                      | Description                    |
+| ------------------ | ----------------------------------------- | ------------------------------ |
+| `index`            | <pre>string</pre>                         | Index name                     |
+| `collection`       | <pre>string</pre>                         | Collection name                |
+| `ids`              | <pre>string[]</pre>                       | IDs of the documents to delete |
+| `waitForRefresh`   | <pre>bool</pre><br/>(`false`)             | If `true`, waits for the change to be reflected for `search` (up to 1s) |
 
 ## Return
 
@@ -37,11 +37,11 @@ The `successes` array contains the successfully deleted document IDs.
 
 Each deletion error is an object of the `errors` array with the following properties:
 
-| Name      | Type              | Description                                            |
-| --------- | ----------------- | ------------------------------------------------------ |
-| `id`      | <pre>String</pre> | Document ID                                      |
+| Name      | Type              | Description           |
+| --------- | ----------------- | --------------------- |
+| `id`      | <pre>String</pre> | Document ID           |
 | `reason`  | <pre>String</pre> | Human readable reason |
-| `status`  | <pre>int</pre> | HTTP status code |
+| `status`  | <pre>int</pre>    | HTTP status code      |
 
 ## Exceptions
 
