@@ -21,10 +21,10 @@ Work in Progress
 Automated queuing allows the SDK to keep requests made when a connection is lost for later replay.  
 
 ::: info
-This option is enabled by default and can be disabled by modifying the [Kuzzle.FailOnNetworkLoss](/sdk/csharp/2/core-classes/kuzzle/properties) property.
+This option is disabled by default and can be enabled by modifying the [Kuzzle.AutoRecover](/sdk/csharp/2/core-classes/kuzzle/introduction#properties) property.
 :::
 
-The queue size is configurable to avoid excessive memory consumption. You can set the [Kuzzle.MaxQueueSize](/sdk/csharp/2/core-classes/kuzzle/properties) property to limit the number of requests that can be stored on the queue.
+The queue size is configurable to avoid excessive memory consumption. You can set the [Kuzzle.MaxQueueSize](/sdk/csharp/2/core-classes/kuzzle/introduction#properties) property to limit the number of requests that can be stored on the queue.
 
 When the SDK lost the connection to Kuzzle, the subsequent requests are stored into the offline queue.  
 
@@ -42,15 +42,15 @@ When the SDK successfully reconnects to Kuzzle, the following actions are perfor
   - the SDK starts to replay the content of the offline queue.
 
 ::: info
-You can set the [Kuzzle.MinTokenDuration](/sdk/csharp/2/core-classes/kuzzle/properties) property to adjust the time limit within which the SDK consider the current authentication token as too old and refresh it.
+You can set the [Kuzzle.MinTokenDuration](/sdk/csharp/2/core-classes/kuzzle/introduction#properties) property to adjust the time limit within which the SDK consider the current authentication token as too old and refresh it.
 :::
 
 ::: info
-It's possible to provide a predicate to filter the queue before the SDK play it by setting the [Kuzzle.QueueFilter](/sdk/csharp/2/core-classes/kuzzle/properties) property.
+It's possible to provide a predicate to filter the queue before the SDK play it by setting the [Kuzzle.QueueFilter](/sdk/csharp/2/core-classes/kuzzle/introduction#properties) property.
 :::
 
 Requests in the offline queue are replayed in the order in which they were recorded, keeping the original time between each request.  
-It is possible to specify a maximum delay between two requests by changing the [Kuzzle.MaxQueueDelay](/sdk/csharp/2/core-classes/kuzzle/properties) property.  
+It is possible to specify a maximum delay between two requests by changing the [Kuzzle.MaxQueueDelay](/sdk/csharp/2/core-classes/kuzzle/introduction#properties) property.  
 
 Each request is removed from the offline queue only after the SDK has actually received a request from Kuzzle to ensure that all requests will be replayed even in the event of a new connection loss.
 

@@ -48,7 +48,7 @@ Each document has the following properties:
 
 Returns a JObject containing 2 arrays: `successes` and `errors`
 
-Successful document updates are returned in the `successes` array as objects with the following properties:
+Each updated document is an object of the `successes` array with the following properties:
 
 | Name      | Type              | Description                                            |
 | --------- | ----------------- | ------------------------------------------------------ |
@@ -56,11 +56,11 @@ Successful document updates are returned in the `successes` array as objects wit
 | `_version` | <pre>int</pre> | Version of the document in the persistent data storage |
 | `_source`  | <pre>JObject</pre> | Document content                                       |
 
-Failed updated are returned in the `errors` array as objects with the following properties:
+Each errored document is an object of the `errors` array with the following properties:
 
 | Name      | Type              | Description                                            |
 | --------- | ----------------- | ------------------------------------------------------ |
-| `document`  | <pre>JObject</pre> | Failed update                                      |
+| `document`  | <pre>JObject</pre> | Document that cause the error                                       |
 | `status` | <pre>int</pre> | HTTP error status |
 | `reason`  | <pre>string</pre> | Human readable reason |
 

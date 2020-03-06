@@ -38,12 +38,27 @@ namespace KuzzleSdk.API.Options {
     public string Scroll { get; set; }
 
     /// <summary>
+    /// Field to sort the result on
+    /// </summary>
+    [
+      JsonProperty(
+        PropertyName = "sort",
+        NullValueHandling = NullValueHandling.Ignore
+      )
+    ]
+    public string Sort { get; set; }
+
+    /// <summary>
     /// Copy constructor.
     /// </summary>
     public SearchOptions(SearchOptions src) {
       if (src != null) {
         From = src.From;
         Size = src.Size;
+
+        if (src.Sort != null) {
+          Sort = string.Copy(src.Sort);
+        }
 
         if (src.Scroll != null) {
           Scroll = string.Copy(src.Scroll);
@@ -52,7 +67,7 @@ namespace KuzzleSdk.API.Options {
     }
 
     /// <summary>
-    /// Initializes a new instance of the 
+    /// Initializes a new instance of the
     /// <see cref="T:KuzzleSdk.API.Options.SearchOptions"/> class.
     /// </summary>
     public SearchOptions() { }

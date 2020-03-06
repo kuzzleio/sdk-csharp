@@ -6,4 +6,4 @@ hooks:
     curl -X PUT kuzzle:7512/nyc-open-data/yellow-taxi
   after: curl -X DELETE kuzzle:7512/nyc-open-data
 template: default
-expected: 'successes":\[.*\],"errors":\[\]'
+expected: 'errors":\[\],"successes":\[.*\]'

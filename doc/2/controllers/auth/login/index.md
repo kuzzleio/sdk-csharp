@@ -9,7 +9,7 @@ description: Authenticates a user.
 
 Authenticates a user.
 
-If this action is successful, all further requests emitted by this SDK instance will be in the name of the authenticated user, until either the authenticated token expires, the [logout](/sdk/csharp/2/controllers/auth/logout) action is called, or the [jwt](/sdk/csharp/2/core-classes/kuzzle/introduction) property is manually unset.
+If this action is successful, all further requests emitted by this SDK instance will be in the name of the authenticated user, until either the authenticated token expires, the [logout](/sdk/csharp/2/controllers/auth/logout) action is called, or the [authentication token](/sdk/csharp/2/core-classes/kuzzle/introduction#properties) property is manually unset.
 
 ## Arguments
 
@@ -50,11 +50,11 @@ Returns a JObject with the following properties:
 | Property    | Type              | Description                                                                              |
 |-------------|-------------------|------------------------------------------------------------------------------------------|
 | `_id`       | <pre>string</pre> | User's `kuid`                                                                            |
-| `jwt`       | <pre>string</pre> | Encrypted JSON Web Token, that must then be sent in the requests headers or in the query |
+| `jwt`       | <pre>string</pre> | Encrypted authentication token, that must then be sent in the requests headers or in the query |
 | `expiresAt` | <pre>Int64</pre>  | Token expiration date, in Epoch-millis (UTC)                                             |
 | `ttl`       | <pre>Int64</pre>  | Token time to live, in milliseconds                                                      |
 
-Once `auth:login` has been called, the returned JWT is stored by the SDK and used for all the subsequent API call, ensuring they are properly authenticated.
+Once `auth:login` has been called, the returned authentication token is stored by the SDK and used for all the subsequent API call, ensuring they are properly authenticated.
 
 ## Exceptions
 
