@@ -7,22 +7,62 @@ using KuzzleSdk.API.Offline;
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk {
-
+  /// <summary>
+  /// Query replayer interface
+  /// </summary>
   public interface IQueryReplayer {
+    /// <summary>
+    /// Return how many queries are in the queue
+    /// </summary>
     int Count { get; }
+    /// <summary>
+    /// Tells if the QueryReplayer is locked (i.e. it doesn't accept new queries).
+    /// Should only be true if there is an 'auth:login' or 'auth:logout' call in the queue
+    /// </summary>
     bool Lock { get; set; }
+    /// <summary>
+    /// True if the QueryReplayer has to wait a login call before replaying the queue
+    /// </summary>
     bool WaitLoginToReplay { get; set; }
 
+    /// <summary>
+    /// Add a new query to the queue.
+    /// Return true if successful
+    /// </summary>
     bool Enqueue(JObject query);
+    /// <summary>
+    /// Remove and return the first query that has been added to the queue.
+    /// </summary>
     JObject Dequeue();
 
+    /// <summary>
+    /// Reject every query with an exception.
+    /// </summary>
     void RejectAllQueries(Exception exception);
+
+    /// <summary>
+    /// If the query satisfies the predicate,
+    /// it is set with an exception and removed from the replayable queue.
+    /// </summary>
     void RejectQueries(Predicate<JObject> predicate, Exception exception);
+    /// <summary>
+    /// Remove every query that satisfies the predicate
+    /// </summary>
+    /// <returns>How many items where removed.</returns>
     int Remove(Predicate<JObject> predicate);
 
+    /// <summary>
+    /// Replay the queries with the same elapsed time they were sent.
+    /// </summary>
     CancellationTokenSource ReplayQueries(bool resetWaitLogin = true);
+    /// <summary>
+    /// Replay the queries with the same elapsed time they were sent if they satisfy the predicate.
+    /// </summary>
     CancellationTokenSource ReplayQueries(Predicate<JObject> predicate, bool resetWaitLogin = true);
 
+    /// <summary>
+    /// Cancels the last replay.
+    /// </summary>
     void CancelReplay();
   }
 
@@ -218,7 +258,7 @@ namespace KuzzleSdk {
       lock (queue) {
         if (queue.Count > 0) {
           currentlyReplaying = true;
-      
+
           foreach (TimedQuery timedQuery in queue) {
             if (predicate(timedQuery.Query)) {
               ReplayQuery(timedQuery, cancellationTokenSource.Token);

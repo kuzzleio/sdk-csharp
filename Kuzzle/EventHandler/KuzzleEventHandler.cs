@@ -4,10 +4,16 @@ using KuzzleSdk.API;
 using KuzzleSdk.EventHandler.Events;
 
 namespace KuzzleSdk.EventHandler {
+  /// <summary>
+  /// SDK event handler
+  /// </summary>
   public sealed class KuzzleEventHandler : AbstractKuzzleEventHandler {
 
     private IKuzzleApi kuzzle;
 
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public KuzzleEventHandler(IKuzzleApi kuzzle) {
       this.kuzzle = kuzzle;
     }
@@ -119,7 +125,7 @@ namespace KuzzleSdk.EventHandler {
     }
 
     /// <summary>
-    /// Token expiration event 
+    /// Token expiration event
     /// </summary>
     public override event Action TokenExpired {
       add {
@@ -137,6 +143,9 @@ namespace KuzzleSdk.EventHandler {
       tokenExpired?.Invoke();
     }
 
+    /// <summary>
+    /// Occurs when a user has logged out.
+    /// </summary>
     public override event Action UserLoggedOut {
       add {
         eventHandlerList.AddHandler(userLoggedOutEventKey, value);
