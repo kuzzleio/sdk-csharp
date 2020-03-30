@@ -2,6 +2,9 @@
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.API.Controllers {
+  /// <summary>
+  /// Implement the "admin" controller of the Kuzzle API
+  /// </summary>
   public class AdminController : BaseController {
     internal AdminController(IKuzzleApi k) : base(k) { }
 

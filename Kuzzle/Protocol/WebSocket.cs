@@ -71,7 +71,7 @@ namespace KuzzleSdk.Protocol {
     }
 
     /// <summary>
-    /// Initializes a new instance of the 
+    /// Initializes a new instance of the
     /// <see cref="T:KuzzleSdk.Protocol.WebSocket"/> class.
     /// </summary>
     /// <param name="uri">URI pointing to a Kuzzle endpoint.</param>
@@ -180,6 +180,9 @@ namespace KuzzleSdk.Protocol {
       }, CancellationToken.None);
     }
 
+    /// <summary>
+    /// Cancel an ongoing reconnection
+    /// </summary>
     public void CancelReconnection() {
       if (reconnectCancellationToken != null) {
         reconnectCancellationToken.Cancel();

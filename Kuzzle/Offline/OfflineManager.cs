@@ -8,13 +8,38 @@ using KuzzleSdk.Protocol;
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.API.Offline {
-
+  /// <summary>
+  /// Offline Manager interface
+  /// </summary>
   public abstract class IOfflineManager {
+    /// <summary>
+    /// The maximum amount of elements that th
+    /// If set to -1, the size is unlimited.
+    /// </summary>
     public abstract int MaxQueueSize { get; set; }
+    /// <summary>
+    /// The minimum duration of a Token after refresh.
+    /// If set to -1 the SDK does not refresh the token automatically.
+    /// </summary>
     public abstract int RefreshedTokenDuration { get; set; }
+    /// <summary>
+    /// The minimum duration of a Token before being automaticaly refresh
+    /// If set to -1 the SDK does not refresh the token automatically.
+    /// </summary>
     public abstract int MinTokenDuration { get; set; }
+    /// <summary>
+    /// The maximum delay between two requests to be replayed
+    /// </summary>
     public abstract int MaxRequestDelay { get; set; }
+    /// <summary>
+    /// Custom filter function: if it returns "false", the query is discarded
+    /// instead of being queued.
+    /// </summary>
     public abstract Func<JObject, bool> QueueFilter { get; set; }
+    /// <summary>
+    /// Queue requests when network is down,
+    /// and automatically replay them when the SDK successfully reconnects.
+    /// </summary>
     public abstract bool AutoRecover { get; set; }
 
     internal abstract AbstractProtocol NetworkProtocol { get; set; }
@@ -28,6 +53,9 @@ namespace KuzzleSdk.API.Offline {
 
   }
 
+  /// <summary>
+  /// Offline Manager implementation
+  /// </summary>
   public class OfflineManager : IOfflineManager {
 
     private ProtocolState previousState = ProtocolState.Closed;
@@ -55,7 +83,7 @@ namespace KuzzleSdk.API.Offline {
 
     /// <summary>
     /// The minimum duration of a Token after refresh.
-    /// If set to -1 the SDK does not refresh the token automaticaly.
+    /// If set to -1 the SDK does not refresh the token automatically.
     /// </summary>
     public override int RefreshedTokenDuration {
       get { return refreshedTokenDuration; }
@@ -64,7 +92,7 @@ namespace KuzzleSdk.API.Offline {
 
     /// <summary>
     /// The minimum duration of a Token before being automaticaly refreshed.
-    /// If set to -1 the SDK does not refresh the token automaticaly.
+    /// If set to -1 the SDK does not refresh the token automatically.
     /// </summary>
     public override int MinTokenDuration {
       get { return minTokenDuration; }
@@ -79,6 +107,10 @@ namespace KuzzleSdk.API.Offline {
       set { maxRequestDelay = value < 0 ? 0 : value; }
     }
 
+    /// <summary>
+    /// Custom filter function: if it returns "false", the query is discarded
+    /// instead of being queued.
+    /// </summary>
     public override Func<JObject, bool> QueueFilter {
       get { return queueFilter; }
       set { queueFilter = value ?? ((obj) => true); }

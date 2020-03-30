@@ -7,11 +7,28 @@ using KuzzleSdk.EventHandler.Events;
 using KuzzleSdk.EventHandler.Events.SubscriptionEvents;
 
 namespace KuzzleSdk.Offline.Subscription {
-
+  /// <summary>
+  /// Handle resubscriptions after a connection loss
+  /// </summary>
   public interface ISubscriptionRecoverer {
+    /// <summary>
+    /// Register a new subscription
+    /// </summary>
     void Add(Subscription subscription);
+
+    /// <summary>
+    /// Remove a subscription
+    /// </summary>
     int Remove(Predicate<Subscription> predicate);
+
+    /// <summary>
+    /// Clear all subscription from the recoverer
+    /// </summary>
     void Clear();
+
+    /// <summary>
+    /// Resubmit all registered subscriptions
+    /// </summary>
     void RenewSubscriptions();
   }
 
@@ -101,7 +118,7 @@ namespace KuzzleSdk.Offline.Subscription {
     public void RenewSubscriptions() {
       lock (subscriptions) {
         foreach (Subscription subscription in subscriptions) {
-          RenewSubscription(subscription);
+          _ = RenewSubscription(subscription);
         }
       }
     }

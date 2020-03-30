@@ -1,11 +1,9 @@
 ﻿using System;
 namespace KuzzleSdk.EventHandler.Events {
-  public class UserLoggedInEvent : EventArgs {
+  /// <summary>
+  /// Event triggered on a successful logout
+  /// </summary>
+  public class UserLoggedOutEvent : EventArgs {
 
-    public string Kuid { get; private set; }
-
-    public UserLoggedInEvent(string kuid) {
-      Kuid = kuid;
-    }
   }
 }
