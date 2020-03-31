@@ -7,7 +7,7 @@ namespace KuzzleSdk.Protocol {
   /// <summary>
   /// Abstract class laying the groundwork of network protocol communication
   /// between this SDK and Kuzzle backends.
-  /// 
+  ///
   /// Inherit from this class if you want to add new network capabilities to
   /// this SDK.
   /// </summary>
