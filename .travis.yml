@@ -34,7 +34,8 @@ jobs:
     - stage: Tests
       name: Dead link check
       if: type = pull_request OR type = push AND branch =~ /^master|[0-9]+-(dev|stable)$/ OR type = cron
-      node_js: 10
+      language: node_js
+      node_js: 12
       cache:
         directories:
           - $HOME/.gem/specs
