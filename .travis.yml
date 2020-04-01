@@ -26,7 +26,7 @@ jobs:
       name: Documentation Snippets
       if: type = pull_request OR type = push AND branch =~ /^master|[0-9]+-dev$/ OR type = cron
       language: node_js
-      node_js: 10
+      node_js: 12
 
       script:
         - docker-compose -f .ci/doc/docker-compose.yml run doc-tests node index
@@ -34,21 +34,26 @@ jobs:
     - stage: Tests
       name: Dead link check
       if: type = pull_request OR type = push AND branch =~ /^master|[0-9]+-(dev|stable)$/ OR type = cron
-      language: node_js
-      node_js: 10
-
+      node_js: 12
+      cache:
+        directories:
+          - $HOME/.gem/specs
+      install:
+        - gem install typhoeus
+        - npm ci --silent
       before_script:
         - npm run doc-prepare
-        - npm run --prefix doc/framework clone-repos
+        - $(npm bin)/kuzdoc iterate-repos:install --repos_path doc/framework/.repos/
+        - $(npm bin)/kuzdoc framework:link -d /sdk/csharp/2/ -v 2
       script:
-        - gem install typhoeus
-        - HYDRA_MAX_CONCURRENCY=20 npm run --prefix doc/framework dead-links
+        - cd doc/framework/
+        - HYDRA_MAX_CONCURRENCY=20 ruby .ci/dead-links.rb -p src/core/2/
 
     - stage: Tests
       name: Build documentation
       if: type = pull_request OR type = push AND branch =~ /^master|[0-9]+-(dev|stable)$/ OR type = cron
       language: node_js
-      node_js: 10
+      node_js: 12
 
       script:
         - npm run doc-prepare
@@ -84,7 +89,7 @@ jobs:
       name: Deploy next-docs.kuzzle.io
       if: type = push AND branch =~ .*-dev
       language: node_js
-      node_js: 10
+      node_js: 12
       env:
         - NODE_ENV=production
         - S3_BUCKET=docs-next.kuzzle.io
@@ -117,7 +122,7 @@ jobs:
       name: Deploy docs.kuzzle.io
       if: type = push AND branch =~ /^master|[0-9]+-stable$/
       language: node_js
-      node_js: 10
+      node_js: 12
       env:
         - NODE_ENV=production
         - S3_BUCKET=docs.kuzzle.io
