@@ -34,6 +34,7 @@ jobs:
     - stage: Tests
       name: Dead link check
       if: type = pull_request OR type = push AND branch =~ /^master|[0-9]+-(dev|stable)$/ OR type = cron
+      language: node_js
       node_js: 12
       cache:
         directories:
