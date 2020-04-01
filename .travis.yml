@@ -42,12 +42,13 @@ jobs:
         - gem install typhoeus
         - npm ci --silent
       before_script:
+        - npm ci
         - npm run doc-prepare
         - $(npm bin)/kuzdoc iterate-repos:install --repos_path doc/framework/.repos/
         - $(npm bin)/kuzdoc framework:link -d /sdk/csharp/2/ -v 2
       script:
-        - cd doc/framework/
-        - HYDRA_MAX_CONCURRENCY=20 ruby .ci/dead-links.rb -p src/core/2/
+        - gem install typhoeus
+        - cd doc/framework/ && HYDRA_MAX_CONCURRENCY=20 ruby .ci/dead-links.rb -p src/sdk/csharp/2/
 
     - stage: Tests
       name: Build documentation
@@ -91,6 +92,7 @@ jobs:
       language: node_js
       node_js: 12
       env:
+        - BRANCH=dev
         - NODE_ENV=production
         - S3_BUCKET=docs-next.kuzzle.io
         - CLOUDFRONT_DISTRIBUTION_ID=E2ZCCEK9GRB49U
@@ -104,6 +106,7 @@ jobs:
 
       install:
         - pip install awscli --upgrade --user
+        - npm ci
 
       script:
         - npm run doc-prepare
@@ -114,6 +117,8 @@ jobs:
         script:
           - npm run doc-upload
         skip_cleanup: true
+        on:
+          all_branches: true
 
       after_deploy:
         - npm run doc-cloudfront
@@ -137,6 +142,7 @@ jobs:
 
       install:
         - pip install awscli --upgrade --user
+        - npm ci
 
       script:
         - npm run doc-prepare
@@ -147,6 +153,8 @@ jobs:
         script:
           - npm run doc-upload
         skip_cleanup: true
+        on:
+          all_branches: true
 
       after_deploy:
         - npm run doc-cloudfront
