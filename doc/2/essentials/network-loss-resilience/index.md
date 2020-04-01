@@ -91,7 +91,7 @@ After executing this [auth:login](/sdk/csharp/2/controllers/auth/login) or [auth
   - real-time subscription renewal,
   - replay requests in the same order, taking into account the original time between each request,
   - the [Recovered](/sdk/csharp/2/essentials/events#recovered) event is issued when all requests have been replayed.
- 2) the SDK is authenticated with a different user than the offline queue requests: real-time subscriptions and subsequent queues requests are discarded with a [401](/core/2/api/essentials/errors#specific-errors) error.
+ 2) the SDK is authenticated with a different user than the offline queue requests: real-time subscriptions and subsequent queues requests are discarded with a [401](/core/2/api/essentials/error-handling#specific-errors) error.
 
 This operation prevents the SDK from replaying requests with a different user than the one who made the original requests.
 
