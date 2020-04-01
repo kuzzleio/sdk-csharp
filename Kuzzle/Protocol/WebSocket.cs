@@ -8,38 +8,120 @@ using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.Protocol {
   /// <summary>
-  /// Interface exposing the same properties as ClientWebSocket, to make
-  /// our WebSocket class testable via duck typing.
+  ///Buffer sizes constants
   /// </summary>
-  internal interface IClientWebSocket {
-    WebSocketState State { get; set; }
+  public static class BufferSize {
+    /// <summary>
+    /// Receive buffer size constant (in bytes)
+    /// </summary>
+    public const int RECEIVE = 64 * 1024;
+    /// <summary>
+    /// Send buffer size constant (in bytes)
+    /// </summary>
+    public const int SEND = 8 * 1024;
+  }
 
+  /// <summary>
+  /// Interface exposing the same properties as ClientWebSocket, to make
+  /// our WebSocket class testable.
+  /// </summary>
+  public interface IClientWebSocket {
+    /// <summary>
+    /// Socket state
+    /// </summary>
+    WebSocketState State { get; }
+
+    /// <summary>
+    /// Socket connection method
+    /// </summary>
     Task ConnectAsync(Uri uri, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Send a websocket message
+    /// </summary>
     Task SendAsync(
       ArraySegment<byte> buffer,
       WebSocketMessageType messageType,
       bool endOfMessage,
       CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Receive a websocket message
+    /// </summary>
     Task<WebSocketReceiveResult> ReceiveAsync(
       ArraySegment<byte> buffer,
       CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Abort the connection and cancel pending operations
+    /// </summary>
     void Abort();
   }
 
   /// <summary>
-  /// WebSocket network protocol.
+  /// This is a humble object forcing linkers to keep ClientWebSocket methods
+  /// while making the protocal testable with unit tests.
+  /// (duck typing with dynamic objets makes linkers think that these methods
+  /// are unused and they strip them from the resulting DLL)
   /// </summary>
-  public class WebSocket : AbstractProtocol {
-    private const int receiveBufferSize = 64 * 1024;
-    private const int sendBufferSize = 8 * 1024;
-    internal dynamic socket;
+  public class ClientWebSocketAdapter : IClientWebSocket {
+    private ClientWebSocket _ws;
+
+    /// <inheritdoc/>
+    public WebSocketState State {
+      get { return _ws.State; }
+    }
+
+    /// <summary>
+    /// Creates a new adapter from a ClientWebSocket class
+    /// </summary>
+    public ClientWebSocketAdapter () {
+      _ws = new ClientWebSocket();
+      _ws.Options.SetBuffer(BufferSize.RECEIVE, BufferSize.SEND);
+    }
+
+    /// <inheritdoc/>
+    public Task ConnectAsync(Uri uri, CancellationToken cancellationToken) {
+      return _ws.ConnectAsync(uri, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public Task SendAsync(
+      ArraySegment<byte> buffer,
+      WebSocketMessageType msgType,
+      bool endOfMessage,
+      CancellationToken cancellationToken
+    ) {
+      return _ws.SendAsync(buffer, msgType, endOfMessage, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public Task<WebSocketReceiveResult> ReceiveAsync(
+      ArraySegment<byte> buffer,
+      CancellationToken cancellationToken
+    ) {
+      return _ws.ReceiveAsync(buffer, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public void Abort() {
+      _ws.Abort();
+    }
+  }
+
+  /// <summary>
+  /// WebSocket network protocol implementation
+  /// </summary>
+  public class AbstractWebSocket : AbstractProtocol {
+    internal IClientWebSocket socket;
+    internal Type SocketAdapter;
     private readonly Uri uri;
     private CancellationTokenSource receiveCancellationToken;
     private CancellationTokenSource sendCancellationToken;
     private CancellationTokenSource reconnectCancellationToken;
     private ArraySegment<byte> incomingBuffer =
       System.Net.WebSockets.WebSocket.CreateClientBuffer(
-        receiveBufferSize, sendBufferSize);
+        BufferSize.RECEIVE, BufferSize.SEND);
     private readonly BlockingCollection<JObject> sendQueue =
       new BlockingCollection<JObject>();
 
@@ -63,21 +145,16 @@ namespace KuzzleSdk.Protocol {
     /// </summary>
     public int ReconnectionRetries { get; set; } = 20;
 
-    internal virtual dynamic CreateClientSocket() {
-      var s = new ClientWebSocket();
-
-      s.Options.SetBuffer(receiveBufferSize, sendBufferSize);
-      return s;
-    }
-
     /// <summary>
     /// Initializes a new instance of the
-    /// <see cref="T:KuzzleSdk.Protocol.WebSocket"/> class.
+    /// <see cref="T:KuzzleSdk.Protocol.AbstractWebSocket"/> class.
     /// </summary>
+    /// <param name="SocketAdapter">WebSocket client class to use to instantiate a new socket (must implement IClientWebSocket)</param>
     /// <param name="uri">URI pointing to a Kuzzle endpoint.</param>
-    public WebSocket(Uri uri) {
+    public AbstractWebSocket(Type SocketAdapter, Uri uri) {
       this.uri = uri ?? throw new ArgumentNullException(nameof(uri));
       State = ProtocolState.Closed;
+      this.SocketAdapter = SocketAdapter;
     }
 
     /// <summary>
@@ -91,7 +168,7 @@ namespace KuzzleSdk.Protocol {
         return;
       }
 
-      socket = CreateClientSocket();
+      socket = (IClientWebSocket)Activator.CreateInstance(SocketAdapter);
 
       await socket.ConnectAsync(uri, cancellationToken);
 
@@ -143,13 +220,12 @@ namespace KuzzleSdk.Protocol {
 
       Task.Run(async () => {
         WebSocketReceiveResult wsResult;
-        StringBuilder messageBuilder = new StringBuilder(receiveBufferSize * 2);
+        StringBuilder messageBuilder = new StringBuilder(BufferSize.RECEIVE * 2);
         while (socket.State == WebSocketState.Open) {
           string message;
 
           do {
             try {
-
               wsResult = await socket.ReceiveAsync(
                 incomingBuffer,
                 receiveCancellationToken.Token);
@@ -239,5 +315,18 @@ namespace KuzzleSdk.Protocol {
         }
       }
     }
+  }
+
+  /// <summary>
+  /// WebSocket network protocol using System.Net.WebSockets
+  /// </summary>
+  public class WebSocket : AbstractWebSocket {
+
+    /// <summary>
+    /// Initializes a new instance of the
+    /// <see cref="T:KuzzleSdk.Protocol.WebSocket"/> class.
+    /// </summary>
+    /// <param name="uri">URI pointing to a Kuzzle endpoint.</param>
+    public WebSocket(Uri uri) : base(typeof(ClientWebSocketAdapter), uri) {}
   }
 }
