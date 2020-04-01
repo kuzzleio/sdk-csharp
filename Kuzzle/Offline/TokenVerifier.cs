@@ -8,8 +8,13 @@ using KuzzleSdk.Offline.Subscription;
 using Newtonsoft.Json.Linq;
 
 namespace KuzzleSdk.Offline {
-
+  /// <summary>
+  /// Authentication token verifier
+  /// </summary>
   public interface ITokenVerifier {
+    /// <summary>
+    /// Returns <c>true</c> if the token is valid
+    /// </summary>
     Task<bool> IsTokenValid();
   }
 

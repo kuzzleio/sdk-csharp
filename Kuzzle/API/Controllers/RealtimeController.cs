@@ -10,7 +10,6 @@ using Newtonsoft.Json.Linq;
 using static KuzzleSdk.API.Controllers.RealtimeController;
 
 namespace KuzzleSdk.API.Controllers {
-
   internal interface IRealtimeController {
     Task<string> SubscribeAndAddToRecoverer(
         string index, string collection, JObject filters,
@@ -18,7 +17,7 @@ namespace KuzzleSdk.API.Controllers {
     }
 
   /// <summary>
-  /// Implements the "realtime" Kuzzle API controller
+  /// Implement the "realtime" Kuzzle API controller
   /// </summary>
   public sealed class RealtimeController : BaseController, IRealtimeController {
     /// <summary>
@@ -112,7 +111,7 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     /// <summary>
-    /// Releases unmanaged resources and performs other cleanup operations 
+    /// Releases unmanaged resources and performs other cleanup operations
     /// before the <see cref="T:KuzzleSdk.API.Controllers.RealtimeController"/>
     /// is reclaimed by garbage collection.
     /// </summary>
@@ -134,8 +133,8 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     /// <summary>
-    /// Sends a real-time message to Kuzzle. The message will be dispatched to 
-    /// all clients with subscriptions matching the index, the collection and 
+    /// Sends a real-time message to Kuzzle. The message will be dispatched to
+    /// all clients with subscriptions matching the index, the collection and
     /// the message content.
     /// </summary>
     public async Task PublishAsync(
@@ -153,8 +152,8 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     /// <summary>
-    /// Subscribes by providing a set of filters: messages, document changes 
-    /// and, optionally, user events matching the provided filters will 
+    /// Subscribes by providing a set of filters: messages, document changes
+    /// and, optionally, user events matching the provided filters will
     /// generate real-time notifications, sent to you in real-time by Kuzzle.
     /// </summary>
     public async Task<string> SubscribeAsync(
@@ -218,16 +217,32 @@ namespace KuzzleSdk.API.Controllers {
     }
 
     /// <summary>
-    /// Subscribes by providing a set of filters: messages, document changes 
-    /// and, optionally, user events matching the provided filters will 
+    /// Subscribes by providing a set of filters: messages, document changes
+    /// and, optionally, user events matching the provided filters will
     /// generate real-time notifications, sent to you in real-time by Kuzzle.
     /// and add the Subscription to the SubscriptionRecoverer for Offline Mode
     /// </summary>
+    /// <param name="index">Storage index</param>
+    /// <param name="collection">Storage collection</param>
+    /// <param name="filters">Realtime filters (Koncorde format)</param>
+    /// <param name="handler">Callback invoked each time a realtime notification is received</param>
+    /// <param name="options">Subscription options</param>
     /// <param name="addToRecoverer">If set to <c>true</c> add to recoverer.</param>
     async Task<string> IRealtimeController.SubscribeAndAddToRecoverer(
-        string index, string collection, JObject filters,
-        NotificationHandler handler, SubscribeOptions options, bool addToRecoverer) {
-      return await SubscribeAndAddToSubscriptionRecoverer(index, collection, filters, handler, options, addToRecoverer);
+        string index,
+        string collection,
+        JObject filters,
+        NotificationHandler handler,
+        SubscribeOptions options,
+        bool addToRecoverer
+    ) {
+      return await SubscribeAndAddToSubscriptionRecoverer(
+        index,
+        collection,
+        filters,
+        handler,
+        options,
+        addToRecoverer);
     }
 
   }
