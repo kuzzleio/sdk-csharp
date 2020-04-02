@@ -27,6 +27,9 @@ namespace KuzzleSdk {
     /// <value>The authentication token.</value>
     string AuthenticationToken { get; set; }
 
+    /// <summary>
+    /// Event handler
+    /// </summary>
     AbstractKuzzleEventHandler EventHandler { get; }
 
     /// <summary>
@@ -165,6 +168,10 @@ namespace KuzzleSdk {
       set { Offline.MaxRequestDelay = value; }
     }
 
+    /// <summary>
+    /// Custom filter function: if it returns "false", the query is discarded
+    /// instead of being queued.
+    /// </summary>
     public Func<JObject, bool> QueueFilter {
       get { return Offline.QueueFilter; }
       set { Offline.QueueFilter = value; }
@@ -261,7 +268,6 @@ namespace KuzzleSdk {
     /// <summary>
     /// Initialize a new instance of the <see cref="T:Kuzzle.Kuzzle"/> class.
     /// </summary>
-    /// <param name="networkProtocol">Network protocol.</param>
     public Kuzzle(
       AbstractProtocol networkProtocol,
       int refreshedTokenDuration = 3600000,
