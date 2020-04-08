@@ -6,9 +6,11 @@ namespace KuzzleSdk.Exceptions {
     /// <summary>
     /// Initializes a new instance of the <see cref="T:Kuzzle.Exceptions.Internal"/> class
     /// </summary>
-    /// <param name="response">Kuzzle API Response.</param>
+    /// <param name="message">Error message</param>
+    /// <param name="status">Error status (HTTP error code)</param>
     public InternalException(string message, int status)
-        : base(message, status) {
+        : base(message, status)
+    {
     }
   }
 }
