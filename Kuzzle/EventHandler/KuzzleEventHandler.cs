@@ -4,10 +4,16 @@ using KuzzleSdk.API;
 using KuzzleSdk.EventHandler.Events;
 
 namespace KuzzleSdk.EventHandler {
+  /// <summary>
+  /// SDK event handler
+  /// </summary>
   public sealed class KuzzleEventHandler : AbstractKuzzleEventHandler {
 
     private IKuzzleApi kuzzle;
 
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public KuzzleEventHandler(IKuzzleApi kuzzle) {
       this.kuzzle = kuzzle;
     }
