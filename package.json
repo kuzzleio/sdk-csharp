@@ -4,7 +4,7 @@
     "doc-dev": "kuzdoc repo:dev -d /sdk/csharp/1/ -v 1",
     "doc-build": "kuzdoc repo:build -d /sdk/csharp/1/ -v 1",
     "doc-upload": "kuzdoc repo:deploy -d /sdk/csharp/1/ -v 1",
-    "doc-cloudfront": "kuzdoc repo:cloudfront -d /sdk/csharp/1/",
+    "doc-cloudfront": "kuzdoc repo:cloudfront -d /sdk/csharp/1/*",
     "doc-deploy": "npm run doc-upload && npm run doc-cloudfront",
     "doc-netlify": "npm run doc-prepare && kuzdoc repo:build -d / -v 1"
   },
