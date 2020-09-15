@@ -1,6 +1,5 @@
 [![Build Status](https://travis-ci.org/kuzzleio/sdk-csharp.svg?branch=master)](https://travis-ci.org/kuzzleio/sdk-csharp)
 [![codecov.io](http://codecov.io/github/kuzzleio/sdk-csharp/coverage.svg?branch=master)](http://codecov.io/github/kuzzleio/sdk-csharp?branch=master)
-[![Join the chat at https://gitter.im/kuzzleio/kuzzle](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/kuzzleio/kuzzle?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
 ## About
@@ -26,7 +25,7 @@ an administration console and a set of plugins that provide advanced functionali
 * :octocat: __[Github](https://github.com/kuzzleio/kuzzle)__
 * :earth_africa: __[Website](https://kuzzle.io)__
 * :books: __[Documentation](https://docs-v2.kuzzle.io)__
-* :email: __[Gitter](https://gitter.im/kuzzleio/kuzzle)__
+* :email: __[Discord](http://join.discord.kuzzle.io)__
 
 
 #### Get trained by the creators of Kuzzle :zap:
@@ -39,10 +38,10 @@ Our teams will be able to meet your needs in terms of expertise and multi-techno
 
 ### Compatibility matrix
 
-| Kuzzle Version | SDK Version    |
-| -------------- | -------------- |
-| 1.x.x          | 1.x.x          | 
-| 2.x.x          | 2.x.x          | 
+| Kuzzle Version | SDK Version |
+|----------------|-------------|
+| 1.x.x          | 1.x.x       |
+| 2.x.x          | 2.x.x       |
 
 ### Getting started :point_right:
 

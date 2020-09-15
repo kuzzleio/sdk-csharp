@@ -63,7 +63,7 @@ jobs:
 
     - stage: Deployments
       name: NuGet
-      if: tag IS present AND branch =~ /^(master|[0-9]+-stable)$/
+      if: type = push AND branch =~ /^(master|[0-9]+-stable)$/
       language: csharp
       solution: sdk-csharp.sln
       sudo: required
