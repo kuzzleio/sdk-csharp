@@ -144,13 +144,19 @@ namespace KuzzleSdk.API.Controllers {
       JObject credentials,
       TimeSpan? expiresIn = null
     ) {
-      Response response = await api.QueryAsync(new JObject {
+      var query = new JObject {
         { "controller", "auth" },
         { "action", "login" },
         { "strategy", strategy },
         { "body", credentials },
         { "expiresIn", expiresIn?.TotalMilliseconds }
-      });
+      };
+
+      if (expiresIn != null) {
+        query["expiresIn"] = expiresIn?.TotalMilliseconds;
+      }
+
+      Response response = await api.QueryAsync(query);
 
       api.AuthenticationToken = (string)response.Result["jwt"];
 
@@ -176,11 +182,16 @@ namespace KuzzleSdk.API.Controllers {
     /// Refreshes an authentication token.
     /// </summary>
     public async Task<JObject> RefreshTokenAsync(TimeSpan? expiresIn = null) {
-      Response response = await api.QueryAsync(new JObject {
+      var query = new JObject {
         { "controller", "auth" },
-        { "action", "refreshToken" },
-        { "expiresIn", expiresIn?.TotalMilliseconds }
-      });
+        { "action", "refreshToken" }
+      };
+
+      if (expiresIn != null) {
+        query["expiresIn"] = expiresIn?.TotalMilliseconds;
+      }
+
+      var response = await api.QueryAsync(query);
 
       api.AuthenticationToken = (string)response.Result["jwt"];
 
