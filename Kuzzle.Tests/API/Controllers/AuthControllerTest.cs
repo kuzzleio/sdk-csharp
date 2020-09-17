@@ -250,11 +250,16 @@ namespace Kuzzle.Tests.API.Controllers {
 
       JObject result = await _authController.RefreshTokenAsync(expiresIn);
 
-      _api.Verify(new JObject {
+      var expectedQuery = new JObject {
         { "controller", "auth" },
-        { "action", "refreshToken" },
-        { "expiresIn", expiresIn?.TotalMilliseconds }
-      });
+        { "action", "refreshToken" }
+      };
+
+      if (expiresIn != null) {
+        expectedQuery["expiresIn"] = expiresIn?.TotalMilliseconds;
+      }
+
+      _api.Verify(expectedQuery);
 
       Assert.Equal<JObject>(
         expected,
