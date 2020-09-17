@@ -91,7 +91,6 @@ jobs:
       language: node_js
       node_js: 10
       env:
-        - NODE_ENV=production
         - S3_BUCKET=docs-next.kuzzle.io
         - CLOUDFRONT_DISTRIBUTION_ID=E2ZCCEK9GRB49U
         - AWS_DEFAULT_REGION=us-west-2
@@ -124,7 +123,6 @@ jobs:
       language: node_js
       node_js: 10
       env:
-        - NODE_ENV=production
         - S3_BUCKET=docs.kuzzle.io
         - CLOUDFRONT_DISTRIBUTION_ID=E3D6RP0POLCJMM
         - AWS_DEFAULT_REGION=us-west-2
