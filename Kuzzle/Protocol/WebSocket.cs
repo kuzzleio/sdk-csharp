@@ -282,12 +282,7 @@ namespace KuzzleSdk.Protocol {
           ConnectAsync(reconnectCancellationToken.Token).Wait();
           return;
         } catch (Exception) {
-          socket.Abort();
-          socket = null;
-          receiveCancellationToken?.Cancel();
-          receiveCancellationToken = null;
-          sendCancellationToken?.Cancel();
-          sendCancellationToken = null;
+          ResetState();
           Thread.Sleep(ReconnectionDelay);
         }
       }
@@ -295,7 +290,7 @@ namespace KuzzleSdk.Protocol {
     }
 
     private void ResetState() {
-      socket.Abort();
+      socket?.Abort();
       socket = null;
       receiveCancellationToken?.Cancel();
       receiveCancellationToken = null;
