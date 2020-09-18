@@ -192,13 +192,18 @@ namespace Kuzzle.Tests.API.Controllers {
         credentials,
         expiresIn);
 
-      _api.Verify(new JObject {
+      var expectedQuery = new JObject {
         { "controller", "auth" },
         { "action", "login" },
         { "strategy", "foostrategy" },
-        { "expiresIn", expiresIn?.TotalMilliseconds },
-        { "body", credentials }
-      });
+        { "body", credentials },
+      };
+
+      if (expiresIn != null) {
+        expectedQuery["expiresIn"] = $"{Math.Floor((double)expiresIn?.TotalSeconds)}s";
+      }
+
+      _api.Verify(expectedQuery);
 
       Assert.Equal<JObject>(
         expected,
@@ -252,11 +257,11 @@ namespace Kuzzle.Tests.API.Controllers {
 
       var expectedQuery = new JObject {
         { "controller", "auth" },
-        { "action", "refreshToken" }
+        { "action", "refreshToken" },
       };
 
       if (expiresIn != null) {
-        expectedQuery["expiresIn"] = expiresIn?.TotalMilliseconds;
+        expectedQuery["expiresIn"] = $"{Math.Floor((double)expiresIn?.TotalSeconds)}s";
       }
 
       _api.Verify(expectedQuery);
