@@ -149,11 +149,10 @@ namespace KuzzleSdk.API.Controllers {
         { "action", "login" },
         { "strategy", strategy },
         { "body", credentials },
-        { "expiresIn", expiresIn?.TotalMilliseconds }
       };
 
       if (expiresIn != null) {
-        query["expiresIn"] = expiresIn?.TotalMilliseconds;
+        query["expiresIn"] = $"{Math.Floor((double)expiresIn?.TotalSeconds)}s";
       }
 
       Response response = await api.QueryAsync(query);
@@ -188,7 +187,7 @@ namespace KuzzleSdk.API.Controllers {
       };
 
       if (expiresIn != null) {
-        query["expiresIn"] = expiresIn?.TotalMilliseconds;
+        query["expiresIn"] = $"{Math.Floor((double)expiresIn?.TotalSeconds)}s";
       }
 
       var response = await api.QueryAsync(query);
