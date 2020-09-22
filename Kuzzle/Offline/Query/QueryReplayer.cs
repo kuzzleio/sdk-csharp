@@ -112,18 +112,20 @@ namespace KuzzleSdk {
             stopWatch.Reset();
             stopWatch.Start();
             queue.Add(new TimedQuery(query, 0));
-          } else {
+          }
+          else {
             TimedQuery previous = queue[queue.Count - 1];
             Int64 elapsedTime = stopWatch.ElapsedMilliseconds - previous.Time;
             elapsedTime = Math.Min(elapsedTime, offlineManager.MaxRequestDelay);
             queue.Add(new TimedQuery(query, previous.Time + elapsedTime));
           }
-          if (query["controller"]?.ToString() == "auth"
-              && (query["action"]?.ToString() == "login"
-                || query["action"]?.ToString() == "logout")
-              ) {
-                Lock = true;
-              }
+
+          String controller = query["controller"]?.ToString();
+          String action = query["action"]?.ToString();
+
+          if (controller == "auth" && (action == "login" || action == "logout")) {
+            Lock = true;
+          }
 
           return true;
         }
@@ -291,7 +293,7 @@ namespace KuzzleSdk {
 
           foreach (TimedQuery timedQuery in queue) {
             if (predicate(timedQuery.Query)) {
-              ReplayOneQuery(timedQuery, cancellationTokenSource.Token);
+              ReplayQuery(timedQuery, cancellationTokenSource.Token);
             }
           }
 

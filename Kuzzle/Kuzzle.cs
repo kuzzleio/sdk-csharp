@@ -228,33 +228,35 @@ namespace KuzzleSdk {
     /// <param name="payload">raw API Response</param>
     internal void ResponsesListener(object sender, string payload) {
       Response response = Response.FromString(payload);
+
+      if (!requests.ContainsKey(response.Room)) {
+        EventHandler.DispatchUnhandledResponse(response);
+        return;
+      }
+
       TaskCompletionSource<Response> task = requests[response.RequestId];
 
-      if (requests.ContainsKey(response.Room)) {
-        if (response.Error != null) {
-          if (response.Error.Message == "Token expired") {
-            EventHandler.DispatchTokenExpired();
-          }
-
-          task.SetException(new Exceptions.ApiErrorException(response));
-        }
-        else {
-          task.SetResult(response);
+      if (response.Error != null) {
+        if (response.Error.Message == "Token expired") {
+          EventHandler.DispatchTokenExpired();
         }
 
-        requestsSemaphore.Wait();
-        try {
-          requests.Remove(response.RequestId);
-        }
-        finally {
-          requestsSemaphore.Release();
-        }
-
-        Offline?.QueryReplayer?.Remove((obj) => obj["requestId"].ToString() == response.RequestId);
-
-      } else {
-        EventHandler.DispatchUnhandledResponse(response);
+        task.SetException(new Exceptions.ApiErrorException(response));
       }
+      else {
+        task.SetResult(response);
+      }
+
+      requestsSemaphore.Wait();
+      try {
+        requests.Remove(response.RequestId);
+      }
+      finally {
+        requestsSemaphore.Release();
+      }
+
+      Offline?.QueryReplayer?.Remove(
+        (obj) => obj["requestId"].ToString() == response.RequestId);
     }
 
     internal void StateChangeListener(object sender, ProtocolState state) {
