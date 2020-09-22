@@ -68,6 +68,8 @@ namespace KuzzleSdk {
   public sealed class Kuzzle : IKuzzleApi, IKuzzle {
     private AbstractProtocol networkProtocol;
 
+    private SemaphoreSlim requestsSemaphore = new SemaphoreSlim(1, 1);
+
     internal readonly Dictionary<string, TaskCompletionSource<Response>>
         requests = new Dictionary<string, TaskCompletionSource<Response>>();
 
@@ -219,7 +221,6 @@ namespace KuzzleSdk {
       }
     }
 
-
     /// <summary>
     /// Handles the ResponseEvent event from the network protocol
     /// </summary>
@@ -227,6 +228,7 @@ namespace KuzzleSdk {
     /// <param name="payload">raw API Response</param>
     internal void ResponsesListener(object sender, string payload) {
       Response response = Response.FromString(payload);
+      TaskCompletionSource<Response> task = requests[response.RequestId];
 
       if (requests.ContainsKey(response.Room)) {
         if (response.Error != null) {
@@ -234,14 +236,18 @@ namespace KuzzleSdk {
             EventHandler.DispatchTokenExpired();
           }
 
-          requests[response.RequestId].SetException(
-            new Exceptions.ApiErrorException(response));
-        } else {
-          requests[response.RequestId].SetResult(response);
+          task.SetException(new Exceptions.ApiErrorException(response));
+        }
+        else {
+          task.SetResult(response);
         }
 
-        lock (requests) {
+        requestsSemaphore.Wait();
+        try {
           requests.Remove(response.RequestId);
+        }
+        finally {
+          requestsSemaphore.Release();
         }
 
         Offline?.QueryReplayer?.Remove((obj) => obj["requestId"].ToString() == response.RequestId);
@@ -252,14 +258,23 @@ namespace KuzzleSdk {
     }
 
     internal void StateChangeListener(object sender, ProtocolState state) {
-      // If not connected anymore: close tasks and clean up the requests buffer
-      if (state == ProtocolState.Closed) {
-        lock (requests) {
+      // If not connected anymore: close pending tasks and clean up the requests
+      // buffer.
+      // If reconnecting, only requests submitted AFTER the disconnection event
+      // can be queued: we have no information about requests submitted before
+      // that event. For all we know, Kuzzle could have received & processed
+      // those requests, but couldn't forward the response to us
+      if (state == ProtocolState.Closed || state == ProtocolState.Reconnecting) {
+        requestsSemaphore.Wait();
+        try {
           foreach (var task in requests.Values) {
             task.SetException(new Exceptions.ConnectionLostException());
           }
 
           requests.Clear();
+        }
+        finally {
+          requestsSemaphore.Release();
         }
       }
     }
@@ -376,14 +391,16 @@ namespace KuzzleSdk {
       query["volatile"]["sdkVersion"] = Version;
       query["volatile"]["sdkInstanceId"] = InstanceId;
 
+      requestsSemaphore.Wait();
+      requests[requestId] = new TaskCompletionSource<Response>(
+        TaskCreationOptions.RunContinuationsAsynchronously);
+      requestsSemaphore.Release();
+
       if (NetworkProtocol.State == ProtocolState.Open) {
         NetworkProtocol.Send(query);
-      } else if (NetworkProtocol.State == ProtocolState.Reconnecting) {
-        Offline.QueryReplayer.Enqueue(query);
       }
-
-      lock (requests) {
-        requests[requestId] = new TaskCompletionSource<Response>();
+      else if (NetworkProtocol.State == ProtocolState.Reconnecting) {
+        Offline.QueryReplayer.Enqueue(query);
       }
 
       return requests[requestId].Task.ConfigureAwait(false);
