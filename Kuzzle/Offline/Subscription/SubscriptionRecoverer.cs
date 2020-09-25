@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using KuzzleSdk.API.Controllers;
 using KuzzleSdk.API.Offline;
@@ -33,9 +34,9 @@ namespace KuzzleSdk.Offline.Subscription {
   }
 
   internal sealed class SubscriptionRecoverer : ISubscriptionRecoverer {
-
     private IRealtimeController realtimeController;
     private List<Subscription> subscriptions = new List<Subscription>();
+    private SemaphoreSlim subscriptionsSemaphore = new SemaphoreSlim(1, 1);
 
     public SubscriptionRecoverer(IOfflineManager offlineManager, IKuzzle kuzzle) {
       this.realtimeController = kuzzle.GetRealtime();
@@ -67,9 +68,9 @@ namespace KuzzleSdk.Offline.Subscription {
     /// Add a subscription.
     /// </summary>
     public void Add(Subscription subscription) {
-      lock (subscriptions) {
-        subscriptions.Add(subscription);
-      }
+      subscriptionsSemaphore.Wait();
+      subscriptions.Add(subscription);
+      subscriptionsSemaphore.Release();
     }
 
     /// <summary>
@@ -81,8 +82,12 @@ namespace KuzzleSdk.Offline.Subscription {
     /// Remove every subscription that satisfies the predicate.
     /// </summary>
     public int Remove(Predicate<Subscription> predicate) {
-      lock (subscriptions) {
+      subscriptionsSemaphore.Wait();
+      try {
         return subscriptions.RemoveAll(predicate);
+      }
+      finally {
+        subscriptionsSemaphore.Release();
       }
     }
 
@@ -90,9 +95,9 @@ namespace KuzzleSdk.Offline.Subscription {
     /// Clear every subscriptions saved.
     /// </summary>
     public void Clear() {
-      lock (subscriptions) {
-        subscriptions.Clear();
-      }
+      subscriptionsSemaphore.Wait();
+      subscriptions.Clear();
+      subscriptionsSemaphore.Release();
     }
 
     /// <summary>
@@ -116,10 +121,14 @@ namespace KuzzleSdk.Offline.Subscription {
     /// Renew every saved subscriptions.
     /// </summary>
     public void RenewSubscriptions() {
-      lock (subscriptions) {
+      subscriptionsSemaphore.Wait();
+      try {
         foreach (Subscription subscription in subscriptions) {
           _ = RenewSubscription(subscription);
         }
+      }
+      finally {
+        subscriptionsSemaphore.Release();
       }
     }
   }
