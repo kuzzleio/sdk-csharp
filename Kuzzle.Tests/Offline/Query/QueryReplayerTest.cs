@@ -147,12 +147,12 @@ namespace Kuzzle.Tests.Offline.Query {
       testableOfflineManager.MaxQueueSize = -1;
       queryReplayer.Lock = false;
 
-      Assert.True(queryReplayer.Enqueue(JObject.Parse("{controller: 'foo', action: 'bar'}")));
-      Assert.True(queryReplayer.Enqueue(JObject.Parse("{controller: 'bar', action: 'foor'}")));
-      Assert.True(queryReplayer.Enqueue(JObject.Parse("{controller: 'foobar', action: 'foobar'}")));
-      Assert.True(queryReplayer.Enqueue(JObject.Parse("{controller: 'barfoo', action: 'foobar'}")));
-      Assert.True(queryReplayer.Enqueue(JObject.Parse("{controller: 'foobar', action: 'barfoo'}")));
-      Assert.True(queryReplayer.Enqueue(JObject.Parse("{controller: 'barfoo', action: 'barfoo'}")));
+      Assert.True(queryReplayer.Enqueue(JObject.Parse("{requestId: '1', controller: 'foo', action: 'bar'}")));
+      Assert.True(queryReplayer.Enqueue(JObject.Parse("{requestId: '2', controller: 'bar', action: 'foor'}")));
+      Assert.True(queryReplayer.Enqueue(JObject.Parse("{requestId: '3', controller: 'foobar', action: 'foobar'}")));
+      Assert.True(queryReplayer.Enqueue(JObject.Parse("{requestId: '4', controller: 'barfoo', action: 'foobar'}")));
+      Assert.True(queryReplayer.Enqueue(JObject.Parse("{requestId: '5', controller: 'foobar', action: 'barfoo'}")));
+      Assert.True(queryReplayer.Enqueue(JObject.Parse("{requestId: '6', controller: 'barfoo', action: 'barfoo'}")));
 
       Assert.Equal(6, queryReplayer.Count);
 
@@ -168,12 +168,12 @@ namespace Kuzzle.Tests.Offline.Query {
       testableOfflineManager.MaxQueueSize = -1;
       queryReplayer.Lock = false;
 
-      Assert.True(queryReplayer.Enqueue(JObject.Parse("{controller: 'foo', action: 'bar'}")));
-      Assert.True(queryReplayer.Enqueue(JObject.Parse("{controller: 'bar', action: 'foor'}")));
-      Assert.True(queryReplayer.Enqueue(JObject.Parse("{controller: 'foobar', action: 'foobar'}")));
-      Assert.True(queryReplayer.Enqueue(JObject.Parse("{controller: 'barfoo', action: 'foobar'}")));
-      Assert.True(queryReplayer.Enqueue(JObject.Parse("{controller: 'foobar', action: 'barfoo'}")));
-      Assert.True(queryReplayer.Enqueue(JObject.Parse("{controller: 'barfoo', action: 'barfoo'}")));
+      Assert.True(queryReplayer.Enqueue(JObject.Parse("{requestId: '1', controller: 'foo', action: 'bar'}")));
+      Assert.True(queryReplayer.Enqueue(JObject.Parse("{requestId: '2', controller: 'bar', action: 'foor'}")));
+      Assert.True(queryReplayer.Enqueue(JObject.Parse("{requestId: '3', controller: 'foobar', action: 'foobar'}")));
+      Assert.True(queryReplayer.Enqueue(JObject.Parse("{requestId: '4', controller: 'barfoo', action: 'foobar'}")));
+      Assert.True(queryReplayer.Enqueue(JObject.Parse("{requestId: '5', controller: 'foobar', action: 'barfoo'}")));
+      Assert.True(queryReplayer.Enqueue(JObject.Parse("{requestId: '6', controller: 'barfoo', action: 'barfoo'}")));
 
       Assert.Equal(6, queryReplayer.Count);
 
