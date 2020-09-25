@@ -211,7 +211,6 @@ namespace KuzzleSdk.Protocol {
             throw e;
           }
         }
-
       }, CancellationToken.None);
     }
 
@@ -266,16 +265,8 @@ namespace KuzzleSdk.Protocol {
     }
 
     private void Reconnect() {
-
-      if (State == ProtocolState.Reconnecting) {
-        return;
-      }
-
       ResetState();
       reconnectCancellationToken = new CancellationTokenSource();
-
-      State = ProtocolState.Reconnecting;
-      DispatchStateChange(State);
 
       for (int i = 0; i < ReconnectionRetries; i++) {
         try {
@@ -301,8 +292,18 @@ namespace KuzzleSdk.Protocol {
     private void CloseState(bool tryReconnect) {
       if (State != ProtocolState.Closed) {
         if (tryReconnect) {
+          // Handles the protocol state in the main thread to avoid race
+          // conditions
+          if (State == ProtocolState.Reconnecting) {
+            return;
+          }
+
+          State = ProtocolState.Reconnecting;
+
           Thread thread = new Thread(Reconnect);
           thread.Start();
+
+          DispatchStateChange(State);
         } else {
           ResetState();
           State = ProtocolState.Closed;

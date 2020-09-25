@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using KuzzleSdk.API;
 using KuzzleSdk.API.Offline;
 using Newtonsoft.Json.Linq;
 
@@ -73,6 +74,7 @@ namespace KuzzleSdk {
     private CancellationTokenSource cancellationTokenSource;
     private bool currentlyReplaying = false;
     private Stopwatch stopWatch = new Stopwatch();
+    private SemaphoreSlim queueSemaphore = new SemaphoreSlim(1, 1);
 
     /// <summary>
     /// Tells if the QueryReplayer is locked (i.e. it doesn't accept new queries).
@@ -103,28 +105,35 @@ namespace KuzzleSdk {
     public bool Enqueue(JObject query) {
       if (Lock || WaitLoginToReplay) return false;
 
-      lock (queue) {
+      queueSemaphore.Wait();
+      try {
         if (queue.Count < offlineManager.MaxQueueSize || offlineManager.MaxQueueSize < 0) {
           if (queue.Count == 0) {
             stopWatch.Reset();
             stopWatch.Start();
             queue.Add(new TimedQuery(query, 0));
-          } else {
+          }
+          else {
             TimedQuery previous = queue[queue.Count - 1];
             Int64 elapsedTime = stopWatch.ElapsedMilliseconds - previous.Time;
             elapsedTime = Math.Min(elapsedTime, offlineManager.MaxRequestDelay);
             queue.Add(new TimedQuery(query, previous.Time + elapsedTime));
           }
-          if (query["controller"]?.ToString() == "auth"
-              && (query["action"]?.ToString() == "login"
-                || query["action"]?.ToString() == "logout")
-              ) {
-                Lock = true;
-              }
+
+          String controller = query["controller"]?.ToString();
+          String action = query["action"]?.ToString();
+
+          if (controller == "auth" && (action == "login" || action == "logout")) {
+            Lock = true;
+          }
 
           return true;
         }
       }
+      finally {
+        queueSemaphore.Release();
+      }
+
       return false;
     }
 
@@ -139,7 +148,8 @@ namespace KuzzleSdk {
     /// Remove and return the first query that has been added to the queue.
     /// </summary>
     public JObject Dequeue() {
-      lock (queue) {
+      queueSemaphore.Wait();
+      try {
         if (queue.Count == 0) {
           return null;
         }
@@ -148,6 +158,9 @@ namespace KuzzleSdk {
         queue.RemoveAt(0);
 
         return query;
+      }
+      finally {
+        queueSemaphore.Release();
       }
     }
 
@@ -163,18 +176,32 @@ namespace KuzzleSdk {
     /// it is set with an exception and removed from the replayable queue.
     /// </summary>
     public void RejectQueries(Predicate<JObject> predicate, Exception exception) {
-      lock (queue) {
+      queueSemaphore.Wait();
+      try {
         foreach (TimedQuery timedQuery in queue) {
           if (predicate(timedQuery.Query)) {
-            kuzzle.GetRequestById(timedQuery.Query["requestId"]?.ToString())?.SetException(exception);
+            String requestId = timedQuery.Query["requestId"]?.ToString();
+
+            if (requestId != null) {
+              TaskCompletionSource<Response> task = kuzzle.GetRequestById(requestId);
+
+              if (task != null) {
+                task.SetException(exception);
+              }
+            }
           }
         }
+
         queue.RemoveAll((obj) => predicate(obj.Query));
+
         if (queue.Count == 0) {
           Lock = false;
           currentlyReplaying = false;
           WaitLoginToReplay = false;
         }
+      }
+      finally {
+        queueSemaphore.Release();
       }
     }
 
@@ -183,7 +210,8 @@ namespace KuzzleSdk {
     /// </summary>
     /// <returns>How many items where removed.</returns>
     public int Remove(Predicate<JObject> predicate) {
-      lock (queue) {
+      queueSemaphore.Wait();
+      try {
         if (queue.Count > 0) {
           Predicate<TimedQuery> timedQueryPredicate = timedQuery => predicate(timedQuery.Query);
           int itemsRemoved = queue.RemoveAll(timedQueryPredicate);
@@ -196,6 +224,9 @@ namespace KuzzleSdk {
           return itemsRemoved;
         }
       }
+      finally {
+        queueSemaphore.Release();
+      }
       return 0;
     }
 
@@ -203,12 +234,12 @@ namespace KuzzleSdk {
     /// Clear the queue.
     /// </summary>
     public void Clear() {
-      lock (queue) {
-        queue.Clear();
-        Lock = false;
-        currentlyReplaying = false;
-        WaitLoginToReplay = false;
-      }
+      queueSemaphore.Wait();
+      queue.Clear();
+      Lock = false;
+      currentlyReplaying = false;
+      WaitLoginToReplay = false;
+      queueSemaphore.Release();
     }
 
     internal delegate Task ReplayQueryFunc(TimedQuery timedQuery, CancellationToken cancellationToken);
@@ -255,7 +286,8 @@ namespace KuzzleSdk {
 
       if (resetWaitLogin) WaitLoginToReplay = false;
 
-      lock (queue) {
+      queueSemaphore.Wait();
+      try {
         if (queue.Count > 0) {
           currentlyReplaying = true;
 
@@ -266,6 +298,9 @@ namespace KuzzleSdk {
           }
 
         }
+      }
+      finally {
+        queueSemaphore.Release();
       }
       return cancellationTokenSource;
     }
