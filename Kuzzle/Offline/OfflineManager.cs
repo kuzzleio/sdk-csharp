@@ -226,7 +226,6 @@ namespace KuzzleSdk.API.Offline {
 
     internal void StateChangeListener(object sender, ProtocolState state) {
       if (state == ProtocolState.Open && previousState == ProtocolState.Reconnecting) {
-
         kuzzle.GetEventHandler().DispatchReconnected();
 
         Task.Run(async () => {
@@ -235,6 +234,7 @@ namespace KuzzleSdk.API.Offline {
         });
 
       }
+
       previousState = state;
     }
 
