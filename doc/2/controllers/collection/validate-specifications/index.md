@@ -31,7 +31,7 @@ public async Task<bool> ValidateSpecificationsAsync(
 
 A JObject representing the specifications to validate.
 
-The JObject data must follow the [Specifications Structure](/core/2/guides/cookbooks/datavalidation):
+The JObject data must follow the [Specifications Structure](/core/2/guides/advanced/data-validation):
 
 ```js
 {

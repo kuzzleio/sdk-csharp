@@ -8,7 +8,7 @@ order: 100
 
 # Response
 
-This class represents a raw [Kuzzle API response](/core/2/api/essentials/kuzzle-response/).  
+This class represents a raw [Kuzzle API response](/core/2/api/payloads/response/).  
 
 ## Namespace
 
