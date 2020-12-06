@@ -31,7 +31,7 @@ public async Task<JObject> UpdateSpecificationsAsync(
 
 A JObject representing the specifications.
 
-The JSON must follow the [Specifications structure](/core/2/guides/cookbooks/datavalidation/schema):
+The JSON must follow the [Specifications structure](/core/2/guides/advanced/data-validation):
 
 ```js
 {

@@ -7,8 +7,8 @@ description: Create a new collection.
 
 # CreateAsync
 
-Creates a new [collection](/core/2/guides/essentials/store-access-data) in the provided `index`.
-You can also provide an optional body with a [collection mapping](/core/2/guides/essentials/database-mappings) allowing you to exploit the full capabilities of our persistent data storage layer.
+Creates a new [collection](/core/2/guides/main-concepts/data-storage) in the provided `index`.
+You can also provide an optional body with a [collection mapping](/core/2/guides/main-concepts/data-storage) allowing you to exploit the full capabilities of our persistent data storage layer.
 
 This method will only update the mapping if the collection already exists.
 
@@ -47,7 +47,7 @@ The mapping must have a root field `properties` containing the mapping definitio
 }
 ```
 
-More information about database mappings [here](/core/2/guides/essentials/database-mappings).
+More information about database mappings [here](/core/2/guides/main-concepts/data-storage).
 
 ## Exceptions
 
