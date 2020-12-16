@@ -24,7 +24,7 @@ public async Task<string> SubscribeAsync(
 |--------------|-----------------------------------------|----------------------------------------------------------------------------------------------------------------|
 | `index`      | <pre>string</pre>                       | Index name                                                                                                     |
 | `collection` | <pre>string</pre>                       | Collection name                                                                                                |
-| `filters`    | <pre>JObject</pre>                      | JObject representing a set of filters following [Koncorde syntax](/core/2/guides/cookbooks/realtime-api/terms) |
+| `filters`    | <pre>JObject</pre>                      | JObject representing a set of filters following [Koncorde syntax](/core/2/api/koncorde-filters-syntax/terms) |
 | `handler`   | <pre>NotificationHandler</pre>          | Handler function to handle notifications                                                                      |
 | `options`    | <pre>SubscribeOptions</pre><br>(`null`) | Subscription options                                                                                           |
 
