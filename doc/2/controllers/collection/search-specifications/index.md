@@ -36,7 +36,7 @@ public async Task<DataObjects.SearchResults> SearchSpecificationsAsync(
 |----------|--------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `From`   | <pre>int</pre><br/>(`0`)       | Offset of the first document to fetch                                                                                                                                                                                |
 | `Size`   | <pre>int</pre><br/>(`10`)      | Maximum number of documents to retrieve per page                                                                                                                                                                     |
-| `Scroll` | <pre>string</pre><br/>(`null`) | When set, gets a forward-only cursor having its TTL set to the given value (i.e. `30s`; cf. [Elasticsearch time limits](https://www.elastic.co/guide/en/elasticsearch/reference/5.6/common-options.html#time-units)) |
+| `Scroll` | <pre>string</pre><br/>(`null`) | When set, gets a forward-only cursor having its TTL set to the given value (i.e. `30s`; cf. [Elasticsearch time limits](https://www.elastic.co/guide/en/elasticsearch/reference/7.4/common-options.html#time-units)) |
 
 ## Return
 

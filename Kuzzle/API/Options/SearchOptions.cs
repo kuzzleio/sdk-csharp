@@ -49,6 +49,17 @@ namespace KuzzleSdk.API.Options {
     public string Sort { get; set; }
 
     /// <summary>
+    /// Query Syntax to use
+    /// </summary>
+    [
+      JsonProperty(
+        PropertyName = "lang",
+        NullValueHandling = NullValueHandling.Ignore
+      )
+    ]
+    public string Lang { get; set; }
+
+    /// <summary>
     /// Copy constructor.
     /// </summary>
     public SearchOptions(SearchOptions src) {
@@ -62,6 +73,10 @@ namespace KuzzleSdk.API.Options {
 
         if (src.Scroll != null) {
           Scroll = string.Copy(src.Scroll);
+        }
+
+        if (src.Lang != null) {
+          Lang = string.Copy(src.Lang);
         }
       }
     }
