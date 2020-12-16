@@ -30,3 +30,4 @@ using KuzzleSdk.API.Options;
 | `Scroll` | <pre>string</pre> |  When set, gets a forward-only cursor having its ttl set to the given value (ie `30s`; cf [elasticsearch time limits](https://www.elastic.co/guide/en/elasticsearch/reference/7.3/common-options.html#time-units)) |
 | `Size` | <pre>int</pre> | Maximum number of documents to retrieve per page |
 | `Sort` | <pre>string</pre> | Field to sort the result on |
+| `Lang` | <pre>string</pre> | Specify the query language to use. By default, it's `elasticsearch` but `koncorde` can also be used. <SinceBadge version="change-me"/> |

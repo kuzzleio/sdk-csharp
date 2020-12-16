@@ -9,7 +9,7 @@ description: Deletes documents matching query.
 
 Deletes documents matching the provided search query.
 
-Kuzzle uses the [ElasticSearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/5.6/query-dsl.html) syntax.
+Kuzzle uses the [ElasticSearch Query DSL](https://www.elastic.co/guide/en/elasticsearch/reference/7.4/query-dsl.html) syntax.
 
 ## Arguments
 
