@@ -1,0 +1,26 @@
+name: Deploy doc
+description: Run Deploy doc
+runs:
+  using: "composite"
+  steps:
+    - name: Install pyhton
+      run: sudo apt install python python-pip -y
+      shell: bash
+    - name: Install awscli
+      run: pip install awscli --upgrade --user
+      shell: bash
+    - name: Install Deps
+      run: npm install --production=false
+      shell: bash
+    - name: Prepare kuzdoc
+      run: npm run doc-prepare
+      shell: bash
+    - name: Build doc
+      run: npm run doc-build
+      shell: bash
+    - name: Upload docs
+      run: npm run doc-upload
+      shell: bash
+    - name: Upload cloudfront
+      run: npm run doc-cloudfront
+      shell: bash

@@ -1,0 +1,37 @@
+name: Deploy Docs Dev
+
+on:
+   push:
+     branches:
+       - 1-dev
+       - 2-dev
+  
+
+jobs:
+  deploy-docs-dev:
+    name: Deployment Doc Dev
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12"
+      - uses: ./.github/actions/doc-deploy
+        env:
+          FRAMEWORK_BRANCH: develop
+          NODE_ENV: production
+          NODE_OPTIONS: "--max_old_space_size=4096"
+          S3_BUCKET: docs-next.kuzzle.io
+          CLOUDFRONT_DISTRIBUTION_ID: E2ZCCEK9GRB49U
+          AWS_DEFAULT_REGION: us-west-2

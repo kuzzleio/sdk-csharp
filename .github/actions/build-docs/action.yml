@@ -1,0 +1,10 @@
+name: Dead Links
+description: Run Dead Links Tests
+runs:
+  using: "composite"
+  steps:
+    - name: Build docs
+      run: |
+        npm run doc-prepare
+        npm run doc-build
+      shell: bash
