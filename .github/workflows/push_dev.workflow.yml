@@ -1,6 +1,10 @@
-name: Pull Request workflow
+name: Deploy Docs Dev
 
-on: [pull_request]
+on:
+   push:
+     branches:
+       - 2-dev
+  
 
 jobs:
   unit-tests:
@@ -38,11 +42,12 @@ jobs:
           node-version: "12"
       - uses: ./.github/actions/snippets-tests
         with:
-          docofile: .ci/doc/docker-compose.yml 
+          docofile: .ci/doc/docker-compose.yml
 
-  dead-links:
-    name: Dead links
+  deploy-docs-dev:
+    name: Deployment Doc Dev
     runs-on: ubuntu-18.04
+    needs: [unit-tests, snippets-tests]
     steps:
       - uses: actions/checkout@v2
       - name: Cache node modules
@@ -56,28 +61,14 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-      - uses: actions/setup-node@v1.4.4
+      - uses: actions/setup-node@v1
         with:
           node-version: "12"
-      - uses: ./.github/actions/dead-links
-
-  build-docs:
-    name: Build docs
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v2
-      - name: Cache node modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
+      - uses: ./.github/actions/doc-deploy
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-      - uses: actions/setup-node@v1.4.4
-        with:
-          node-version: "12"
-      - uses: ./.github/actions/build-docs
+          REGION: us-west-2
+          S3_BUCKET: docs-next.kuzzle.io
+          CLOUDFRONT_ID: E2ZCCEK9GRB49U
+          FRAMEWORK_BRANCH: dev
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
