@@ -5,6 +5,7 @@ runs:
   steps:
     - name: Build docs
       run: |
+        npm ci
         npm run doc-prepare
         npm run doc-build
       shell: bash
