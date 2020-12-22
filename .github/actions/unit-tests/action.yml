@@ -8,6 +8,6 @@ runs:
       shell: bash
     - name: Run tests
       run: |
-        dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=$TRAVIS_BUILD_DIR/lcov.info
+        dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=lcov /p:CoverletOutput=./lcov.info
         curl -s https://codecov.io/bash > codecov && bash codecov
       shell: bash

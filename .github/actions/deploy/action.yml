@@ -8,7 +8,7 @@ runs:
       shell: bash
     - name: Run Deploy
       run: |
-        dotnet build $TRAVIS_BUILD_DIR/Kuzzle/Kuzzle.csproj -c Release
-        dotnet build $TRAVIS_BUILD_DIR/Kuzzle.Tests/Kuzzle.Tests.csproj
+        dotnet build ./Kuzzle/Kuzzle.csproj -c Release
+        dotnet build ./Kuzzle.Tests/Kuzzle.Tests.csproj
         bash deploy.sh
       shell: bash
