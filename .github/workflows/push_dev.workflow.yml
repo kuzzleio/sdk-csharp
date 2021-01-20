@@ -10,6 +10,7 @@ jobs:
   unit-tests:
     name: Unit Tests csharp ${{ matrix.dotnet }}
     runs-on: ubuntu-18.04
+    timeout-minutes: 30
     strategy:
       matrix:
         dotnet: ['2.2']
@@ -24,6 +25,7 @@ jobs:
   snippets-tests:
     name: Snippet Tests csharp ${{ matrix.dotnet }}
     runs-on: ubuntu-18.04
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v2
       - name: Cache node modules
@@ -47,6 +49,7 @@ jobs:
   deploy-docs-dev:
     name: Deployment Doc Dev
     runs-on: ubuntu-18.04
+    timeout-minutes: 30
     needs: [unit-tests, snippets-tests]
     steps:
       - uses: actions/checkout@v2
