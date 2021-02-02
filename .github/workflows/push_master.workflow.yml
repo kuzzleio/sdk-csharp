@@ -61,6 +61,8 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet }}
       - uses: ./.github/actions/deploy
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 
   deploy-docs-prod:
     name: Documentation deployment

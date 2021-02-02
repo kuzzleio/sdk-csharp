@@ -17,12 +17,10 @@ inputs:
   REGION:
     description: AWS default region
     required: true
-    default: 'us-west-2'
   FRAMEWORK_BRANCH:
     description: Documentation framework branch to use
     required: true
-    default: 'master'
-  
+
 runs:
   using: "composite"
   steps:
