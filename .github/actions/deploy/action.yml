@@ -10,5 +10,13 @@ runs:
       run: |
         dotnet build ./Kuzzle/Kuzzle.csproj -c Release
         dotnet build ./Kuzzle.Tests/Kuzzle.Tests.csproj
-        bash deploy.sh
+        NUSPEC_FILE="./Kuzzle/Kuzzle.nuspec"
+        NUPKG_FILE="./kuzzlesdk.nupkg"
+        yes | sudo certmgr -ssl -m https://go.microsoft.com
+        yes | sudo certmgr -ssl -m https://nugetgallery.blob.core.windows.net
+        yes | sudo certmgr -ssl -m https://nuget.org
+        sudo nuget update -self
+        sudo chmod -R 777 /tmp/NuGetScratch/*
+        nuget pack ${NUSPEC_FILE} -OutputDirectory ./ -OutputFileNamesWithoutVersion
+        nuget push ${NUPKG_FILE} -ApiKey ${NUGET_API_KEY} -Source nuget.org
       shell: bash

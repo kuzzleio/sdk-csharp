@@ -23,7 +23,7 @@ jobs:
       - uses: ./.github/actions/unit-tests
 
   snippets-tests:
-    name: Snippet Tests - .NET v${{ matrix.dotnet }}
+    name: Snippet Tests
     runs-on: ubuntu-18.04
     timeout-minutes: 30
     steps:
@@ -47,7 +47,7 @@ jobs:
           docofile: .ci/doc/docker-compose.yml
 
   deploy-prod:
-    name: Unit Tests csharp ${{ matrix.dotnet }}
+    name: Production deployment
     runs-on: ubuntu-18.04
     timeout-minutes: 30
     needs: [unit-tests, snippets-tests]
@@ -61,10 +61,34 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet }}
       - uses: ./.github/actions/deploy
+
+  deploy-docs-prod:
+    name: Documentation deployment
+    runs-on: ubuntu-18.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
         with:
-          REGION: us-west-2
-          S3_BUCKET: docs.kuzzle.io
-          CLOUDFRONT_ID: E3D6RP0POLCJMM
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12"
+      - uses: ./.github/actions/doc-deploy
+        env:
           FRAMEWORK_BRANCH: master
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          NODE_ENV: production
+          NODE_OPTIONS: "--max_old_space_size=4096"
+          S3_BUCKET: docs.kuzzle.io
+          CLOUDFRONT_DISTRIBUTION_ID: E3D6RP0POLCJMM
+          AWS_DEFAULT_REGION: us-west-2
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
