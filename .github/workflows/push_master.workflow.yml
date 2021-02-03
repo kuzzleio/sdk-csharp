@@ -1,4 +1,4 @@
-name: Deploy Prod to NuGet
+name: Main branch
 
 on:
    push:
