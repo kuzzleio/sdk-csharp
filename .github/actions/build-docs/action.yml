@@ -5,7 +5,8 @@ runs:
   steps:
     - name: Build docs
       run: |
-        npm ci
+        npm ci --production=false
+        npm i --save-dev kuzdoc
         npm run doc-prepare
         npm run doc-build
       shell: bash
