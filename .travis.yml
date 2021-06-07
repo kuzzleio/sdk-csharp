@@ -41,7 +41,8 @@ jobs:
           - $HOME/.gem/specs
       install:
         - gem install typhoeus
-        - npm ci --silent
+        - npm ci --production=false
+        - npm i --save-dev kuzdoc
       before_script:
         - npm run doc-prepare
         - $(npm bin)/kuzdoc iterate-repos:install --repos_path doc/framework/.repos/
@@ -56,6 +57,9 @@ jobs:
       language: node_js
       node_js: 10
 
+      install:
+        - npm ci --production=false
+        - npm i --save-dev kuzdoc
       script:
         - npm run doc-prepare
         - npm run doc-build
@@ -103,7 +107,8 @@ jobs:
 
       install:
         - pip install awscli --upgrade --user
-        - npm ci
+        - npm ci --production=false
+        - npm i --save-dev kuzdoc
 
       script:
         - npm run doc-prepare
@@ -136,7 +141,8 @@ jobs:
 
       install:
         - pip install awscli --upgrade --user
-        - npm ci
+        - npm ci --production=false
+        - npm i --save-dev kuzdoc
 
       script:
         - npm run doc-prepare
