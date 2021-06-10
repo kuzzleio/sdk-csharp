@@ -1,10 +1,9 @@
 name: Dev branch
 
 on:
-   push:
-     branches:
-       - 2-dev
-  
+  push:
+    branches:
+      - 2-dev
 
 jobs:
   unit-tests:
@@ -13,7 +12,7 @@ jobs:
     timeout-minutes: 30
     strategy:
       matrix:
-        dotnet: ['2.2']
+        dotnet: ["2.2"]
     steps:
       - uses: actions/checkout@v2
       - name: Setup dotnet
@@ -72,6 +71,5 @@ jobs:
           REGION: us-west-2
           S3_BUCKET: docs-next.kuzzle.io
           CLOUDFRONT_ID: E2ZCCEK9GRB49U
-          FRAMEWORK_BRANCH: dev
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
