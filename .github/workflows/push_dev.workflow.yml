@@ -45,11 +45,36 @@ jobs:
         with:
           docofile: .ci/doc/docker-compose.yml
 
+  dead-links:
+    name: Dead links
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - uses: actions/setup-node@v1.4.4
+        with:
+          node-version: "12"
+      - uses: webfactory/ssh-agent@v0.5.2
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+      - uses: ./.github/actions/dead-links
+
   deploy-docs-dev:
     name: Deployment Doc Dev
     runs-on: ubuntu-18.04
     timeout-minutes: 30
-    needs: [unit-tests, snippets-tests]
+    needs: [unit-tests, snippets-tests, dead-links]
     steps:
       - uses: actions/checkout@v2
       - name: Cache node modules
