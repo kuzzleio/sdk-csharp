@@ -1,0 +1,8 @@
+name: Unit Tests
+description: Run Unit Tests
+runs:
+  using: "composite"
+  steps:
+    - name: Run restore
+      run: docker-compose -f ${{ inputs.docofile }} run doc-tests node index
+      shell: bash
