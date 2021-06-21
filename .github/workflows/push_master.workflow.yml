@@ -45,24 +45,6 @@ jobs:
         with:
           docofile: .ci/doc/docker-compose.yml
 
-  deploy-prod:
-    name: Production deployment
-    runs-on: ubuntu-18.04
-    timeout-minutes: 30
-    needs: [unit-tests, snippets-tests]
-    strategy:
-      matrix:
-        dotnet: ["2.2"]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Setup dotnet
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ matrix.dotnet }}
-      - uses: ./.github/actions/deploy
-        env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-
   dead-links:
     name: Dead links
     runs-on: ubuntu-latest
@@ -87,6 +69,24 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
       - uses: ./.github/actions/dead-links
+
+  deploy-prod:
+    name: Production deployment
+    runs-on: ubuntu-18.04
+    timeout-minutes: 30
+    needs: [unit-tests, snippets-tests, dead-links]
+    strategy:
+      matrix:
+        dotnet: ["2.2"]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ matrix.dotnet }}
+      - uses: ./.github/actions/deploy
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 
   deploy-docs-prod:
     name: Documentation deployment
