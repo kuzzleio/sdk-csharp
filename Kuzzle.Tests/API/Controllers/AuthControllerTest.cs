@@ -22,6 +22,28 @@ namespace Kuzzle.Tests.API.Controllers {
     }
 
     [Fact]
+    public async void CheckRightsAsyncTest() {
+      JObject requestPayload = new JObject { 
+        { "controller", "server" }, 
+        { "action", "info" } 
+      };
+
+      _api.SetResult(@"{result: {allowed: true}}");
+
+      bool allowed = await _authController.CheckRightsAsync(requestPayload);
+
+      _api.Verify(new JObject {
+        { "controller", "auth" },
+        { "action", "checkRights" },
+        { "body", requestPayload } 
+      });
+
+      Assert.Equal<bool>(
+        true,
+        allowed);
+    }
+
+    [Fact]
     public async void CheckTokenAsyncTest() {
       string token = "foobar";
 

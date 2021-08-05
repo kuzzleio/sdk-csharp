@@ -16,6 +16,20 @@ namespace KuzzleSdk.API.Controllers {
     internal AuthController(IKuzzleApi api) : base(api) { }
 
     /// <summary>
+    /// Checks if the provided API request can be executed by this network
+    /// connection, using the current authentication information.
+    /// </summary>
+    public async Task<bool> CheckRightsAsync(JObject requestPayload) {
+      Response response = await api.QueryAsync(new JObject {
+        { "controller", "auth" },
+        { "action", "checkRights" },
+        { "body", requestPayload },
+      });
+
+      return (bool)response.Result["allowed"];
+    }
+
+    /// <summary>
     /// Checks the validity of an authentication token.
     /// </summary>
     public async Task<JObject> CheckTokenAsync(string token) {
