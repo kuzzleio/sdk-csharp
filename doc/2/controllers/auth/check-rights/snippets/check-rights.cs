@@ -8,13 +8,11 @@ try {
     { "action", "info" }
   };
 
-  JObject res = await kuzzle.Auth.CheckRightsAsync(requestPayload);
+  bool allowed = await kuzzle.Auth.CheckRightsAsync(requestPayload);
 
-  Console.WriteLine(res.ToString(Formatting.None));
+  Console.WriteLine(allowed);
   /*
-  {
-    "allowed": true,
-  }
+    true
   */
 } catch (KuzzleException e) {
   Console.WriteLine(e);

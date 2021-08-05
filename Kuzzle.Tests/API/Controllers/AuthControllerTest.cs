@@ -38,9 +38,7 @@ namespace Kuzzle.Tests.API.Controllers {
         { "body", requestPayload } 
       });
 
-      Assert.Equal<bool>(
-        true,
-        allowed);
+      Assert.True(allowed);
     }
 
     [Fact]
