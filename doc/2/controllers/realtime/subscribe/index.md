@@ -7,7 +7,7 @@ description: Subscribes to real-time notifications.
 
 # SubscribeAsync
 
-Subscribes by providing a set of filters: messages, document changes and, optionally, user events matching the provided filters will generate [real-time notifications](/core/2/api/essentials/notifications), sent to you in real-time by Kuzzle.
+Subscribes by providing a set of filters: messages, document changes and, optionally, user events matching the provided filters will generate [real-time notifications](/core/2/api/payloads/notifications), sent to you in real-time by Kuzzle.
 
 ## Arguments
 
@@ -24,7 +24,7 @@ public async Task<string> SubscribeAsync(
 |--------------|-----------------------------------------|----------------------------------------------------------------------------------------------------------------|
 | `index`      | <pre>string</pre>                       | Index name                                                                                                     |
 | `collection` | <pre>string</pre>                       | Collection name                                                                                                |
-| `filters`    | <pre>JObject</pre>                      | JObject representing a set of filters following [Koncorde syntax](/core/2/api/koncorde-filters-syntax/terms) |
+| `filters`    | <pre>JObject</pre>                      | JObject representing a set of filters following [Koncorde syntax](/core/2/api/koncorde-filters-syntax) |
 | `handler`   | <pre>NotificationHandler</pre>          | Handler function to handle notifications                                                                      |
 | `options`    | <pre>SubscribeOptions</pre><br>(`null`) | Subscription options                                                                                           |
 

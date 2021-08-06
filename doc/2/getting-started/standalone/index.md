@@ -13,7 +13,7 @@ It will walk you through creating scripts that can **store** documents in Kuzzle
 
 You are going to write an application that **stores** documents in Kuzzle Server and subscribes to **real time notifications** for each created document.
 
-To follow this tutorial, you must have a Kuzzle Server up and running. Follow these instructions if this is not already the case: [Running Kuzzle](/core/2/guides/getting-started/running-kuzzle/).
+To follow this tutorial, you must have a Kuzzle Server up and running. Follow these instructions if this is not already the case: [Running Kuzzle](/core/2/guides/getting-started/run-kuzzle).
 
 
 ::: info
@@ -133,7 +133,7 @@ Now in another terminal, launch the program to create a document:
 dotnet run -- create
 ```
 
-This creates a new document in Kuzzle which, in turn, triggers a [document notification](/core/2/api/essentials/notifications/#documents-changes-messages). That notification is sent by Kuzzle to our other running program, which subscribed to changes occuring in that index and collection.
+This creates a new document in Kuzzle which, in turn, triggers a [document notification](/core/2/api/payloads/notifications/#documents-changes-messages). That notification is sent by Kuzzle to our other running program, which subscribed to changes occuring in that index and collection.
 Check the subscribe program terminal: a new message is printed everytime a document is created.
 
 ```bash
@@ -151,4 +151,4 @@ Now that you're more familiar with Kuzzle, dive even deeper to learn how to leve
 - discover what this SDK has to offer by browsing other sections of this documentation
 - learn how to use [Koncorde](/core/2/api/koncorde-filters-syntax) to create incredibly fine-grained and blazing-fast subscriptions
 - learn how to perform a [basic authentication](/sdk/csharp/2/controllers/auth/login)
-- follow our guide to learn how to [manage users, and how to set up fine-grained access control](/core/2/guides/essentials/security/)
+- follow our guide to learn how to [manage users, and how to set up fine-grained access control](/core/2/guides/main-concepts/permissions)

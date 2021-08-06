@@ -1,0 +1,12 @@
+name: Dead Links
+description: Run Dead Links Tests
+runs:
+  using: "composite"
+  steps:
+    - name: Build docs
+      run: |
+        npm ci --production=false
+        npm i --save-dev kuzdoc
+        npm run doc-prepare
+        npm run doc-build
+      shell: bash
