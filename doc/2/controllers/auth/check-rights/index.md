@@ -21,11 +21,7 @@ public async Task<bool> CheckRightsAsync(JObject requestPayload);
 
 ## Return
 
-A JObject which has the following properties:
-
-| Property  | Type            | Description                                                                   |
-| --------- | --------------- | ----------------------------------------------------------------------------- |
-| `allowed` | <pre>bool</pre> | a boolean telling whether the provided request would have been allowed or not |
+A boolean telling whether the provided request would have been allowed or not
 
 ## Exceptions
 
