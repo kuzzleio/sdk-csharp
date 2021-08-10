@@ -50,6 +50,7 @@ jobs:
     runs-on: ubuntu-18.04
     timeout-minutes: 30
     needs: [unit-tests, snippets-tests]
+    if: ${{ !startsWith( github.event.head_commit.message, '[no-deploy]') }}
     strategy:
       matrix:
         dotnet: ["2.2"]
@@ -63,59 +64,26 @@ jobs:
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 
-  dead-links:
-    name: Dead links
+  doc-deploy:
+    name: Deploy Doc to PROD
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    needs: [snippets-tests, unit-tests]
+    if: ${{ !startsWith( github.event.head_commit.message, '[no-deploy]') }}
     steps:
       - uses: actions/checkout@v2
-      - name: Cache node modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-      - uses: actions/setup-node@v1.4.4
+          fetch-depth: 0
+      - name: Extract references from context
+        shell: bash
+        id: extract-refs
+        run: |
+          echo "::set-output name=version::$(git describe --abbrev=0 --tags | cut -d. -f 1)"
+          echo "::set-output name=repo::$(echo $GITHUB_REPOSITORY | cut -d/ -f 2)"
+      - uses: convictional/trigger-workflow-and-wait@v1.3.0
         with:
-          node-version: "12"
-      - uses: webfactory/ssh-agent@v0.5.2
-        with:
-          ssh-private-key: ${{ secrets.SSH_KEY }}
-      - uses: ./.github/actions/dead-links
-
-  deploy-docs-prod:
-    name: Documentation deployment
-    runs-on: ubuntu-18.04
-    timeout-minutes: 30
-    needs: [dead-links, deploy-prod]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Cache node modules
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-      - uses: actions/setup-node@v1
-        with:
-          node-version: "12"
-      - uses: ./.github/actions/doc-deploy
-        env:
-          FRAMEWORK_BRANCH: master
-          NODE_ENV: production
-          NODE_OPTIONS: "--max_old_space_size=4096"
-          S3_BUCKET: docs.kuzzle.io
-          CLOUDFRONT_DISTRIBUTION_ID: E3D6RP0POLCJMM
-          AWS_DEFAULT_REGION: us-west-2
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          owner: kuzzleio
+          repo: documentation
+          github_token: ${{ secrets.ACCESS_TOKEN_CI }}
+          workflow_file_name: child_repo.workflow.yml
+          ref: master
+          inputs: '{"repo_name": "${{ steps.extract-refs.outputs.repo }}", "branch": "${{ github.head_ref }}", "version": "${{ steps.extract-refs.outputs.version }}"}'
